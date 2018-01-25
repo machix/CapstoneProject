@@ -1,23 +1,32 @@
 package main
-
+ 
 import (
-	"fmt"
-	"log"
-	"net/http"
+    "encoding/json"
+    "fmt"
+    "net/http"
 )
-
+ 
 func handler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Received Request: ", r.Host)
-	fmt.Fprintf(w, r.Host+"\n")
+    fmt.Fprintf(w, "Welcome, %!", r.URL.Path[1:])
 }
-
+ 
 func main() {
-	http.HandleFunc("/", handler)
-
-	port := "8001"
-
-	err := http.ListenAndServe(":"+port, nil)
-	if err != nil {
-		log.Fatal("Could not listen: ", err)
-	}
+    http.HandleFunc("/", handler)
+    http.HandleFunc("/getLocation/", about)
+    http.ListenAndServe(":8080", nil)
+}
+ 
+type Message struct {
+    Text string
+}
+ 
+func about (w http.ResponseWriter, r *http.Request) {
+    m := Message{"We will return the latitude longitude here eventually"}
+    b, err := json.Marshal(m)
+ 
+    if err != nil {
+        panic(err)
+    }
+ 
+     w.Write(b)
 }
