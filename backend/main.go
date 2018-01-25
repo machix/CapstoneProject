@@ -1,9 +1,16 @@
 package main
  
 import (
+<<<<<<< HEAD:main.go
     "encoding/json"
     "fmt"
     "net/http"
+=======
+	"fmt"
+	"log"
+	"os"
+	"net/http"
+>>>>>>> 465f3ad16b1061a4c7c758b531c99dbae76433c3:backend/main.go
 )
  
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -11,6 +18,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
  
 func main() {
+<<<<<<< HEAD:main.go
     http.HandleFunc("/", handler)
     http.HandleFunc("/getLocation/", about)
     http.ListenAndServe(":8080", nil)
@@ -29,4 +37,12 @@ func about (w http.ResponseWriter, r *http.Request) {
     }
  
      w.Write(b)
+=======
+	http.HandleFunc("/", handler)
+
+	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	if err != nil {
+		log.Fatal("Could not listen: ", err)
+	}
+>>>>>>> 465f3ad16b1061a4c7c758b531c99dbae76433c3:backend/main.go
 }
