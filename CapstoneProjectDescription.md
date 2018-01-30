@@ -85,7 +85,7 @@ The technology stack that will be used is listed below:
 Solving a problem that has already been solved, is not a good use of development time. For this reason, I will be utilizing a wide array of libraries. Many of these libraries will be included in the Go standard library. Below is a list of libraries that I plan to use and their use case, although more may be added in the future as problems arise, some replaced if better alternatives are found, and others as inspiration:
 
 * gorilla/mux - implements a request router and dispatcher for matching incoming request to their respective handler
-* cors - Used to handle cross origin domain sharing that is blocked by the browser
+* cors - CORS is a net/http handler implementing Cross Origin Resource Sharing W3 specification in Golang
 * go-geo - This is a library for manipulating geometric shapes (Primary spherical). This has a partial implementation of the S2 solution mentioned previously. This isn't a complete implementation, so this may or may not be used upon further research.
 * dep - go dependency management tool
 * rtreego - A library for efficiently storing and querying spatial data
@@ -98,7 +98,7 @@ The main personal challenges of this project isn't in developing the API, but ra
 
 In every project I have worked on dealing with HTTP request, I have always run into CORS (Cross Origin Resource Sharing) issues. For security reasons, browsers restrict cross-origin HTTP requests initiated from within scripts. Problems can quickly arise from this security precaution while testing communication between the front-end and backend of an application. I have solved this problem many times, and I am using a library mentioned previously to help solve this issue before it arises.
 
-I lack experience in developing high concurrent services, so I expect to run into roadblocks dealing with concurrency within the application. I plan to overcome this through research and reading about concurrent design patterns. Also, by reaching out for help with the professor and any other teachers that may be able to help. Another option is to use stackoverflow. Ultimately I will seek guidance from people more knowledgeable than myself if I run into any roadblocks. 
+I lack experience in developing high concurrent services, so I expect to run into roadblocks dealing with concurrency within the application. I plan to overcome this through research and reading about concurrent design patterns. Also, by reaching out for help with the professor and any other teachers that may be able to help. Another option is to use stackoverflow. Ultimately, I will seek guidance from people more knowledgeable than myself if I run into any roadblocks. 
 
 ## *Algorithm and Data Structure Appendix*
 
