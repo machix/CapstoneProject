@@ -25,6 +25,7 @@ The next step in the process will implement more endpoints that will allow the c
 
 
 #### **Features (B)**
+
 Adding to this implementation one of the endpoints will also allow the request to have a distance parameter to determine the radius of the geofence. 
 
 #### **Features (C)**
@@ -66,6 +67,7 @@ Solving a problem that has already been solved, is not a good use of development
 
 * gorilla/mux - implements a request router and dispatcher for matching incoming request to their respective handler
 * cors - Used to handle cross origin domain sharing that is blocked by the browser
+* go-geo - This is a library for manipulating geometric shapes (Primary spherical). This has a partial implementation of the S2 solution mention previously. This isn't a complete implementation, so this may or may not be used upon further research.
 
 
 I will be using the built in Go libraries to test my project, in addition to Jasmine/Karma for testing on the frontend. All of the builds and test can be automated through Travis CI. The front end portion of the project uses npm and yarn to manage dependences. dep will be included on the backend to manage dependencies in Go. Go has a built in formatting tool that can be used by adding it to a build script.
@@ -79,7 +81,7 @@ In every project I have worked on dealing with HTTP request, I have always run i
 Almost all of the implemenations of geofencing use data structures that I am aware of, but unfamiliar with. This poses a risk due to the fact I will need to do thorough research to ensure my understanding of the data structure's mechanisms are sufficient to allow me to succeed in properly implementing the data structure in the geofencing algorithm. 
 
 
-## __*Algorithm Appendix*__
+## __*Algorithm and Data Structure Appendix*__
 
 #### Ray Casting Algorithm
 One of the easiest ways to determine if a point is in a polygon is to test how many times a ray starting from the point moving in a fixed direction intersects with edges of the polygon. The the point is outside of the target polygon then the ray will intersect an even number of times and if it is inside the polygon then it will intersect and odd number of times. One edge case in which this algorithm fails is if the point lies directly on the edge of the polygon. 
@@ -88,3 +90,9 @@ There is another "naive" algorithm called the winding number algorithm. I do not
 
 #### R-Tree
 An R-Tree is based on a B-Tree, but used for multi-dimensional objects. The R-Tree allows us to compare minimum bounding rectangles to other objects minimum bounding rectangles. The minimum bounding rectangles is a simple bounding box (bbox) which is defined by the minimum and maximum coordinate. Checking if an objects bbox is inside another is a constant time operation. 
+
+#### Quad Tree
+A quad tree is a specialized kd-tree used for 2D indexing. Generally you would take a flat projection of your "map" or space and divide into quarters or cells. You then divide those recursively until you hit a defined depth, and these will be the leaves of the tree.
+
+#### S2
+This is a specialized implementation of a quadtree. This is used in many mapping systems. The S2 project is done via cube mapping, this is where you use six faces of a cube as the map shape. This is done so that each cell has a similar surface area. The cells are also organized using a space spilling curve to conserve locality in the cell. 
