@@ -21,7 +21,7 @@ This project could theoretically be implemented in any popular “backend” lan
 The geofencing service with endpoints will be novel code that will be created during this project. Additionally, while there exist some libraries with the data structure implementations, the implementation of both the data structures and algorithms to handle the geofencing portion of the backend does not exist in any open-source projects.
 
 ## __*Project Features and Implementation*__
-I will use a priority system to rank the importance of the features. There will be three levels of priority, with A being essential, B being want to implement, and C being extensions or extras.
+I will use a priority system to rank the importance of the features. There will be three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. *Please note that while these feature descriptions are in paragraph form, they will be divided into single-purpose, manageable, and testable features on Github.*
 
 #### **Features (A)**
 The most rudimentary and basic implementation of this project will be a simple service with one endpoint, hosted on DigitalOcean, that returns a "hello world" type of response. The next step of the project will be to implement a simple interface that will enable me to easily interact with the API. Next we will connect the service to a database and then test to ensure the service is correctly uploading data from our FrontEnd to a database.
@@ -49,7 +49,7 @@ Applications and services that implement geofencing exist, but most are propriet
 ##### Blog Post
 * [Uber blog about geofencing](https://eng.uber.com/go-geofence/)
 * [Geofencing with Google Data Flow](https://cloudplatform.googleblog.com/2014/12/geofencing-340-million-nyc-taxi-with-google-cloud-dataflow.html)
-* [Google’s S2, geometry on the sphere, cells and Hilbert curve](Google’s S2, geometry on the sphere, cells and Hilbert curve)
+* [Google’s S2, geometry on the sphere, cells and Hilbert curve](http://blog.christianperone.com/2015/08/googles-s2-geometry-on-the-sphere-cells-and-hilbert-curve/)
 * [S2 Cells and space filling curves](https://medium.com/sidewalk-talk/s2-cells-and-space-filling-curves-keys-to-building-better-digital-map-tools-for-cities-a312aa5e2f59)
 
 ##### Products
