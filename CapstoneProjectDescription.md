@@ -67,7 +67,7 @@ Previous experience at my internship working on web apps with assist me in easil
 ## __*Testing*__
 Testing is an important, if not essential, part of software development. Golang has a testing library that will be used to test this project. Once the database is implement I will plan to populate the database with "dummy" data to enable testing of the service and queries. Testing the frontend will be done with Jasmine and Karma. Jasmine is a behavior driven framework for testing javascript and Karma is a test runner. Automated testing will be configured and performed using TravisCI. Any actions that I perform more than 2 or 3 times while building the project, I will plan to automate.
 
-Time permitting, I will also plan to do performance testing on the microservice to determine the load the microservice is able to handle.
+Time permitting, I will also plan to do performance testing on the microservice to determine the load the microservice is able to handle. If I reach this point in the project, then I will have to do more research on tools and libraries that will enable me to easily perform these test.
 
 ## __*Technology*__
 The technology stack that will be used is listed below:
