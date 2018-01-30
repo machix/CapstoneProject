@@ -20,7 +20,7 @@ This project could theoretically be implemented in any popular “backend” lan
 
 The geofencing service with endpoints will be novel code that will be created during this project. Additionally, while there exist some libraries with the data structure implementations, the implementation of both the data structures and algorithms to handle the geofencing portion of the backend does not exist in any open-source projects.
 
-I have discussed the professor the potential use for this application, as well as described in the background and motivation section why this project/service would be useful on a commercial level. 
+I have discussed with the professor the potential use for this application, as well as described in the background and motivation section why this project/service would be useful on a commercial level. 
 
 ## __*Project Features and Implementation*__
 I will use a priority system to rank the importance of the features. There will be three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. *Please note that while these feature descriptions are in paragraph form, they will be divided into single-purpose, manageable, and testable features on Github.*
