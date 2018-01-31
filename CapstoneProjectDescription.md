@@ -20,7 +20,7 @@ This project could theoretically be implemented in any popular “backend” lan
 
 The geofencing service with endpoints will be novel code that will be created during this project. Additionally, while there exist some libraries with the data structure implementations, the implementation of both the data structures and algorithms to handle the geofencing portion of the backend does not exist in any open-source projects.
 
-I have discussed the professor the potential use for this application, as well as described in the background and motivation section why this project/service would be useful on a commercial level. 
+I have discussed with the professor the potential use for this application, as well as described in the background and motivation section why this project/service would be useful on a commercial level. 
 
 ## __*Project Features and Implementation*__
 I will use a priority system to rank the importance of the features. There will be three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. *Please note that while these feature descriptions are in paragraph form, they will be divided into single-purpose, manageable, and testable features on Github.*
@@ -67,7 +67,7 @@ Previous experience at my internship working on web apps with assist me in easil
 ## __*Testing*__
 Testing is an important, if not essential, part of software development. Golang has a testing library that will be used to test this project. Once the database is implement I will plan to populate the database with "dummy" data to enable testing of the service and queries. Testing the frontend will be done with Jasmine and Karma. Jasmine is a behavior driven framework for testing javascript and Karma is a test runner. Automated testing will be configured and performed using TravisCI. Any actions that I perform more than 2 or 3 times while building the project, I will plan to automate.
 
-Time permitting, I will also plan to do performance testing on the microservice to determine the load the microservice is able to handle.
+Time permitting, I will also plan to do performance testing on the microservice to determine the load the microservice is able to handle. If I reach this point in the project, then I will have to do more research on tools and libraries that will enable me to easily perform these test.
 
 ## __*Technology*__
 The technology stack that will be used is listed below:
@@ -85,7 +85,7 @@ The technology stack that will be used is listed below:
 Solving a problem that has already been solved, is not a good use of development time. For this reason, I will be utilizing a wide array of libraries. Many of these libraries will be included in the Go standard library. Below is a list of libraries that I plan to use and their use case, although more may be added in the future as problems arise, some replaced if better alternatives are found, and others as inspiration:
 
 * gorilla/mux - implements a request router and dispatcher for matching incoming request to their respective handler
-* cors - Used to handle cross origin domain sharing that is blocked by the browser
+* cors - CORS is a net/http handler implementing Cross Origin Resource Sharing W3 specification in Golang
 * go-geo - This is a library for manipulating geometric shapes (Primary spherical). This has a partial implementation of the S2 solution mentioned previously. This isn't a complete implementation, so this may or may not be used upon further research.
 * dep - go dependency management tool
 * rtreego - A library for efficiently storing and querying spatial data
@@ -98,7 +98,7 @@ The main personal challenges of this project isn't in developing the API, but ra
 
 In every project I have worked on dealing with HTTP request, I have always run into CORS (Cross Origin Resource Sharing) issues. For security reasons, browsers restrict cross-origin HTTP requests initiated from within scripts. Problems can quickly arise from this security precaution while testing communication between the front-end and backend of an application. I have solved this problem many times, and I am using a library mentioned previously to help solve this issue before it arises.
 
-I lack experience in developing high concurrent services, so I expect to run into roadblocks dealing with concurrency within the application. I plan to overcome this through research and reading about concurrent design patterns. Also, by reaching out for help with the professor and any other teachers that may be able to help. Another option is to use stackoverflow. Ultimately I will seek guidance from people more knowledgeable than myself if I run into any roadblocks. 
+I lack experience in developing high concurrent services, so I expect to run into roadblocks dealing with concurrency within the application. I plan to overcome this through research and reading about concurrent design patterns. Also, by reaching out for help with the professor and any other teachers that may be able to help. Another option is to use stackoverflow. Ultimately, I will seek guidance from people more knowledgeable than myself if I run into any roadblocks. 
 
 ## *Algorithm and Data Structure Appendix*
 
