@@ -23,7 +23,7 @@ type Message struct {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Welcome, %!", r.URL.Path[1:])
+    fmt.Fprintf(w, "Welcome, %s", r.URL.Path[1:])
 }
 
 func getPosition(w http.ResponseWriter, r *http.Request) {

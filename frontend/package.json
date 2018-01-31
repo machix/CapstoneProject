@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.17.1",
+    "google-maps-react": "^1.1.2",
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^1.1.1",
     "mocha": "^5.0.0",
