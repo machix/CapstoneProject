@@ -1,0 +1,24 @@
+matrix:
+  include:
+    - language: node_js
+      node_js:
+        - "stable"
+      before_script:
+        - cd frontend #Change directory into correct frontend folder
+      cache:
+        directories:
+          - node_modules #Cache node_modules for faster builds
+        script:
+          - npm test #Runs Tests
+          - npm run build #Creats a production build
+
+    - language: go
+      before_script:
+        - cd backend #Change directory into correct backend folder
+      script:
+        - go test . #Run go test in backend folder
+
+
+notifications:
+  email:
+    - cochranjm@appstate.edu
