@@ -5,9 +5,12 @@ matrix:
         - "stable"
       before_script:
         - cd frontend #Change directory into correct frontend folder
+        - npm install
       cache:
         directories:
           - node_modules #Cache node_modules for faster builds
+        script:
+          - npm test #Runs Tests
 
     - language: go
       before_script:
