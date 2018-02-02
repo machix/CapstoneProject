@@ -1,9 +1,10 @@
 package main
- 
+
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
-	"encoding/json"
+
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
@@ -14,7 +15,7 @@ func main() {
 	router.HandleFunc("/", handler)
 	router.HandleFunc("/position", getPosition).Methods("GET")
 
-	corsRouter := cors.Default().Handler(router);
+	corsRouter := cors.Default().Handler(router)
 	http.ListenAndServe(":8000", corsRouter)
 }
 
@@ -23,16 +24,16 @@ type Message struct {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Welcome, %s", r.URL.Path[1:])
+	fmt.Fprintf(w, "Welcome, %s", r.URL.Path[1:])
 }
 
 func getPosition(w http.ResponseWriter, r *http.Request) {
 	m := Message{"Soon you will get some really cool info herer! It will be very cool!"}
-    b, err := json.Marshal(m)
- 
-    errorCheck(err)
- 
-    w.Write(b)
+	b, err := json.Marshal(m)
+
+	errorCheck(err)
+
+	w.Write(b)
 }
 
 func errorCheck(e error) {

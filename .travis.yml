@@ -14,7 +14,7 @@ matrix:
 
     - language: go
       before_script:
-        - cd backend #Change directory into correct backend folder
+        - cd backend/test #Change directory into correct backend folder
       script:
         - go test . #Run go test in backend folder
 
