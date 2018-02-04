@@ -19,26 +19,35 @@ class App extends Component {
     return (
       <MuiThemeProvider>
         <div>
-          <RaisedButton label="Get Request" onClick={() => this.fetchBasicEndpoint()} />
+          <RaisedButton label="Get Request" onClick={() => this.fetchBasicEndpoint("")} />
           <br />
           <TextField value={this.state.getRequestResponse} />
+          <br />
+          <RaisedButton label="Get Position Endpoint" onClick={() => this.fetchBasicEndpoint("/position")} />
+          <br />
+          <TextField value={this.state.getRequestPositionResponse} />
         </div>
-        </MuiThemeProvider>
-        );
+      </MuiThemeProvider>
+    );
   }
 
   //Method for testing communication with the rudimentary API
-  fetchBasicEndpoint() {
-      var url = 'http://159.203.178.86:8000';
-      axios.get(url)
-        .then(response => {
-          console.log(response.data);
+  fetchBasicEndpoint(endpoint) {
+    var url = 'http://159.203.178.86:8000' + endpoint;
+    axios.get(url)
+      .then(response => {
+        console.log(response.data);
         var res = response.data;
-          this.setState({getRequestResponse: res});
-        })
-        .catch(error => {
-          console.log(error);
-        })
+        if (endpoint == "/position") {
+          var responseString = res['Text'];
+          this.setState({getRequestPositionResponse: responseString})
+        } else {
+          this.setState({ getRequestResponse: res });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
   }
 }
 
