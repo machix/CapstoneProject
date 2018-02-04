@@ -1,45 +1,54 @@
 import React, { Component } from 'react';
 import './App.css';
-import { geolocated } from 'react-geolocated';
-import Maps from './components/Map/';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import axios from 'axios';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      getRequestResponse: '',
+      getRequestPositionResponse: ''
+    }
+  }
+
   render() {
     return (
-        !this.props.isGeolocationAvailable
-        ? <div>Your browser does not support Geolocation</div>
-        : !this.props.isGeolocationEnabled
-          ? <div>Geolocation is not enabled</div>
-        : this.props.coords
-            ? <table>
-          <tbody>
-            <tr><td>latitude</td><td>{this.props.coords.latitude}</td></tr>
-            <tr><td>longitude</td><td>{this.props.coords.longitude}</td></tr>
-            <tr><td>altitude</td><td>{this.props.coords.altitude}</td></tr>
-            <Maps />
-          </tbody>
-        </table>
-        : <div>Getting the location data&hellip; </div>
+      <MuiThemeProvider>
+        <div>
+          <RaisedButton label="Get Request" onClick={() => this.fetchBasicEndpoint("")} />
+          <br />
+          <TextField value={this.state.getRequestResponse} />
+          <br />
+          <RaisedButton label="Get Position Endpoint" onClick={() => this.fetchBasicEndpoint("/position")} />
+          <br />
+          <TextField value={this.state.getRequestPositionResponse} />
+        </div>
+      </MuiThemeProvider>
     );
   }
 
   //Method for testing communication with the rudimentary API
-  fetchCoordinateData() {
-    //TODO: Add URL for digital ocean droplet here
-    //   var url = '';
-    //   axios.get(url)
-    //     .then(response => {
-    //       console.log(response);
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //     })
+  fetchBasicEndpoint(endpoint) {
+    var url = 'http://159.203.178.86:8000' + endpoint;
+    axios.get(url)
+      .then(response => {
+        console.log(response.data);
+        var res = response.data;
+        if (endpoint == "/position") {
+          var responseString = res['Text'];
+          this.setState({getRequestPositionResponse: responseString})
+        } else {
+          this.setState({ getRequestResponse: res });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
   }
 }
 
-export default geolocated({
-  positionOptions: {
-    enableHighAccuracy: false,
-  },
-  userDecisionTimeout: 5000,
-})(App);
+export default App;
