@@ -14,6 +14,9 @@ func main() {
 
 	router.HandleFunc("/", handler)
 	router.HandleFunc("/position", getPosition).Methods("GET")
+	router.HandleFunc("/postPosition", postPosition).Methods("POST")
+	router.HandleFunc("/deletePosition", deletePosition).Methods("DELETE")
+	router.HandleFunc("/updatePosition", updatePosition).Methods("UPDATE")
 
 	corsRouter := cors.Default().Handler(router)
 	http.ListenAndServe(":8000", corsRouter)
@@ -34,6 +37,18 @@ func getPosition(w http.ResponseWriter, r *http.Request) {
 	errorCheck(err)
 
 	w.Write(b)
+}
+
+func postPosition(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func deletePosition(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func updatePosition(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func errorCheck(e error) {
