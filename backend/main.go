@@ -14,9 +14,6 @@ type Message struct {
 	Text string
 }
 
-// Locations to be posted to the database
-var locations []Location
-
 func main() {
 	router := mux.NewRouter()
 
@@ -47,12 +44,7 @@ func getPosition(w http.ResponseWriter, r *http.Request) {
 
 // Post a new latitude and longitude position to the database
 func postPosition(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	var location Location
-	_ = json.NewDecoder(r.Body).Decode(&location)
-	location.ID = params["id"]
-	locations = append(locations, location)
-	json.NewEncoder(w).Encode(locations)
+	//TODO: Implement post position function
 }
 
 // Deletes a latitude and longitude position in the database
