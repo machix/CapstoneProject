@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,33 +10,11 @@ import (
 	"github.com/rs/cors"
 )
 
-// Location struct that represents data stored in the database
-type Location struct {
-	ID        string  `json:"id,omitempty"`
-	Latitude  float32 `json:"latitude,omitempty"`
-	Longitude float32 `json:"longitude,omitempty"`
-}
-
 type Message struct {
 	Text string
 }
 
-const (
-	DB_USER     = "postgres"
-	DB_PASSWORD = "postgres"
-	DB_NAME     = "test"
-)
-
-// Locations to be posted to the database
-var locations []Location
-
 func main() {
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-		DB_USER, DB_PASSWORD, DB_NAME)
-	db, err := sql.Open("postgres", dbinfo)
-	errorCheck(err)
-	defer db.Close()
-
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", handler)
@@ -67,12 +44,7 @@ func getPosition(w http.ResponseWriter, r *http.Request) {
 
 // Post a new latitude and longitude position to the database
 func postPosition(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	var location Location
-	_ = json.NewDecoder(r.Body).Decode(&location)
-	location.ID = params["id"]
-	locations = append(locations, location)
-	json.NewEncoder(w).Encode(locations)
+	//TODO: Implement post position function
 }
 
 // Deletes a latitude and longitude position in the database
