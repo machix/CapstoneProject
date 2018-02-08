@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,33 +10,14 @@ import (
 	"github.com/rs/cors"
 )
 
-// Location struct that represents data stored in the database
-type Location struct {
-	ID        string  `json:"id,omitempty"`
-	Latitude  float32 `json:"latitude,omitempty"`
-	Longitude float32 `json:"longitude,omitempty"`
-}
-
 type Message struct {
 	Text string
 }
-
-const (
-	DB_USER     = "postgres"
-	DB_PASSWORD = "postgres"
-	DB_NAME     = "test"
-)
 
 // Locations to be posted to the database
 var locations []Location
 
 func main() {
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-		DB_USER, DB_PASSWORD, DB_NAME)
-	db, err := sql.Open("postgres", dbinfo)
-	errorCheck(err)
-	defer db.Close()
-
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", handler)
