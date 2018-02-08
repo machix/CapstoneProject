@@ -20,5 +20,7 @@ type Store struct {
 }
 
 type StoreLocation struct {
-	//geom point
+	ClientID  uint32  `json:"id,omitempty"`
+	Latitude  float32 `json:"latitude,omitempty"`
+	Longitude float32 `json:"longitude,omitempty"`
 }
