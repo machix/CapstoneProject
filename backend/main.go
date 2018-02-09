@@ -9,6 +9,8 @@ import (
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
+
+	"backend/database"
 )
 
 type User struct {
@@ -25,7 +27,7 @@ var db *sql.DB
 
 func main() {
 	router := mux.NewRouter()
-	db = connectDb()
+	db := database.ConnectDb()
 
 	router.HandleFunc("/", handler)
 	router.HandleFunc("/position", getPosition).Methods("GET")

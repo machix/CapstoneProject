@@ -19,7 +19,7 @@ const (
 )
 
 // Connect to the postgres database
-func connectDb() *sql.DB {
+func ConnectDb() *sql.DB {
 	config := dbConfig()
 	var err error
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
