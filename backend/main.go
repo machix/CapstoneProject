@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -10,12 +11,21 @@ import (
 	"github.com/rs/cors"
 )
 
-type Message struct {
-	Text string
+type User struct {
+	ID        uint32
+	FirstName string
+	LastName  string
 }
+
+type users struct {
+	UserSummary []User
+}
+
+var db *sql.DB
 
 func main() {
 	router := mux.NewRouter()
+	db = connectDb()
 
 	router.HandleFunc("/", handler)
 	router.HandleFunc("/position", getPosition).Methods("GET")
@@ -34,12 +44,56 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 // This is a method for testing response from the API
 func getPosition(w http.ResponseWriter, r *http.Request) {
-	m := Message{"Soon you will get some really cool info herer! It will be very cool!"}
-	b, err := json.Marshal(m)
+	us := users{}
+	err := queryPosition(&us)
 
-	errorCheck(err)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
 
-	w.Write(b)
+	out, err := json.Marshal(us)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
+}
+
+//Query the db to fetch data about user's position
+func queryPosition(u *users) error {
+	rows, err := db.Query(
+		`SELECT id, first_name, last_name
+		 FROM users`)
+
+	//Return error from sql query
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+
+	//Loop through the database query
+	for rows.Next() {
+		tempUser := User{}
+		err = rows.Scan(
+			&tempUser.ID,
+			&tempUser.FirstName,
+			&tempUser.LastName)
+
+		if err != nil {
+			return err
+		}
+
+		u.UserSummary = append(u.UserSummary, tempUser)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Post a new latitude and longitude position to the database
