@@ -6,15 +6,16 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/NaturalFractals/CapstoneProject/backend/database"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
 )
 
 type User struct {
-	ID        uint32
-	FirstName string
-	LastName  string
+	id        uint32
+	latitude  float32
+	longitude float32
 }
 
 type users struct {
@@ -25,7 +26,6 @@ var db *sql.DB
 
 func main() {
 	router := mux.NewRouter()
-	//db := database.ConnectDb()
 
 	router.HandleFunc("/", handler)
 	router.HandleFunc("/position", getPosition).Methods("GET")
@@ -63,9 +63,10 @@ func getPosition(w http.ResponseWriter, r *http.Request) {
 
 //Query the db to fetch data about user's position
 func queryPosition(u *users) error {
+	db := database.ConnectDb()
 	rows, err := db.Query(
-		`SELECT id, first_name, last_name
-		 FROM users`)
+		`SELECT *
+		 FROM "USER_LOCATION"`)
 
 	//Return error from sql query
 	if err != nil {
@@ -78,9 +79,9 @@ func queryPosition(u *users) error {
 	for rows.Next() {
 		tempUser := User{}
 		err = rows.Scan(
-			&tempUser.ID,
-			&tempUser.FirstName,
-			&tempUser.LastName)
+			&tempUser.id,
+			&tempUser.latitude,
+			&tempUser.longitude)
 
 		if err != nil {
 			return err
@@ -98,7 +99,31 @@ func queryPosition(u *users) error {
 
 // Post a new latitude and longitude position to the database
 func postPosition(w http.ResponseWriter, r *http.Request) {
-	//TODO: Implement post position function
+	us := users{}
+	err := queryPostPosition(&us)
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	out, err := json.Marshal(us)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
+}
+
+// Query the db to post information about the user's position
+func queryPostPosition(u *users) error {
+	//db := database.ConnectDb()
+	// rows, err := db.Query(
+	// 	`INSERT INTO USER_LOCATION (id, latitude, longitude)
+	// 	 VALUES (test, 3.45322, 3.23523)`)
+	err := fmt.Errorf("")
+	return err
 }
 
 // Deletes a latitude and longitude position in the database
