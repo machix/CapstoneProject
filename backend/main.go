@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"./database"
+	"github.com/NaturalFractals/CapstoneProject/backend/database"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
@@ -99,7 +99,31 @@ func queryPosition(u *users) error {
 
 // Post a new latitude and longitude position to the database
 func postPosition(w http.ResponseWriter, r *http.Request) {
-	//TODO: Implement post position function
+	us := users{}
+	err := queryPostPosition(&us)
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	out, err := json.Marshal(us)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
+}
+
+// Query the db to post information about the user's position
+func queryPostPosition(u *users) error {
+	db := database.ConnectDb()
+	rows, err := db.Query(
+		`INSERT INTO USER_LOCATION (id, latitude, longitude)
+		 VALUES (test, 3.45322, 3.23523)`)
+
+	return err
 }
 
 // Deletes a latitude and longitude position in the database
