@@ -118,11 +118,11 @@ func postPosition(w http.ResponseWriter, r *http.Request) {
 
 // Query the db to post information about the user's position
 func queryPostPosition(u *users) error {
-	db := database.ConnectDb()
-	rows, err := db.Query(
-		`INSERT INTO USER_LOCATION (id, latitude, longitude)
-		 VALUES (test, 3.45322, 3.23523)`)
-
+	//db := database.ConnectDb()
+	// rows, err := db.Query(
+	// 	`INSERT INTO USER_LOCATION (id, latitude, longitude)
+	// 	 VALUES (test, 3.45322, 3.23523)`)
+	err := fmt.Errorf("")
 	return err
 }
 
