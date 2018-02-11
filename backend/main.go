@@ -128,12 +128,52 @@ func queryPostPosition(u *users) error {
 
 // Deletes a latitude and longitude position in the database
 func deletePosition(w http.ResponseWriter, r *http.Request) {
-	//TODO: Implement delete from database
+	us := users{}
+	err := queryPostPosition(&us)
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	out, err := json.Marshal(us)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
+}
+
+// Queries the database to delete the user's location
+func deletePositionQuery(u *users) error {
+	err := fmt.Errorf("")
+	return err
 }
 
 // Updates a latitude and longitude position in the database
 func updatePosition(w http.ResponseWriter, r *http.Request) {
-	//TODO: Implement update to database
+	us := users{}
+	err := updatePositionQuery(&us)
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	out, err := json.Marshal(us)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
+}
+
+// Queries the database to update the user's location position
+func updatePositionQuery(u *users) error {
+	err := fmt.Errorf("")
+	return err
 }
 
 // Method to handle all error checking
