@@ -5,15 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/NaturalFractals/CapstoneProject/backend/model"
 	_ "github.com/lib/pq"
-	"github.com/mattermost/platform/model"
 )
 
 var db *sql.DB
-
-type users struct {
-	UserSummary []model.User
-}
 
 const (
 	dbhost = "DBHOST"
@@ -86,7 +82,7 @@ func dbConfig() map[string]string {
 }
 
 //Query the db to fetch data about user's position
-func QueryPosition(u *model.User) error {
+func QueryPosition(u *model.Summary) error {
 	rows, err := db.Query(
 		`SELECT *
 		 FROM "USER_LOCATION"`)
@@ -102,9 +98,9 @@ func QueryPosition(u *model.User) error {
 	for rows.Next() {
 		tempUser := model.User{}
 		err = rows.Scan(
-			&tempUser.id,
-			&tempUser.latitude,
-			&tempUser.longitude)
+			&tempUser.Id,
+			&tempUser.Latitude,
+			&tempUser.Longitude)
 
 		if err != nil {
 			return err
@@ -118,6 +114,28 @@ func QueryPosition(u *model.User) error {
 		return err
 	}
 	return nil
+}
+
+// Query the db to post information about the user's position
+func QueryPostPosition(u *model.User) error {
+	//db := database.ConnectDb()
+	// rows, err := db.Query(
+	// 	`INSERT INTO USER_LOCATION (id, latitude, longitude)
+	// 	 VALUES (test, 3.45322, 3.23523)`)
+	err := fmt.Errorf("")
+	return err
+}
+
+// Queries the database to delete the user's location
+func QueryDeletePosition(u *model.User) error {
+	err := fmt.Errorf("")
+	return err
+}
+
+// Queries the database to update the user's location position
+func QueryUpdatePosition(u *model.User) error {
+	err := fmt.Errorf("")
+	return err
 }
 
 // Method to handle all error checking
