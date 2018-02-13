@@ -1,11 +1,17 @@
 package model
 
-import "time"
+import (
+	"time"
+)
+
+type Summary struct {
+	UserSummary []User
+}
 
 type User struct {
-	id        uint32
-	latitude  float32
-	longitude float32
+	Id        uint32
+	Latitude  float32
+	Longitude float32
 }
 
 type UserInfo struct {
