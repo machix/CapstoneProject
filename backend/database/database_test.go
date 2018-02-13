@@ -55,5 +55,15 @@ func TestDatabaseDeleteQuery(t *testing.T) {
 
 // Test database update query
 func TestDatabaseUpdateQuery(t *testing.T) {
-	//Unit test for updating database
+	db, mock, err := sqlmock.New()
+
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+
+	sqlmock.NewRows([]string{"Id", "Latitude", "Longitude"}).AddRow(1, 4.5678, 5.4567)
+
+	mock.ExpectBegin()
+	mock.ExpectExec("UPDATE USERLOCATION").WillReturnResult(sqlmock.NewResult(1, 1))
 }
