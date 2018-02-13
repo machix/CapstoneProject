@@ -3,6 +3,7 @@ package database
 import (
 	"testing"
 
+	"github.com/NaturalFractals/CapstoneProject/backend/model"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
@@ -14,18 +15,21 @@ func TestDatabaseConnect(t *testing.T) {
 // Test get request to database
 func TestDatabaseSelectQuery(t *testing.T) {
 	db, mock, err := sqlmock.New()
+
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	defer db.Close()
 
+	rows := sqlmock.NewRows([]string{"Id", "Latitude", "Longitude"}).AddRow(1, 4.5678, 5.4567)
+
 	mock.ExpectBegin()
-	mock.ExpectExec("UPDATE products").WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec("INSERT INTO product_viewers").WithArgs(2, 3).WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectCommit()
+	mock.ExpectQuery(`[SELECT * FROM USER_LOCATION]`).WillReturnRows(rows)
+
+	tempSummary := model.Summary{}
 
 	// Test QueryPosition function
-	if err = QueryPosition(db, 2, 3); err != nil {
+	if err = QueryPosition(&tempSummary, db); err != nil {
 		t.Errorf("error was not expected while updating stats: %s", err)
 	}
 
@@ -37,7 +41,16 @@ func TestDatabaseSelectQuery(t *testing.T) {
 
 // Test database delete query
 func TestDatabaseDeleteQuery(t *testing.T) {
-	//Unit test for deleting from the database
+	db, mock, err := sqlmock.New()
+
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+
+	sqlmock.NewRows([]string{"Id", "Latitude", "Longitude"}).AddRow(1, 4.5678, 5.4567)
+
+	mock.ExpectBegin()
 }
 
 // Test database update query

@@ -9,8 +9,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
-
 const (
 	dbhost = "DBHOST"
 	dbport = "DBPORT"
@@ -21,6 +19,7 @@ const (
 
 // Connect to the postgres database
 func ConnectDb() *sql.DB {
+	var db *sql.DB
 	config := dbConfig()
 	var err error
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
@@ -82,13 +81,20 @@ func dbConfig() map[string]string {
 }
 
 //Query the db to fetch data about user's position
-func QueryPosition(u *model.Summary) error {
-	rows, err := db.Query(
+func QueryPosition(u *model.Summary, db *sql.DB) error {
+	tx, err := db.Begin()
+
+	if err != nil {
+		return err
+	}
+
+	rows, err := tx.Query(
 		`SELECT *
-		 FROM "USER_LOCATION"`)
+		 FROM USER_LOCATION`)
 
 	//Return error from sql query
 	if err != nil {
+		tx.Rollback()
 		return err
 	}
 
@@ -117,7 +123,7 @@ func QueryPosition(u *model.Summary) error {
 }
 
 // Query the db to post information about the user's position
-func QueryPostPosition(u *model.User) error {
+func QueryPostPosition(u *model.User, db *sql.DB) error {
 	//db := database.ConnectDb()
 	// rows, err := db.Query(
 	// 	`INSERT INTO USER_LOCATION (id, latitude, longitude)
@@ -127,13 +133,13 @@ func QueryPostPosition(u *model.User) error {
 }
 
 // Queries the database to delete the user's location
-func QueryDeletePosition(u *model.User) error {
+func QueryDeletePosition(u *model.User, db *sql.DB) error {
 	err := fmt.Errorf("")
 	return err
 }
 
 // Queries the database to update the user's location position
-func QueryUpdatePosition(u *model.User) error {
+func QueryUpdatePosition(u *model.User, db *sql.DB) error {
 	err := fmt.Errorf("")
 	return err
 }
