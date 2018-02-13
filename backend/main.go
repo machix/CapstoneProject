@@ -9,20 +9,11 @@ import (
 	"net/http"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/database"
+	"github.com/NaturalFractals/CapstoneProject/backend/model"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
 )
-
-type User struct {
-	id        uint32
-	latitude  float32
-	longitude float32
-}
-
-type users struct {
-	UserSummary []User
-}
 
 var db *sql.DB
 
@@ -46,7 +37,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 // This is a method for testing response from the API
 func getPosition(w http.ResponseWriter, r *http.Request) {
-	us := users{}
+	us := model.User{}
 	err := database.QueryPosition(&us)
 
 	if err != nil {
@@ -65,7 +56,7 @@ func getPosition(w http.ResponseWriter, r *http.Request) {
 
 // Post a new latitude and longitude position to the database
 func postPosition(w http.ResponseWriter, r *http.Request) {
-	us := users{}
+	us := model.User{}
 	err := queryPostPosition(&us)
 
 	if err != nil {
@@ -83,7 +74,7 @@ func postPosition(w http.ResponseWriter, r *http.Request) {
 }
 
 // Query the db to post information about the user's position
-func queryPostPosition(u *users) error {
+func queryPostPosition(u *model.User) error {
 	//db := database.ConnectDb()
 	// rows, err := db.Query(
 	// 	`INSERT INTO USER_LOCATION (id, latitude, longitude)
@@ -94,7 +85,7 @@ func queryPostPosition(u *users) error {
 
 // Deletes a latitude and longitude position in the database
 func deletePosition(w http.ResponseWriter, r *http.Request) {
-	us := users{}
+	us := model.User{}
 	err := queryPostPosition(&us)
 
 	if err != nil {
@@ -112,14 +103,14 @@ func deletePosition(w http.ResponseWriter, r *http.Request) {
 }
 
 // Queries the database to delete the user's location
-func deletePositionQuery(u *users) error {
+func deletePositionQuery(u *model.User) error {
 	err := fmt.Errorf("")
 	return err
 }
 
 // Updates a latitude and longitude position in the database
 func updatePosition(w http.ResponseWriter, r *http.Request) {
-	us := users{}
+	us := model.User{}
 	err := updatePositionQuery(&us)
 
 	if err != nil {
@@ -137,7 +128,7 @@ func updatePosition(w http.ResponseWriter, r *http.Request) {
 }
 
 // Queries the database to update the user's location position
-func updatePositionQuery(u *users) error {
+func updatePositionQuery(u *model.User) error {
 	err := fmt.Errorf("")
 	return err
 }

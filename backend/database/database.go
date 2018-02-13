@@ -6,15 +6,10 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
+	"github.com/mattermost/platform/model"
 )
 
 var db *sql.DB
-
-type User struct {
-	id        uint32
-	latitude  float32
-	longitude float32
-}
 
 type users struct {
 	UserSummary []User
@@ -91,7 +86,7 @@ func dbConfig() map[string]string {
 }
 
 //Query the db to fetch data about user's position
-func QueryPosition(u *users) error {
+func QueryPosition(u *model.User) error {
 	rows, err := db.Query(
 		`SELECT *
 		 FROM "USER_LOCATION"`)
