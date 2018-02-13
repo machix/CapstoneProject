@@ -9,8 +9,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
-
 const (
 	dbhost = "DBHOST"
 	dbport = "DBPORT"
@@ -21,6 +19,7 @@ const (
 
 // Connect to the postgres database
 func ConnectDb() *sql.DB {
+	var db *sql.DB
 	config := dbConfig()
 	var err error
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
@@ -29,7 +28,6 @@ func ConnectDb() *sql.DB {
 		config[dbuser], config[dbpass], config[dbname])
 
 	db, err = sql.Open("postgres", psqlInfo)
-
 	if err != nil {
 		panic(err)
 	}
@@ -82,13 +80,17 @@ func dbConfig() map[string]string {
 }
 
 //Query the db to fetch data about user's position
-func QueryPosition(u *model.Summary) error {
-	rows, err := db.Query(
-		`SELECT *
-		 FROM "USER_LOCATION"`)
-
-	//Return error from sql query
+func QueryPosition(u *model.Summary, db *sql.DB) error {
+	tx, err := db.Begin()
 	if err != nil {
+		return err
+	}
+
+	rows, err := tx.Query(
+		`SELECT *
+		 FROM USER_LOCATION`)
+	if err != nil {
+		tx.Rollback()
 		return err
 	}
 
@@ -113,34 +115,84 @@ func QueryPosition(u *model.Summary) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 // Query the db to post information about the user's position
-func QueryPostPosition(u *model.User) error {
-	//db := database.ConnectDb()
-	// rows, err := db.Query(
-	// 	`INSERT INTO USER_LOCATION (id, latitude, longitude)
-	// 	 VALUES (test, 3.45322, 3.23523)`)
-	err := fmt.Errorf("")
-	return err
+func PostPosition(u *model.User, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := "INSERT INTO USER_LOCATION (Id, Latitude, Longitude) values (?, ?, ?)"
+
+	userLocationPost, err := tx.Prepare(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	defer userLocationPost.Close()
+
+	_, err = userLocationPost.Exec(u.Id, u.Latitude, u.Longitude)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
 }
 
 // Queries the database to delete the user's location
-func QueryDeletePosition(u *model.User) error {
-	err := fmt.Errorf("")
-	return err
+func DeletePosition(u *model.User, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := "DELETE Id=? FROM USER_LOCATION"
+
+	userLocationDelete, err := tx.Prepare(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	defer userLocationDelete.Close()
+
+	_, err = userLocationDelete.Exec(u.Id)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
 }
 
 // Queries the database to update the user's location position
-func QueryUpdatePosition(u *model.User) error {
-	err := fmt.Errorf("")
-	return err
-}
-
-// Method to handle all error checking
-func errorCheck(e error) {
-	if e != nil {
-		panic(e)
+func UpdatePosition(u *model.User, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
 	}
+
+	sqlStmt := "UPDATE USER_LOCATION SET Latitude=6.7890"
+
+	userLocationUpdate, err := tx.Prepare(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	defer userLocationUpdate.Close()
+
+	_, err = tx.Exec(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
 }

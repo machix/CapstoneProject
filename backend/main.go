@@ -3,6 +3,7 @@ package main
 //go-sqlmock library for testing
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -34,8 +35,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 // This is a method for testing response from the API
 func getPosition(w http.ResponseWriter, r *http.Request) {
+	var db *sql.DB
 	us := model.Summary{}
-	err := database.QueryPosition(&us)
+	err := database.QueryPosition(&us, db)
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
