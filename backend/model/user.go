@@ -3,6 +3,12 @@ package model
 import "time"
 
 type User struct {
+	id        uint32
+	latitude  float32
+	longitude float32
+}
+
+type UserInfo struct {
 	ID        uint32    `db:"id" bson:"id,omitempty"`
 	FirstName string    `db:"first_name" bson:"first_name"`
 	LastName  string    `db:"last_name" bson:"last_name"`
