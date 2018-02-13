@@ -12,7 +12,7 @@ import (
 var db *sql.DB
 
 type users struct {
-	UserSummary []User
+	UserSummary []model.User
 }
 
 const (
@@ -100,7 +100,7 @@ func QueryPosition(u *model.User) error {
 
 	//Loop through the database query
 	for rows.Next() {
-		tempUser := User{}
+		tempUser := model.User{}
 		err = rows.Scan(
 			&tempUser.id,
 			&tempUser.latitude,
