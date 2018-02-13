@@ -1,5 +1,7 @@
 package main
 
+//go-sqlmock library for testing
+
 import (
 	"database/sql"
 	"encoding/json"
@@ -45,7 +47,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 // This is a method for testing response from the API
 func getPosition(w http.ResponseWriter, r *http.Request) {
 	us := users{}
-	err := queryPosition(&us)
+	err := database.QueryPosition(&us)
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -59,42 +61,6 @@ func getPosition(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, string(out))
-}
-
-//Query the db to fetch data about user's position
-func queryPosition(u *users) error {
-	db := database.ConnectDb()
-	rows, err := db.Query(
-		`SELECT *
-		 FROM "USER_LOCATION"`)
-
-	//Return error from sql query
-	if err != nil {
-		return err
-	}
-
-	defer rows.Close()
-
-	//Loop through the database query
-	for rows.Next() {
-		tempUser := User{}
-		err = rows.Scan(
-			&tempUser.id,
-			&tempUser.latitude,
-			&tempUser.longitude)
-
-		if err != nil {
-			return err
-		}
-
-		u.UserSummary = append(u.UserSummary, tempUser)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // Post a new latitude and longitude position to the database
@@ -128,12 +94,52 @@ func queryPostPosition(u *users) error {
 
 // Deletes a latitude and longitude position in the database
 func deletePosition(w http.ResponseWriter, r *http.Request) {
-	//TODO: Implement delete from database
+	us := users{}
+	err := queryPostPosition(&us)
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	out, err := json.Marshal(us)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
+}
+
+// Queries the database to delete the user's location
+func deletePositionQuery(u *users) error {
+	err := fmt.Errorf("")
+	return err
 }
 
 // Updates a latitude and longitude position in the database
 func updatePosition(w http.ResponseWriter, r *http.Request) {
-	//TODO: Implement update to database
+	us := users{}
+	err := updatePositionQuery(&us)
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	out, err := json.Marshal(us)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
+}
+
+// Queries the database to update the user's location position
+func updatePositionQuery(u *users) error {
+	err := fmt.Errorf("")
+	return err
 }
 
 // Method to handle all error checking

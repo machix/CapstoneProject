@@ -10,6 +10,16 @@ import (
 
 var db *sql.DB
 
+type User struct {
+	id        uint32
+	latitude  float32
+	longitude float32
+}
+
+type users struct {
+	UserSummary []User
+}
+
 const (
 	dbhost = "DBHOST"
 	dbport = "DBPORT"
@@ -78,6 +88,41 @@ func dbConfig() map[string]string {
 	conf[dbpass] = password
 	conf[dbname] = name
 	return conf
+}
+
+//Query the db to fetch data about user's position
+func QueryPosition(u *users) error {
+	rows, err := db.Query(
+		`SELECT *
+		 FROM "USER_LOCATION"`)
+
+	//Return error from sql query
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+
+	//Loop through the database query
+	for rows.Next() {
+		tempUser := User{}
+		err = rows.Scan(
+			&tempUser.id,
+			&tempUser.latitude,
+			&tempUser.longitude)
+
+		if err != nil {
+			return err
+		}
+
+		u.UserSummary = append(u.UserSummary, tempUser)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Method to handle all error checking
