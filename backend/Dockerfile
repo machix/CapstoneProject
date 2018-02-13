@@ -1,9 +1,6 @@
-FROM golang:1.8
+FROM alpine:3.7
 
-WORKDIR /go/src/app
-COPY . .
+COPY geo-api-linux /
 
-RUN go-wrapper download   # "go get -d -v ./..."
-RUN go-wrapper install    # "go install -v ./..."
+CMD [ "/geo-api-linux" ]
 
-CMD ["go-wrapper", "run"] # ["app"]

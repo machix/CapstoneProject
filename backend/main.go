@@ -1,5 +1,7 @@
 package main
 
+//go-sqlmock library for testing
+
 import (
 	"database/sql"
 	"encoding/json"
@@ -45,7 +47,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 // This is a method for testing response from the API
 func getPosition(w http.ResponseWriter, r *http.Request) {
 	us := users{}
-	err := queryPosition(&us)
+	err := database.QueryPosition(&us)
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -59,42 +61,6 @@ func getPosition(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, string(out))
-}
-
-//Query the db to fetch data about user's position
-func queryPosition(u *users) error {
-	db := database.ConnectDb()
-	rows, err := db.Query(
-		`SELECT *
-		 FROM "USER_LOCATION"`)
-
-	//Return error from sql query
-	if err != nil {
-		return err
-	}
-
-	defer rows.Close()
-
-	//Loop through the database query
-	for rows.Next() {
-		tempUser := User{}
-		err = rows.Scan(
-			&tempUser.id,
-			&tempUser.latitude,
-			&tempUser.longitude)
-
-		if err != nil {
-			return err
-		}
-
-		u.UserSummary = append(u.UserSummary, tempUser)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // Post a new latitude and longitude position to the database
