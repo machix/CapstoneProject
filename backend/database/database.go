@@ -178,7 +178,7 @@ func UpdatePosition(u *model.User, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := "UPDATE USER_LOCATION SET Latitude=6.7890"
+	sqlStmt := "UPDATE USER_LOCATION SET Latitude=?"
 
 	userLocationUpdate, err := tx.Prepare(sqlStmt)
 	if err != nil {

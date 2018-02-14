@@ -1,7 +1,5 @@
 package main
 
-//go-sqlmock library for testing
-
 import (
 	"database/sql"
 	"encoding/json"
@@ -14,6 +12,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
 )
+
+var db *sql.DB
 
 func main() {
 	router := mux.NewRouter()
@@ -30,12 +30,11 @@ func main() {
 
 // This is a method that test response from the API
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome, %s", r.URL.Path[1:])
+	fmt.Fprintf(w, "You have been hacked.")
 }
 
 // This is a method for testing response from the API
 func getPosition(w http.ResponseWriter, r *http.Request) {
-	var db *sql.DB
 	us := model.Summary{}
 	err := database.QueryPosition(&us, db)
 
@@ -63,11 +62,4 @@ func deletePosition(w http.ResponseWriter, r *http.Request) {
 
 // Updates a latitude and longitude position in the database
 func updatePosition(w http.ResponseWriter, r *http.Request) {
-}
-
-// Method to handle all error checking
-func errorCheck(e error) {
-	if e != nil {
-		panic(e)
-	}
 }
