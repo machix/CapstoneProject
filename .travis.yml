@@ -13,10 +13,8 @@ matrix:
           - npm test #Runs Tests
 
     - language: go
-      before_script:
-        - cd backend/test #Change directory into correct backend folder
       script:
-        - go test . #Run go test in backend folder
+        - go test ./backend/database && go test ./backend/test #Run go test in backend folder
 
 
 notifications:
