@@ -3,6 +3,14 @@ import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
 import axios from 'axios';
 
 class App extends Component {
@@ -26,6 +34,13 @@ class App extends Component {
           <RaisedButton label="Get Position Endpoint" onClick={() => this.fetchBasicEndpoint("/position")} />
           <br />
           <TextField value={this.state.getRequestPositionResponse} />
+          <br />
+          <RaisedButton label="Search database" onClick={() => this.fetchDatabaseInfo()}/>
+          <br />
+          <RaisedButton label="Get data from Id" onClick={() => this.fetchDatabaseId()}/>
+          <br />
+          <Table>
+          </Table>
         </div>
       </MuiThemeProvider>
     );

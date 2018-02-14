@@ -2,7 +2,6 @@ package database
 
 import (
 	"testing"
-    "fmt"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
@@ -71,13 +70,12 @@ func TestDatabaseUpdateQuery(t *testing.T) {
 	mock.ExpectExec("UPDATE USER_LOCATION SET Latitude=?").WillReturnResult(sqlmock.NewResult(1, 1))
 
 	tempUser := model.User{}
-    
+
 	err = UpdatePosition(&tempUser, db)
 	if err != nil {
 		t.Errorf("Error was not expected while updating stats: %s", err)
 	}
 
-    fmt.Printf("%s, %g, %g", tempUser.Id, tempUser.Latitude, tempUser.Longitude) 
 	err = mock.ExpectationsWereMet()
 	if err != nil {
 		t.Errorf("Expectations were not met: %s", err)
