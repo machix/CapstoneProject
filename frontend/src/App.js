@@ -35,11 +35,20 @@ class App extends Component {
           <br />
           <TextField value={this.state.getRequestPositionResponse} />
           <br />
-          <RaisedButton label="Search database" onClick={() => this.fetchDatabaseInfo()}/>
+          <RaisedButton label="Search database" onClick={() => this.fetchDatabaseInfo()} />
           <br />
-          <RaisedButton label="Get data from Id" onClick={() => this.fetchDatabaseId()}/>
+          <RaisedButton label="Get data from Id" onClick={() => this.fetchDatabaseId()} />
           <br />
           <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderColumn>ID</TableHeaderColumn>
+                <TableHeaderColumn>Latitude</TableHeaderColumn>
+                <TableHeaderColumn>Longitudels
+                
+                </TableHeaderColumn>
+              </TableRow>
+            </TableHeader>
           </Table>
         </div>
       </MuiThemeProvider>
@@ -55,7 +64,7 @@ class App extends Component {
         var res = response.data;
         if (endpoint == "/position") {
           var responseString = res['Text'];
-          this.setState({getRequestPositionResponse: responseString})
+          this.setState({ getRequestPositionResponse: responseString })
         } else {
           this.setState({ getRequestResponse: res });
         }
