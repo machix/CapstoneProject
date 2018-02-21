@@ -29,17 +29,19 @@ class App extends Component {
     return (
       <MuiThemeProvider>
         <div>
-          <RaisedButton label="Get Request" onClick={() => this.fetchBasicEndpoint("")} />
+          <RaisedButton label="Get Request" primary={true} onClick={() => this.fetchBasicEndpoint("")} />
           <br />
           <TextField value={this.state.getRequestResponse} />
           <br />
-          <RaisedButton label="Get Position Endpoint" onClick={() => this.fetchBasicEndpoint("/position")} />
+          <br />
+          <RaisedButton label="Get Position Endpoint" primary={true} onClick={() => this.fetchBasicEndpoint("/position")} />
           <br />
           <TextField value={this.state.getRequestPositionResponse} />
           <br />
-          <RaisedButton label="Search database" onClick={() => this.fetchDatabaseInfo()} />
+          <RaisedButton label="Search database" primary={true}/>
           <br />
-          <RaisedButton label="Get data from Id" onClick={() => this.fetchDatabaseId()} />
+          <br />
+          <RaisedButton label="Get data from Id" primary={true}/>
           <br />
           <Table>
             <TableHeader>
@@ -70,6 +72,15 @@ class App extends Component {
     axios.get(url)
       .then(response => {
         console.log(response.data);
+        var res = response.data;
+        this.state.setState(this.tableData = []);
+        for(var i = 0; i < res.length; i++) {
+          var tempObject;
+          tempObject.Id = res[i].Id;
+          tempObject.Latitude = res[i].Latitude;
+          tempObject.Longitude = res[i].Longitude;
+          this.state.tableData.push(tempObject)
+        }
       })
   }
 
@@ -79,6 +90,15 @@ class App extends Component {
     axios.get(url)
       .then(response => {
         console.log(response.data);
+        var res = response.data;
+        this.state.setState(this.tableData = []);
+        for(var i = 0; i < res.length; i++) {
+          var tempObject;
+          tempObject.Id = res[i].Id;
+          tempObject.Latitude = res[i].Latitude;
+          tempObject.Longitude = res[i].Longitude;
+          this.state.tableData.push(tempObject);
+        }
       })
   }
 
