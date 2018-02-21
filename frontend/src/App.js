@@ -19,7 +19,8 @@ class App extends Component {
 
     this.state = {
       getRequestResponse: '',
-      getRequestPositionResponse: ''
+      getRequestPositionResponse: '',
+      tableData: []
     }
   }
 
@@ -44,10 +45,17 @@ class App extends Component {
               <TableRow>
                 <TableHeaderColumn>ID</TableHeaderColumn>
                 <TableHeaderColumn>Latitude</TableHeaderColumn>
-                <TableHeaderColumn>Longitudels
-                
-                </TableHeaderColumn>
+                <TableHeaderColumn>Longitude</TableHeaderColumn>
               </TableRow>
+              <TableBody>
+                {tableData.map((row, Id) => (
+                  <TableRow key={Id}>
+                    <TableRowColumn>{Id}</TableRowColumn>
+                    <TableRowColumn>{row.Latitude}</TableRowColumn>
+                    <TableRowColumn>{row.Longitude}</TableRowColumn>
+                  </TableRow>
+                ))}
+              </TableBody>
             </TableHeader>
           </Table>
         </div>
