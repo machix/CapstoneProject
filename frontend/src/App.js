@@ -14,6 +14,7 @@ import {
 import axios from 'axios';
 
 class App extends Component {
+
   constructor(props) {
     super(props);
 
@@ -48,7 +49,7 @@ class App extends Component {
                 <TableHeaderColumn>Longitude</TableHeaderColumn>
               </TableRow>
               <TableBody>
-                {tableData.map((row, Id) => (
+                {this.state.tableData.map((row, Id) => (
                   <TableRow key={Id}>
                     <TableRowColumn>{Id}</TableRowColumn>
                     <TableRowColumn>{row.Latitude}</TableRowColumn>
@@ -63,7 +64,25 @@ class App extends Component {
     );
   }
 
-  //Method for testing communication with the rudimentary API
+  // Function for fetching all of the info in the database
+  fetchDatabaseInfo() {
+    var url = 'http://159.203.178.86:8000/getPositions';
+    axios.get(url)
+      .then(response => {
+        console.log(response.data);
+      })
+  }
+
+  // Function for fetching info from the database give ID
+  fetchDatabaseId(id) {
+    var url = 'http://159.203.178.86:8000/getPosition?=ID';
+    axios.get(url)
+      .then(response => {
+        console.log(response.data);
+      })
+  }
+
+  // Function for testing communication with the rudimentary API
   fetchBasicEndpoint(endpoint) {
     var url = 'http://159.203.178.86:8000' + endpoint;
     axios.get(url)
