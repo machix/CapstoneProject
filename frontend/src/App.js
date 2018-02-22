@@ -11,7 +11,9 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import { Grid, Row, Col } from 'react-flexbox-grid';
 import axios from 'axios';
+import Map from "./components/Map";
 
 class App extends Component {
 
@@ -28,40 +30,49 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider>
-        <div>
-          <RaisedButton label="Get Request" primary={true} onClick={() => this.fetchBasicEndpoint("")} />
-          <br />
-          <TextField value={this.state.getRequestResponse} />
-          <br />
-          <br />
-          <RaisedButton label="Get Position Endpoint" primary={true} onClick={() => this.fetchBasicEndpoint("/position")} />
-          <br />
-          <TextField value={this.state.getRequestPositionResponse} />
-          <br />
-          <RaisedButton label="Search database" primary={true}/>
-          <br />
-          <br />
-          <RaisedButton label="Get data from Id" primary={true}/>
-          <br />
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHeaderColumn>ID</TableHeaderColumn>
-                <TableHeaderColumn>Latitude</TableHeaderColumn>
-                <TableHeaderColumn>Longitude</TableHeaderColumn>
-              </TableRow>
-              <TableBody>
-                {this.state.tableData.map((row, Id) => (
-                  <TableRow key={Id}>
-                    <TableRowColumn>{Id}</TableRowColumn>
-                    <TableRowColumn>{row.Latitude}</TableRowColumn>
-                    <TableRowColumn>{row.Longitude}</TableRowColumn>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </TableHeader>
-          </Table>
-        </div>
+        <Grid fluid>
+          <Row>
+            <Col xs={6} md={3}>
+              <RaisedButton label="Get Request" primary={true} onClick={() => this.fetchBasicEndpoint("")} />
+              <br />
+              <TextField value={this.state.getRequestResponse} />
+              <br />
+              <br />
+              <RaisedButton label="Get Position Endpoint" primary={true} onClick={() => this.fetchBasicEndpoint("/position")} />
+              <br />
+              <TextField value={this.state.getRequestPositionResponse} />
+              <br />
+              <RaisedButton label="Search database" primary={true} />
+              <br />
+              <br />
+              <RaisedButton label="Get data from Id" primary={true} />
+              <br />
+            </Col>
+            <Col xs={6} md={3}>
+                <Map/>
+            </Col>
+          </Row>
+          <Row>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHeaderColumn>ID</TableHeaderColumn>
+                  <TableHeaderColumn>Latitude</TableHeaderColumn>
+                  <TableHeaderColumn>Longitude</TableHeaderColumn>
+                </TableRow>
+                <TableBody>
+                  {this.state.tableData.map((row, Id) => (
+                    <TableRow key={Id}>
+                      <TableRowColumn>{Id}</TableRowColumn>
+                      <TableRowColumn>{row.Latitude}</TableRowColumn>
+                      <TableRowColumn>{row.Longitude}</TableRowColumn>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </TableHeader>
+            </Table>
+          </Row>
+        </Grid>
       </MuiThemeProvider>
     );
   }
@@ -74,7 +85,7 @@ class App extends Component {
         console.log(response.data);
         var res = response.data;
         this.state.setState(this.tableData = []);
-        for(var i = 0; i < res.length; i++) {
+        for (var i = 0; i < res.length; i++) {
           var tempObject;
           tempObject.Id = res[i].Id;
           tempObject.Latitude = res[i].Latitude;
@@ -92,7 +103,7 @@ class App extends Component {
         console.log(response.data);
         var res = response.data;
         this.state.setState(this.tableData = []);
-        for(var i = 0; i < res.length; i++) {
+        for (var i = 0; i < res.length; i++) {
           var tempObject;
           tempObject.Id = res[i].Id;
           tempObject.Latitude = res[i].Latitude;
@@ -109,7 +120,7 @@ class App extends Component {
       .then(response => {
         console.log(response.data);
         var res = response.data;
-        if (endpoint == "/position") {
+        if (endpoint === "/position") {
           var responseString = res['Text'];
           this.setState({ getRequestPositionResponse: responseString })
         } else {
