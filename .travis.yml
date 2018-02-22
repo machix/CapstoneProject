@@ -14,7 +14,8 @@ matrix:
 
     - language: go
       script:
-        - go test ./backend/database && go test ./backend/test #Run go test in backend folder
+        - cd backend #Run go test in backend folder
+        - go test ./... #Run all go test
 
 
 notifications:
