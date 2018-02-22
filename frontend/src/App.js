@@ -42,7 +42,7 @@ class App extends Component {
               <br />
               <TextField value={this.state.getRequestPositionResponse} />
               <br />
-              <RaisedButton label="Search database" primary={true} />
+              <RaisedButton label="Load database" primary={true} />
               <br />
               <br />
               <RaisedButton label="Get data from Id" primary={true} />
@@ -52,6 +52,7 @@ class App extends Component {
                 <Map/>
             </Col>
           </Row>
+          <br /><br /><br /><br /><br />
           <Row>
             <Table>
               <TableHeader>
