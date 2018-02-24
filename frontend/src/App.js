@@ -33,15 +33,6 @@ class App extends Component {
         <Grid fluid>
           <Row>
             <Col xs={6} md={3}>
-              <RaisedButton label="Get Request" primary={true} onClick={() => this.fetchBasicEndpoint("")} />
-              <br />
-              <TextField value={this.state.getRequestResponse} />
-              <br />
-              <br />
-              <RaisedButton label="Get Position Endpoint" primary={true} onClick={() => this.fetchBasicEndpoint("/position")} />
-              <br />
-              <TextField value={this.state.getRequestPositionResponse} />
-              <br />
               <RaisedButton label="Load database" primary={true} />
               <br />
               <br />
