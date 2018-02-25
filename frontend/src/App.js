@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
 import {
   Table,
   TableBody,
@@ -33,7 +32,7 @@ class App extends Component {
         <Grid fluid>
           <Row>
             <Col xs={6} md={3}>
-              <RaisedButton label="Load database" primary={true} />
+              <RaisedButton label="Load database" primary={true} onClick={ () => this.fetchDatabaseInfo()}/>
               <br />
               <br />
               <RaisedButton label="Get data from Id" primary={true} />
@@ -71,7 +70,7 @@ class App extends Component {
 
   // Function for fetching all of the info in the database
   fetchDatabaseInfo() {
-    var url = 'http://159.203.178.86:8000/getPositions';
+    var url = 'http://159.203.178.86:8000/position';
     axios.get(url)
       .then(response => {
         console.log(response.data);
