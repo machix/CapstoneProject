@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class Maps extends Component {
     render() {
@@ -47,14 +48,21 @@ class Maps extends Component {
                             zIndex: 1,
                         },
                     }}
+                    onPolygonComplete={(value) => this.savePolygonPoints(value)}
                     />
             </GoogleMap>
             );
         return (
             <div>
                 <MapWithADrawingManager />
+                <RaisedButton label="Save Geofence" primary={true} onClick={(e) => this.savePolygonPoints(e)} />
             </div>
         );
+    }
+
+    savePolygonPoints(polygon) {
+        var locations = polygon.getPaths().getArray();
+        console.log(locations);
     }
 }
 
