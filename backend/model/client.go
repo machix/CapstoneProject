@@ -1,11 +1,13 @@
 package model
 
-import "time"
+import (
+	"time"
+	"github.com/kellydunn/golang-geo"
+)
 
 type ClientPolygon struct {
 	Id        uint32
-	Latitude  float32
-	Longitude float32
+	polygon	  geo.Polygon
 }
 
 type Client struct {

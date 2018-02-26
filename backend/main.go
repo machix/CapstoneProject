@@ -8,6 +8,7 @@ import (
 
 	"github.com/NaturalFractals/CapstoneProject/backend/database"
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
+	"github.com/kellydunn/golang-geo"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
@@ -63,13 +64,7 @@ func postPosition(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	out, err := json.Marshal(us)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	fmt.Fprintf(w, string(out))
+	marshalJson(us, w)
 }
 
 // Deletes a latitude and longitude position in the database
@@ -82,13 +77,7 @@ func deletePosition(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	out, err := json.Marshal(us)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	fmt.Fprintf(w, string(out))
+	marshalJson(us, w)
 }
 
 // Updates a latitude and longitude position in the database
@@ -101,7 +90,22 @@ func updatePosition(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	out, err := json.Marshal(us)
+	marshalJson(us, w)
+}
+
+// Adds polygon to the database for client
+func addPolygon(w http.ResponseWriter, r *http.Request, p *geo.Polygon) {
+	var db = database.ConnectDb()
+	err := database.SavePolygon(p, db)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+}
+
+// Marshals the json and outputs, otherwise outputs error if unsuccesful
+func marshalJson(u model.User, w http.ResponseWriter) {
+	out, err := json.Marshal(u)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

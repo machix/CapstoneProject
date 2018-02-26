@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
+	"github.com/kellydunn/golang-geo"
 	_ "github.com/lib/pq"
 )
 
@@ -197,4 +198,28 @@ func UpdatePosition(u *model.User, db *sql.DB) error {
 	return nil
 }
 
-func SavePolygon() {}
+// Saves points in a polygon that has been drawn on the map
+func SavePolygon(p *geo.Polygon, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := "INSERT INTO CLIENT_POLYGON"
+
+	userPolygonInsert, err := tx.Prepare(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	defer userPolygonInsert.Close()
+
+	_, err = tx.Exec(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
+}
