@@ -55,11 +55,11 @@ class Maps extends Component {
         return (
             <div>
                 <MapWithADrawingManager />
-                <RaisedButton label="Save Geofence" primary={true} onClick={(e) => this.savePolygonPoints(e)} />
             </div>
         );
     }
 
+    // Save the coordinates of the polygon drawn on the map
     savePolygonPoints(polygon) {
         var locations = polygon.getPaths().getArray();
         console.log(locations);
