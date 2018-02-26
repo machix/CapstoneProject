@@ -38,6 +38,7 @@ class App extends Component {
               <br />
               <div>
                 <RaisedButton label="Insert New Point" primary={true} />
+                <br />
                 <TextField placeholder="Id" />
                 <TextField placeholder="Latitude" />
                 <TextField placeholder="Longitude" />
@@ -90,6 +91,11 @@ class App extends Component {
           this.state.tableData.push(tempObject)
         }
       })
+    this.showTable();
+  }
+
+  showTable() {
+    //Show the table once the data is loaded
   }
 
   // Function for fetching info from the database give ID

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class Maps extends Component {
     render() {
@@ -47,6 +48,7 @@ class Maps extends Component {
                             zIndex: 1,
                         },
                     }}
+                    onPolygonComplete={(value) => this.savePolygonPoints(value)}
                     />
             </GoogleMap>
             );
@@ -55,6 +57,12 @@ class Maps extends Component {
                 <MapWithADrawingManager />
             </div>
         );
+    }
+
+    // Save the coordinates of the polygon drawn on the map
+    savePolygonPoints(polygon) {
+        var locations = polygon.getPaths().getArray();
+        console.log(locations);
     }
 }
 
