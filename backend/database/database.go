@@ -196,3 +196,5 @@ func UpdatePosition(u *model.User, db *sql.DB) error {
 
 	return nil
 }
+
+func SavePolygon() {}
