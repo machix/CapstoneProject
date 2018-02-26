@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 import {
   Table,
   TableBody,
@@ -32,14 +33,19 @@ class App extends Component {
         <Grid fluid>
           <Row>
             <Col xs={6} md={3}>
-              <RaisedButton label="Load database" primary={true} onClick={ () => this.fetchDatabaseInfo()}/>
+              <RaisedButton label="Load database" primary={true} onClick={() => this.fetchDatabaseInfo()} />
               <br />
               <br />
-              <RaisedButton label="Get data from Id" primary={true} />
+              <div>
+                <RaisedButton label="Insert New Point" primary={true} />
+                <TextField placeholder="Id" />
+                <TextField placeholder="Latitude" />
+                <TextField placeholder="Longitude" />
+              </div>
               <br />
             </Col>
             <Col xs={6} md={3}>
-                <Map/>
+              <Map />
             </Col>
           </Row>
           <br /><br /><br /><br /><br />
