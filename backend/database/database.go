@@ -223,3 +223,29 @@ func SavePolygon(p *geo.Polygon, db *sql.DB) error {
 
 	return nil
 }
+
+// Returns all polygons associated with client
+func GetPolygons(c *model.Client, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := "SELECT * WHERE id={c.Id}"
+
+	clientPolygonRetrieve, err := tx.Prepare(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	defer clientPolygonRetrieve.Close()
+
+	_, err = tx.Exec(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
+}
