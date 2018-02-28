@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
-	"github.com/kellydunn/golang-geo"
 	_ "github.com/lib/pq"
 )
 
@@ -19,7 +18,7 @@ const (
 )
 
 // Connect to the postgres database
-func ConnectDb() *sql.DB {
+func ConnectUserDb() *sql.DB {
 	var db *sql.DB
 	config := dbConfig()
 	var err error
@@ -188,58 +187,6 @@ func UpdatePosition(u *model.User, db *sql.DB) error {
 	}
 
 	defer userLocationUpdate.Close()
-
-	_, err = tx.Exec(sqlStmt)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return nil
-}
-
-// Saves points in a polygon that has been drawn on the map
-func SavePolygon(p *geo.Polygon, db *sql.DB) error {
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-
-	sqlStmt := "INSERT INTO CLIENT_POLYGON"
-
-	userPolygonInsert, err := tx.Prepare(sqlStmt)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	defer userPolygonInsert.Close()
-
-	_, err = tx.Exec(sqlStmt)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return nil
-}
-
-// Returns all polygons associated with client
-func GetPolygons(c *model.Client, db *sql.DB) error {
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-
-	sqlStmt := "SELECT * WHERE id={c.Id}"
-
-	clientPolygonRetrieve, err := tx.Prepare(sqlStmt)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	defer clientPolygonRetrieve.Close()
 
 	_, err = tx.Exec(sqlStmt)
 	if err != nil {

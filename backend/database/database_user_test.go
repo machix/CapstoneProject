@@ -7,12 +7,12 @@ import (
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
-//Test connection to the AWS Postgres database
-func TestDatabaseConnect(t *testing.T) {
-	//Add Test to test database connection
+// Test connection to the AWS Postgres database
+func TestUserDatabaseConnect(t *testing.T) {
+	// Add Test to test database connection
 }
 
-// Test get request to database
+// Test get request to database for user
 func TestDatabaseSelectQuery(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -39,7 +39,7 @@ func TestDatabaseSelectQuery(t *testing.T) {
 	}
 }
 
-// Test database delete query
+// Test database delete query for user
 func TestDatabaseDeleteQuery(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -54,7 +54,7 @@ func TestDatabaseDeleteQuery(t *testing.T) {
 
 }
 
-// Test database update query
+// Test database update query for user
 func TestDatabaseUpdateQuery(t *testing.T) {
 	db, mock, err := sqlmock.New()
 

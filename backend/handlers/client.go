@@ -8,13 +8,18 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+// ClientHandler represent handler for handling client resource
+type (
+	ClientHandler struct{}
+)
+
 // Adds polygon to the database for client
 func AddPolygon(w http.ResponseWriter, r *http.Request) {
 }
 
 // Retrieve client's polygons(geofences) from the database
 func GetPolygons(w http.ResponseWriter, r *http.Request, c *model.Client) {
-	var db = database.ConnectDb()
+	var db = database.ConnectClientDb()
 	err := database.GetPolygons(c, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -28,14 +33,14 @@ func NewClientHandler() *UserHandler {
 }
 
 // ClientUser retrieves an individual user resource
-func (uh UserHandler) GetClient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func (ch ClientHandler) GetClient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 }
 
 // CreateUser creates a new user resource
-func (uh UserHandler) CreateClient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func (ch ClientHandler) CreateClient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 }
 
 // RemoveClient removes an existing user resource
-func (uh UserHandler) RemoveClient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func (ch ClientHandler) RemoveClient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 }
