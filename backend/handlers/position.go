@@ -1,6 +1,5 @@
 package handlers
 
-
 import (
 	"encoding/json"
 	"fmt"
@@ -17,7 +16,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 // This is a method for testing response from the API
 func GetPosition(w http.ResponseWriter, r *http.Request) {
-	var db = database.ConnectDb()
+	var db = database.ConnectUserDb()
 	us := model.Summary{}
 	err := database.QueryPosition(&us, db)
 
@@ -37,7 +36,7 @@ func GetPosition(w http.ResponseWriter, r *http.Request) {
 
 // Post a new latitude and longitude position to the database
 func PostPosition(w http.ResponseWriter, r *http.Request) {
-	var db = database.ConnectDb()
+	var db = database.ConnectUserDb()
 	us := model.User{}
 	err := database.PostPosition(&us, db)
 	if err != nil {
@@ -50,7 +49,7 @@ func PostPosition(w http.ResponseWriter, r *http.Request) {
 
 // Deletes a latitude and longitude position in the database
 func DeletePosition(w http.ResponseWriter, r *http.Request) {
-	var db = database.ConnectDb()
+	var db = database.ConnectUserDb()
 	us := model.User{}
 	err := database.DeletePosition(&us, db)
 	if err != nil {
@@ -63,7 +62,7 @@ func DeletePosition(w http.ResponseWriter, r *http.Request) {
 
 // Updates a latitude and longitude position in the database
 func UpdatePosition(w http.ResponseWriter, r *http.Request) {
-	var db = database.ConnectDb()
+	var db = database.ConnectUserDb()
 	us := model.User{}
 	err := database.UpdatePosition(&us, db)
 	if err != nil {
