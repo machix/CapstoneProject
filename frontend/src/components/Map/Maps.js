@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
 
 class Maps extends Component {
     render() {
@@ -14,7 +13,7 @@ class Maps extends Component {
 
         const MapWithADrawingManager = compose(
             withProps({
-                googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
+                googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCru0FXiEWV7vQnvQvTNHyQisAi96J2rlI&v=3.exp&libraries=geometry,drawing,places",
                 loadingElement: <div style={{ height: `100%` }} />,
                 containerElement: <div style={{ height: `500px`, width: '1400px' }} />,
                 mapElement: <div style={{ height: `100%` }} />,
@@ -27,7 +26,7 @@ class Maps extends Component {
                 defaultCenter={new google.maps.LatLng(-34.397, 150.644)}
                 >
                 <DrawingManager
-                    defaultDrawingMode={google.maps.drawing.OverlayType.CIRCLE}
+                    defaultDrawingMode={google.maps.drawing.OverlayType.POLYGON}
                     defaultOptions={{
                         drawingControl: true,
                         drawingControlOptions: {
@@ -48,7 +47,7 @@ class Maps extends Component {
                             zIndex: 1,
                         },
                     }}
-                    onPolygonComplete={(value) => this.savePolygonPoints(value)}
+                    onPolygonComplete={(polygon) => this.savePolygonPoints(polygon)}
                     />
             </GoogleMap>
             );
@@ -61,8 +60,11 @@ class Maps extends Component {
 
     // Save the coordinates of the polygon drawn on the map
     savePolygonPoints(polygon) {
-        var locations = polygon.getPaths().getArray();
-        console.log(locations);
+        var locations = (polygon.getPath().getArray());
+        for(var i = 0; i < locations.length; i++) {
+            console.log(locations[i].lat());
+            console.log(locations[i].lng());
+        }
     }
 }
 
