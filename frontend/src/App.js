@@ -16,7 +16,7 @@ class App extends Component {
     this.state = {
       getRequestResponse: '',
       getRequestPositionResponse: '',
-      tableData: [],
+      data: [],
       columns: [
         {
           Header: "Id",
@@ -62,7 +62,7 @@ class App extends Component {
           <Row>
               <div className="Table">
                 <ReactTable
-                  data={this.state.tableData}
+                  data={this.state.data}
                   columns={this.state.columns}
                   />
               </div>
@@ -78,17 +78,20 @@ class App extends Component {
     axios.get(url)
       .then(response => {
         var res = response.data;
-        this.setState({ tableData: [] });
+        this.setState({ data: [] });
+        var tempTableArray = [];
         for (var key in res) {
           if (res.hasOwnProperty(key)) {
             var value = res[key];
             var tempObject = {};
-            tempObject.Id = value[0].Id;
-            tempObject.Latitude = value[0].Latitude;
-            tempObject.Longitude = value[0].Longitude;
-            this.state.tableData.push(tempObject)
+            tempObject.id = value[0].Id;
+            tempObject.latitude = value[0].Latitude;
+            tempObject.longitude = value[0].Longitude;
+            tempTableArray.push(tempObject);
           }
         }
+        this.setState({data: tempTableArray});
+        console.log(this.state.data);
       })
     this.showTable();
   }
@@ -104,14 +107,16 @@ class App extends Component {
       .then(response => {
         console.log(response.data);
         var res = response.data;
-        this.state.setState(this.tableData = []);
+        var tempTableArray = [];
         for (var i = 0; i < res.length; i++) {
           var tempObject;
           tempObject.Id = res[i].Id;
           tempObject.Latitude = res[i].Latitude;
           tempObject.Longitude = res[i].Longitude;
-          this.state.tableData.push(tempObject);
+          this.state.tempTableArray.push(tempObject);
         }
+        this.setState({data: tempTableArray});
+        console.log(this.state.data);
       })
   }
 
