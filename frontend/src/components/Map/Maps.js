@@ -61,10 +61,14 @@ class Maps extends Component {
     // Save the coordinates of the polygon drawn on the map
     savePolygonPoints(polygon) {
         var locations = (polygon.getPath().getArray());
+        var polygonPointArray = [];
         for(var i = 0; i < locations.length; i++) {
-            console.log(locations[i].lat());
-            console.log(locations[i].lng());
+            var polygonObject = {};
+            polygonObject.latitude = locations[i].lat();
+            polygonObject.longitude = locations[i].lng();
+            polygonPointArray.push(polygonObject);
         }
+        //Make API call
     }
 }
 
