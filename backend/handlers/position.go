@@ -40,13 +40,13 @@ func PostPosition(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 	err := json.NewDecoder(r.Body).Decode(&user)
 
-	err := database.PostPosition(&user, db)
+	err = database.PostPosition(&user, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	marshalJson(us, w)
+	marshalJson(user, w)
 }
 
 // Deletes a latitude and longitude position in the database
