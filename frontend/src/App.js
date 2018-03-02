@@ -14,6 +14,9 @@ class App extends Component {
     super(props);
 
     this.state = {
+      insertId: '',
+      insertLongitude: '',
+      insertLatitude: '',
       getRequestResponse: '',
       getRequestPositionResponse: '',
       data: [],
@@ -34,7 +37,20 @@ class App extends Component {
     }
   }
 
+  // Handles data change on the insert id text field
+  handlePostId = (e) => {
+    this.setState({ insertId: e.target.value });
+  }
 
+  // Handles data change on the insert latitude text field
+  handlePostLatitude = (e) => {
+    this.setState({ insertLatitude: e.target.value });
+  }
+
+  // Handles data change on the insert longitude text field
+  handlePostLongitude = (e) => {
+    this.setState({ insertLongitude: e.target.value });
+  }
 
   render() {
     return (
@@ -42,15 +58,15 @@ class App extends Component {
         <Grid fluid>
           <Row>
             <Col xs={6} md={3}>
-              <RaisedButton label="Load database" primary={true} onClick={() => this.fetchDatabaseInfo()} />
+              <RaisedButton id="load_button" label="Load database" primary={true} onClick={() => this.fetchDatabaseInfo()} />
               <br />
               <br />
               <div>
-                <RaisedButton label="Insert New Point" primary={true} />
+                <RaisedButton id="insert_button" label="Insert New Point" primary={true} onClick={() => this.insertNewPosition()} />
                 <br />
-                <TextField placeholder="Id" />
-                <TextField placeholder="Latitude" />
-                <TextField placeholder="Longitude" />
+                <TextField id="id_field" placeholder="Id" onChange={this.handlePostId} />
+                <TextField id="latitude_field" placeholder="Latitude" onChange={this.handlePostLatitude} />
+                <TextField id="longitude_field" placeholder="Longitude" onChange={this.handlePostLongitude} />
               </div>
               <br />
             </Col>
@@ -60,12 +76,12 @@ class App extends Component {
           </Row>
           <br /><br /><br /><br /><br />
           <Row>
-              <div className="Table">
-                <ReactTable
-                  data={this.state.data}
-                  columns={this.state.columns}
-                  />
-              </div>
+            <div className="Table">
+              <ReactTable
+                data={this.state.data}
+                columns={this.state.columns}
+                />
+            </div>
           </Row>
         </Grid>
       </MuiThemeProvider>
@@ -90,14 +106,19 @@ class App extends Component {
             tempTableArray.push(tempObject);
           }
         }
-        this.setState({data: tempTableArray});
+        this.setState({ data: tempTableArray });
         console.log(this.state.data);
       })
-    this.showTable();
   }
 
-  showTable() {
-    //Show the table once the data is loaded
+  // Insert new position into the user database
+  insertNewPosition(position) {
+    var url = '159.203.178.86:8000/postPosition&Id=' + this.state.insertId +
+      '&Latitude=' + this.state.insertLatitude + '&Longitude=' + this.state.insertLongitude;
+    axios.post(url)
+      .then(response => {
+        console.log(response);
+      });
   }
 
   // Function for fetching info from the database give ID
@@ -115,7 +136,7 @@ class App extends Component {
           tempObject.Longitude = res[i].Longitude;
           this.state.tempTableArray.push(tempObject);
         }
-        this.setState({data: tempTableArray});
+        this.setState({ data: tempTableArray });
         console.log(this.state.data);
       })
   }
