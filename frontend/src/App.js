@@ -3,14 +3,7 @@ import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
+import ReactTable from 'react-table';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import axios from 'axios';
 import Map from "./components/Map";
@@ -23,9 +16,25 @@ class App extends Component {
     this.state = {
       getRequestResponse: '',
       getRequestPositionResponse: '',
-      tableData: []
+      data: [],
+      columns: [
+        {
+          Header: "Id",
+          accessor: "id"
+        },
+        {
+          Header: "Latitude",
+          accessor: "latitude"
+        },
+        {
+          Header: "Longitude",
+          accessor: "longitude"
+        }
+      ]
     }
   }
+
+
 
   render() {
     return (
@@ -51,24 +60,12 @@ class App extends Component {
           </Row>
           <br /><br /><br /><br /><br />
           <Row>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHeaderColumn>ID</TableHeaderColumn>
-                  <TableHeaderColumn>Latitude</TableHeaderColumn>
-                  <TableHeaderColumn>Longitude</TableHeaderColumn>
-                </TableRow>
-                <TableBody>
-                  {this.state.tableData.map((row, Id) => (
-                    <TableRow key={Id}>
-                      <TableRowColumn>{Id}</TableRowColumn>
-                      <TableRowColumn>{row.Latitude}</TableRowColumn>
-                      <TableRowColumn>{row.Longitude}</TableRowColumn>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </TableHeader>
-            </Table>
+              <div className="Table">
+                <ReactTable
+                  data={this.state.data}
+                  columns={this.state.columns}
+                  />
+              </div>
           </Row>
         </Grid>
       </MuiThemeProvider>
@@ -80,16 +77,21 @@ class App extends Component {
     var url = 'http://159.203.178.86:8000/position';
     axios.get(url)
       .then(response => {
-        console.log(response.data);
         var res = response.data;
-        this.state.setState(this.tableData = []);
-        for (var i = 0; i < res.length; i++) {
-          var tempObject;
-          tempObject.Id = res[i].Id;
-          tempObject.Latitude = res[i].Latitude;
-          tempObject.Longitude = res[i].Longitude;
-          this.state.tableData.push(tempObject)
+        this.setState({ data: [] });
+        var tempTableArray = [];
+        for (var key in res) {
+          if (res.hasOwnProperty(key)) {
+            var value = res[key];
+            var tempObject = {};
+            tempObject.id = value[0].Id;
+            tempObject.latitude = value[0].Latitude;
+            tempObject.longitude = value[0].Longitude;
+            tempTableArray.push(tempObject);
+          }
         }
+        this.setState({data: tempTableArray});
+        console.log(this.state.data);
       })
     this.showTable();
   }
@@ -100,19 +102,21 @@ class App extends Component {
 
   // Function for fetching info from the database give ID
   fetchDatabaseId(id) {
-    var url = 'http://159.203.178.86:8000/getPosition?=ID';
+    var url = 'http://159.203.178.86:8000/getPosition';
     axios.get(url)
       .then(response => {
         console.log(response.data);
         var res = response.data;
-        this.state.setState(this.tableData = []);
+        var tempTableArray = [];
         for (var i = 0; i < res.length; i++) {
           var tempObject;
           tempObject.Id = res[i].Id;
           tempObject.Latitude = res[i].Latitude;
           tempObject.Longitude = res[i].Longitude;
-          this.state.tableData.push(tempObject);
+          this.state.tempTableArray.push(tempObject);
         }
+        this.setState({data: tempTableArray});
+        console.log(this.state.data);
       })
   }
 

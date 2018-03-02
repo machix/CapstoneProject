@@ -15,7 +15,8 @@
     "react-geolocated": "^2.3.0",
     "react-google-map-draw-filter": "^1.2.2",
     "react-google-maps": "^9.4.5",
-    "react-scripts": "^1.1.0"
+    "react-scripts": "^1.1.0",
+    "react-table": "^6.8.0"
   },
   "scripts": {
     "start": "react-scripts start",
