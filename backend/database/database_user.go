@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
-	_ "github.com/lib/pq"
 )
 
 const (
@@ -127,7 +126,6 @@ func PostPosition(u *model.User, db *sql.DB) error {
 	}
 
 	sqlStmt := `INSERT INTO USER_LOCATION (Id, Latitude, Longitude) VALUES (2, 3.454, 4.232)`
-
 	userLocationPost, err := tx.Prepare(sqlStmt)
 	if err != nil {
 		tx.Rollback()
@@ -136,7 +134,7 @@ func PostPosition(u *model.User, db *sql.DB) error {
 
 	defer userLocationPost.Close()
 
-	_, err = userLocationPost.Exec(u.Id, u.Latitude, u.Longitude)
+	_, err = userLocationPost.Exec(sqlStmt)
 	if err != nil {
 		tx.Rollback()
 		return err
