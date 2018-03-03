@@ -115,7 +115,7 @@ class App extends Component {
   insertNewPosition(position) {
     var url = '159.203.178.86:8000/postPosition&Id=' + this.state.insertId +
       '&Latitude=' + this.state.insertLatitude + '&Longitude=' + this.state.insertLongitude;
-    axios.post(url)
+    axios.put(url)
       .then(response => {
         console.log(response);
       });
