@@ -125,7 +125,7 @@ func PostPosition(u *model.User, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := `INSERT INTO USER_LOCATION (Id, Latitude, Longitude) VALUES (2, 3.454, 4.232)`
+	sqlStmt := `INSERT INTO USER_LOCATION (id, latitude, longitude) VALUES (3, 3.454, 4.232)`
 	userLocationPost, err := tx.Prepare(sqlStmt)
 	if err != nil {
 		tx.Rollback()

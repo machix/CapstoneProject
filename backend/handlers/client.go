@@ -15,6 +15,8 @@ type (
 
 // Adds polygon to the database for client
 func AddPolygon(w http.ResponseWriter, r *http.Request) {
+	var db = database.ConnectClientDb()
+	db.Close()
 }
 
 // Retrieve client's polygons(geofences) from the database
@@ -38,7 +40,6 @@ func (ch ClientHandler) GetClient(w http.ResponseWriter, r *http.Request, p http
 
 // CreateUser creates a new user resource
 func (ch ClientHandler) CreateClient(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-
 }
 
 // RemoveClient removes an existing user resource
