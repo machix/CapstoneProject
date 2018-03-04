@@ -112,7 +112,7 @@ func SavePolygon(p *geo.Polygon, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := "INSERT INTO CLIENT_DATA SET Polygon=?"
+	sqlStmt := "INSERT INTO CLIENT_DATA SET Polygon=1"
 
 	userPolygonInsert, err := tx.Prepare(sqlStmt)
 	if err != nil {

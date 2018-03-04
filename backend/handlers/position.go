@@ -36,10 +36,8 @@ func GetPosition(w http.ResponseWriter, r *http.Request) {
 
 // Post a new latitude and longitude position to the database
 func PostPosition(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("here")
 	var db = database.ConnectUserDb()
 	var user model.User
-	fmt.Println("here")
 	err := json.NewDecoder(r.Body).Decode(&user)
 
 	err = database.PostPosition(&user, db)

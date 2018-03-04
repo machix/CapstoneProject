@@ -113,12 +113,21 @@ class App extends Component {
 
   // Insert new position into the user database
   insertNewPosition(position) {
-    var url = '159.203.178.86:8000/postPosition&Id=' + this.state.insertId +
-      '&Latitude=' + this.state.insertLatitude + '&Longitude=' + this.state.insertLongitude;
+    var url = '159.203.178.86:8000/postPosition&id=' + this.state.insertId +
+      '&latitude=' + this.state.insertLatitude + '&longitude=' + this.state.insertLongitude;
     axios.put(url)
       .then(response => {
         console.log(response);
       });
+  }
+
+  // Delete position in the user database
+  deletePosition(id) {
+    var url = '159.203.178.86:8000/deletePosition';
+    axios.delete(url)
+      .then(resonse => {
+        console.log(response);
+      })
   }
 
   // Function for fetching info from the database give ID
