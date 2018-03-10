@@ -4,7 +4,10 @@ import "github.com/kellydunn/golang-geo"
 
 // The current implementation of this geofence is from the repo below:
 // https://github.com/weilunwu/go-geofence
-// This will be to test concept. Further versions of the service will
+// This will be to test concept. This is meant for the same geofence
+// which is good for caching and speeding up efficiency.
+
+// Further versions of the service will
 // use the golang-geo package and possible other packages for a custom
 // implementation involving different data structures.
 

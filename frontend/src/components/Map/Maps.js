@@ -70,6 +70,11 @@ class Maps extends Component {
         }
         //Make API call
     }
+
+    // Download polygons
+    getPolygonPoints() {
+        // TODO: Implement drawing polygons onto map from database
+    }
 }
 
 export default Maps;

@@ -9,6 +9,7 @@ import (
 	geo "github.com/kellydunn/golang-geo"
 )
 
+// Database Constants. Uses environment variables
 const (
 	dbhostclient = "DBHOST_CLIENT"
 	dbportclient = "DBPORT_CLIENT"
