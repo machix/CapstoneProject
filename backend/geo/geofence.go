@@ -6,7 +6,8 @@ import "github.com/kellydunn/golang-geo"
 // https://github.com/weilunwu/go-geofence
 // This will be to test concept. Further versions of the service will
 // use the golang-geo package and possible other packages for a custom
-// implementation.
+// implementation involving different data structures.
+// Also, I have removed the holes from this implementation
 
 type Geofence struct {
 	vertices    []*geo.Point
@@ -64,10 +65,30 @@ func (geofence *Geofence) extractYVertices() []float64 {
 	return vertices
 }
 
+// Determines the tiles included inside the fence for efficient checking
 func (geofence *Geofence) setInclusionTiles() {
+	xVertices := geofence.extractXVertices()
+	yVertices := geofence.extractYVertices()
 
+	geofence.minX = getMin(xVertices)
+	geofence.minY = getMin(yVertices)
+	geofence.maxX = getMax(xVertices)
+	geofence.maxY = getMax(yVertices)
+
+	xRange := geofence.maxX - geofence.minX
+	yRange := geofence.maxY - geofence.minY
+	geofence.tileWidth = xRange / float64(geofence.granularity)
+	geofence.tileHeight = yRange / float64(geofence.granularity)
+
+	geofence.minTileX = project(geofence.minX, geofence.tileWidth)
+	geofence.minTileY = project(geofence.minY, geofence.tileHeight)
+	geofence.maxTileX = project(geofence.maxX, geofence.tileWidth)
+	geofence.maxTileY = project(geofence.maxY, geofence.tileHeight)
+
+	geofence.setExclusionTiles(geofence.vertices, true)
 }
 
+// Determine the tiles that are outside of the fence for efficient checking
 func (geofence *Geofence) setExclusionTiles(vertices []*geo.Point, inclusive bool) {
 	var hash float64
 	var poly []*geo.Point
