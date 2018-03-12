@@ -1,8 +1,14 @@
 package geo
 
 import (
+	"math"
+
 	geo "github.com/kellydunn/golang-geo"
 )
+
+func project(value float64, tileSize float64) float64 {
+	return math.Floor(value / tileSize)
+}
 
 // Checks to see if two polygons have intersecting edges
 func haveIntersectingEdges(poly1 []*geo.Point, poly2 []*geo.Point) bool {

@@ -2,8 +2,19 @@ package geo
 
 import "github.com/kellydunn/golang-geo"
 
+// The current implementation of this geofence is from the repo below:
+// https://github.com/weilunwu/go-geofence
+// This will be to test concept. This is meant for the same geofence
+// which is good for caching and speeding up efficiency.
+
+// Further versions of the service will
+// use the golang-geo package and possible other packages for a custom
+// implementation involving different data structures.
+
+// Geofence is a struct for efficient search whether a point is in polygon
 type Geofence struct {
 	vertices    []*geo.Point
+	holes       [][]*geo.Point
 	tiles       map[float64]string
 	granularity int64
 	minX        float64
@@ -18,73 +29,138 @@ type Geofence struct {
 	maxTileY    float64
 }
 
-const defaultGranularity = 18
+const defaultGranularity = 20
 
-// Constructor for a new geofence. {{(1, 3), (3, 1)}, {2, 3}}
+// NewGeofence is the construct for Geofence, vertices: {{(1,2),(2,3)}, {(1,0)}}.
+// 1st array contains polygon vertices. 2nd array contains holes.
 func NewGeofence(points [][]*geo.Point, args ...interface{}) *Geofence {
-	geo := &Geofence{}
+	geofence := &Geofence{}
 	if len(args) > 0 {
-		geo.granularity = args[0].(int64)
+		geofence.granularity = args[0].(int64)
 	} else {
-		geo.granularity = defaultGranularity
+		geofence.granularity = defaultGranularity
 	}
-	geo.vertices = points[0]
-
-	geo.tiles = make(map[float64]string)
-	geo.setInclusionTiles()
-	return geo
-}
-
-// Determines if the input point is contained inside of the polygon
-func (geofence *Geofence) isInside(point *geo.Point) bool {
-	return false
-}
-
-// Extracts latitude coordinates from the current geofence
-func (geofence *Geofence) extractXVertices() []float64 {
-	vertices := make([]float64, len(geofence.vertices))
-	for i := 0; i < len(geofence.vertices); i++ {
-		vertices[i] = geofence.vertices[i].Lat()
+	geofence.vertices = points[0]
+	if len(points) > 1 {
+		geofence.holes = points[1:]
 	}
-	return vertices
+	geofence.tiles = make(map[float64]string)
+
+	geofence.setInclusionTiles()
+	return geofence
 }
 
-// Extracts longitude coordinates from the current geofence
-func (geofence *Geofence) extractYVertices() []float64 {
-	vertices := make([]float64, len(geofence.vertices))
-	for i := 0; i < len(geofence.vertices); i++ {
-		vertices[i] = geofence.vertices[i].Lng()
+// Inside checks whether a given point is inside the geofence
+func (geofence *Geofence) Inside(point *geo.Point) bool {
+	// Bbox check first
+	if point.Lat() < geofence.minX || point.Lat() > geofence.maxX || point.Lng() < geofence.minY || point.Lng() > geofence.maxY {
+		return false
 	}
-	return vertices
-}
 
-func (geofence *Geofence) setInclusionTiles() {
+	tileHash := (project(point.Lng(), geofence.tileHeight)-geofence.minTileY)*float64(geofence.granularity) + (project(point.Lat(), geofence.tileWidth) - geofence.minTileX)
+	intersects := geofence.tiles[tileHash]
 
-}
-
-func (geofence *Geofence) setExclusionTiles(vertices []*geo.Point, inclusive bool) {
-	var hash float64
-	var poly []*geo.Point
-	for x := geofence.minTileX; x <= geofence.maxTileX; x++ {
-		for y := geofence.minTileY; y <= geofence.maxTileY; y++ {
-			hash = (y-geofence.minTileY)*float64(geofence.granularity) + (x - geofence.minTileX)
-			poly = []*geo.Point{geo.NewPoint(x*geofence.tileWidth, y*geofence.tileHeight),
-				geo.NewPoint((x+1)*geofence.tileWidth, y*geofence.tileHeight),
-				geo.NewPoint((x+1)*geofence.tileWidth, (y+1)*geofence.tileHeight),
-				geo.NewPoint(x*geofence.tileWidth, (y+1)*geofence.tileHeight),
-				geo.NewPoint(x*geofence.tileWidth, y*geofence.tileHeight)}
+	if intersects == "i" {
+		return true
+	} else if intersects == "x" {
+		polygon := geo.NewPolygon(geofence.vertices)
+		inside := polygon.Contains(point)
+		if !inside || len(geofence.holes) == 0 {
+			return inside
 		}
 
-		if haveIntersectingEdges(poly, vertices) || hasPointInPolygon(vertices, poly) {
-			geofence.tiles[hash] = "x"
-		} else if hasPointInPolygon(poly, vertices) {
-			if inclusive {
-				geofence.tiles[hash] = "i"
-			} else {
-				geofence.tiles[hash] = "o"
+		// if we hanve holes cut out, and the point falls within the outer ring,
+		// ensure no inner rings exclude this point
+		for i := 0; i < len(geofence.holes); i++ {
+			holePoly := geo.NewPolygon(geofence.holes[i])
+			if holePoly.Contains(point) {
+				return false
 			}
 		}
+		return true
+	} else {
+		return false
 	}
+}
+
+// Determines the tiles included inside the fence for efficient checking
+func (geofence *Geofence) setInclusionTiles() {
+	xVertices := geofence.getXVertices()
+	yVertices := geofence.getYVertices()
+
+	geofence.minX = getMin(xVertices)
+	geofence.minY = getMin(yVertices)
+	geofence.maxX = getMax(xVertices)
+	geofence.maxY = getMax(yVertices)
+
+	xRange := geofence.maxX - geofence.minX
+	yRange := geofence.maxY - geofence.minY
+	geofence.tileWidth = xRange / float64(geofence.granularity)
+	geofence.tileHeight = yRange / float64(geofence.granularity)
+
+	geofence.minTileX = project(geofence.minX, geofence.tileWidth)
+	geofence.minTileY = project(geofence.minY, geofence.tileHeight)
+	geofence.maxTileX = project(geofence.maxX, geofence.tileWidth)
+	geofence.maxTileY = project(geofence.maxY, geofence.tileHeight)
+
+	geofence.setExclusionTiles(geofence.vertices, true)
+	if len(geofence.holes) > 0 {
+		for _, hole := range geofence.holes {
+			geofence.setExclusionTiles(hole, false)
+		}
+	}
+}
+
+// Determine the tiles that are outside of the fence for efficient checking
+func (geofence *Geofence) setExclusionTiles(vertices []*geo.Point, inclusive bool) {
+	var tileHash float64
+	var bBoxPoly []*geo.Point
+	for tileX := geofence.minTileX; tileX <= geofence.maxTileX; tileX++ {
+		for tileY := geofence.minTileY; tileY <= geofence.maxTileY; tileY++ {
+			tileHash = (tileY-geofence.minTileY)*float64(geofence.granularity) + (tileX - geofence.minTileX)
+			bBoxPoly = []*geo.Point{geo.NewPoint(tileX*geofence.tileWidth, tileY*geofence.tileHeight), geo.NewPoint((tileX+1)*geofence.tileWidth, tileY*geofence.tileHeight), geo.NewPoint((tileX+1)*geofence.tileWidth, (tileY+1)*geofence.tileHeight), geo.NewPoint(tileX*geofence.tileWidth, (tileY+1)*geofence.tileHeight), geo.NewPoint(tileX*geofence.tileWidth, tileY*geofence.tileHeight)}
+
+			if haveIntersectingEdges(bBoxPoly, vertices) || hasPointInPolygon(vertices, bBoxPoly) {
+				geofence.tiles[tileHash] = "x"
+			} else if hasPointInPolygon(bBoxPoly, vertices) {
+				if inclusive {
+					geofence.tiles[tileHash] = "i"
+				} else {
+					geofence.tiles[tileHash] = "o"
+				}
+			} // else all points are outside the poly
+		}
+	}
+}
+
+func (geofence *Geofence) getXVertices() []float64 {
+	xVertices := make([]float64, len(geofence.vertices))
+	for i := 0; i < len(geofence.vertices); i++ {
+		xVertices[i] = geofence.vertices[i].Lat()
+	}
+	return xVertices
+}
+
+func (geofence *Geofence) getYVertices() []float64 {
+	yVertices := make([]float64, len(geofence.vertices))
+	for i := 0; i < len(geofence.vertices); i++ {
+		yVertices[i] = geofence.vertices[i].Lng()
+	}
+	return yVertices
+}
+
+// Get min out of array of floats
+func getMin(slice []float64) float64 {
+	var min float64
+	if len(slice) > 0 {
+		min = slice[0]
+	}
+	for i := 1; i < len(slice); i++ {
+		if slice[i] < min {
+			min = slice[i]
+		}
+	}
+	return min
 }
 
 // Get max out of array of floats
@@ -99,18 +175,4 @@ func getMax(slice []float64) float64 {
 		}
 	}
 	return max
-}
-
-// Get min out of array of floats
-func getMin(slice []float64) float64 {
-	var min float64
-	if len(slice) < 0 {
-		min = slice[0]
-	}
-	for i := 1; i < len(slice); i++ {
-		if slice[i] < min {
-			min = slice[i]
-		}
-	}
-	return min
 }

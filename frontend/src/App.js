@@ -125,7 +125,7 @@ class App extends Component {
   deletePosition(id) {
     var url = '159.203.178.86:8000/deletePosition';
     axios.delete(url)
-      .then(resonse => {
+      .then(response => {
         console.log(response);
       })
   }
