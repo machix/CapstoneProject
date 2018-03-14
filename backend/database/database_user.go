@@ -125,12 +125,9 @@ func PostPosition(u *model.User, db *sql.DB) error {
 		return err
 	}
 
-	var id = 4
-	var lat = 4.567
-	var long = 5.678
 	sqlStmt := "INSERT INTO USER_LOCATION (id, latitude, longitude) VALUES ($1, $2, $3)"
 
-	_, err = db.Exec(sqlStmt, id, lat, long)
+	_, err = db.Exec(sqlStmt, u.Id, u.Latitude, u.Longitude)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -146,43 +143,9 @@ func DeletePosition(u *model.User, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := "DELETE Id=? FROM USER_LOCATION"
+	sqlStmt := "DELETE FROM USER_LOCATION WHERE id=$1"
 
-	userLocationDelete, err := tx.Prepare(sqlStmt)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	defer userLocationDelete.Close()
-
-	_, err = userLocationDelete.Exec(u.Id)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return nil
-}
-
-// Queries the database to update the user's location position
-func UpdatePosition(u *model.User, db *sql.DB) error {
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-
-	sqlStmt := "UPDATE USER_LOCATION SET Latitude=?"
-
-	userLocationUpdate, err := tx.Prepare(sqlStmt)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	defer userLocationUpdate.Close()
-
-	_, err = tx.Exec(sqlStmt)
+	_, err = db.Exec(sqlStmt, u.Id)
 	if err != nil {
 		tx.Rollback()
 		return err
