@@ -62,19 +62,6 @@ func DeletePosition(w http.ResponseWriter, r *http.Request) {
 	marshalJson(us, w)
 }
 
-// Updates a latitude and longitude position in the database
-func UpdatePosition(w http.ResponseWriter, r *http.Request) {
-	var db = database.ConnectUserDb()
-	us := model.User{}
-	err := database.UpdatePosition(&us, db)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	marshalJson(us, w)
-}
-
 // Marshals the json and outputs, otherwise outputs error if unsuccesful
 func marshalJson(u model.User, w http.ResponseWriter) {
 	out, err := json.Marshal(u)
