@@ -17,6 +17,9 @@ class App extends Component {
       insertId: '',
       insertLongitude: '',
       insertLatitude: '',
+      deleteId: '',
+      deleteLatitude: '',
+      deleteLongitude: '',
       getRequestResponse: '',
       getRequestPositionResponse: '',
       data: [],
@@ -52,6 +55,21 @@ class App extends Component {
     this.setState({ insertLongitude: e.target.value });
   }
 
+  // Handles data change on the delete id text field
+  handleDeleteId = (e) => {
+    this.setState({ deleteId: e.target.value});
+  }
+
+  // Handles data change on the delete latitude field
+  handleDeleteLatitude = (e) => {
+    this.setState({ deleteLatitude: e.target.value});
+  }
+
+  // Handles data change on the delete longitude field
+  handleDeleteLongitude = (e) => {
+    this.setState({ deleteLongitude: e.target.value});
+  }
+
   render() {
     return (
       <MuiThemeProvider>
@@ -59,8 +77,21 @@ class App extends Component {
           <Row>
             <Col xs={6} md={3}>
               <RaisedButton id="load_button" label="Load database" primary={true} onClick={() => this.fetchDatabaseInfo()} />
-              <br />
-              <br />
+            </Col>
+            <Col xs={6} md={3}>
+              <Map />
+            </Col>
+          </Row>
+          <br /><br /><br />
+          <Row>
+            <Col>
+              <div id="data_table" className="Table">
+                <ReactTable
+                  data={this.state.data}
+                  columns={this.state.columns}/>
+              </div>
+            </Col>
+            <Col>
               <div>
                 <RaisedButton id="insert_button" label="Insert New Point" primary={true} onClick={() => this.insertNewPosition()} />
                 <br />
@@ -68,20 +99,16 @@ class App extends Component {
                 <TextField id="latitude_field" hintText="Latitude" onChange={this.handlePostLatitude} />
                 <TextField id="longitude_field" hintText="Longitude" onChange={this.handlePostLongitude} />
               </div>
-              <br />
             </Col>
-            <Col xs={6} md={3}>
-              <Map />
+            <Col>
+              <div>
+                <RaisedButton id="delete_button" label="Insert New Point" primary={true} onClick={() => this.insertNewPosition()} />
+                <br />
+                <TextField id="id_delete_field" hintText="Id" onChange={this.handleDeleteId} />
+                <TextField id="latitude_delete_field" hintText="Latitude" onChange={this.handleDeleteLatitude} />
+                <TextField id="longitude_delete_field" hintText="Longitude" onChange={this.handleDeleteLongitude} />
+              </div>
             </Col>
-          </Row>
-          <br /><br /><br /><br /><br />
-          <Row>
-            <div id="data_table" className="Table">
-              <ReactTable
-                data={this.state.data}
-                columns={this.state.columns}
-              />
-            </div>
           </Row>
         </Grid>
       </MuiThemeProvider>
@@ -116,8 +143,8 @@ class App extends Component {
 
   // Insert new position into the user database
   insertNewPosition(position) {
-    var url = '159.203.178.86:8000/postPosition&id=' + this.state.insertId +
-      '&latitude=' + this.state.insertLatitude + '&longitude=' + this.state.insertLongitude;
+    var url = '159.203.178.86:8000/postPosition&Id=' + this.state.insertId +
+      '&Latitude=' + this.state.insertLatitude + '&Longitude=' + this.state.insertLongitude;
     axios.put(url)
       .then(response => {
         console.log(response);
