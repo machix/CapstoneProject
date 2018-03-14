@@ -9,7 +9,6 @@ import axios from 'axios';
 import Map from "./components/Map";
 
 class App extends Component {
-
   constructor(props) {
     super(props);
 
