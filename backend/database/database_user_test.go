@@ -53,31 +53,3 @@ func TestDatabaseDeleteQuery(t *testing.T) {
 	mock.ExpectPrepare(`[DELETE Id=? FROM USER_LOCATION]`).ExpectExec()
 
 }
-
-// Test database update query for user
-func TestDatabaseUpdateQuery(t *testing.T) {
-	db, mock, err := sqlmock.New()
-
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	defer db.Close()
-
-	sqlmock.NewRows([]string{"Id", "Latitude", "Longitude"}).AddRow(1, 4.5678, 5.4567)
-
-	mock.ExpectBegin()
-	mock.ExpectPrepare("UPDATE USER_LOCATION SET Latitude=?")
-	mock.ExpectExec("UPDATE USER_LOCATION SET Latitude=?").WillReturnResult(sqlmock.NewResult(1, 1))
-
-	tempUser := model.User{}
-
-	err = UpdatePosition(&tempUser, db)
-	if err != nil {
-		t.Errorf("Error was not expected while updating stats: %s", err)
-	}
-
-	err = mock.ExpectationsWereMet()
-	if err != nil {
-		t.Errorf("Expectations were not met: %s", err)
-	}
-}

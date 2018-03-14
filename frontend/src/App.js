@@ -64,9 +64,9 @@ class App extends Component {
               <div>
                 <RaisedButton id="insert_button" label="Insert New Point" primary={true} onClick={() => this.insertNewPosition()} />
                 <br />
-                <TextField id="id_field" placeholder="Id" onChange={this.handlePostId} />
-                <TextField id="latitude_field" placeholder="Latitude" onChange={this.handlePostLatitude} />
-                <TextField id="longitude_field" placeholder="Longitude" onChange={this.handlePostLongitude} />
+                <TextField id="id_field" hintText="Id" onChange={this.handlePostId} />
+                <TextField id="latitude_field" hintText="Latitude" onChange={this.handlePostLatitude} />
+                <TextField id="longitude_field" hintText="Longitude" onChange={this.handlePostLongitude} />
               </div>
               <br />
             </Col>
@@ -76,11 +76,11 @@ class App extends Component {
           </Row>
           <br /><br /><br /><br /><br />
           <Row>
-            <div className="Table">
+            <div id="data_table" className="Table">
               <ReactTable
                 data={this.state.data}
                 columns={this.state.columns}
-                />
+              />
             </div>
           </Row>
         </Grid>
@@ -93,17 +93,20 @@ class App extends Component {
     var url = 'http://159.203.178.86:8000/position';
     axios.get(url)
       .then(response => {
+        console.log(response);
         var res = response.data;
         this.setState({ data: [] });
         var tempTableArray = [];
         for (var key in res) {
           if (res.hasOwnProperty(key)) {
             var value = res[key];
-            var tempObject = {};
-            tempObject.id = value[0].Id;
-            tempObject.latitude = value[0].Latitude;
-            tempObject.longitude = value[0].Longitude;
-            tempTableArray.push(tempObject);
+            for (var i = 0; i < value.length; i++) {
+              var tempObject = {};
+              tempObject.id = value[i].Id;
+              tempObject.latitude = value[i].Latitude;
+              tempObject.longitude = value[i].Longitude;
+              tempTableArray.push(tempObject);
+            }
           }
         }
         this.setState({ data: tempTableArray });
