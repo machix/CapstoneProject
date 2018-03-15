@@ -90,7 +90,7 @@ class App extends Component {
                   columns={this.state.columns}/>
               </div>
             </Col>
-            <Col>
+            <Col xs={6} md={3}>
               <div>
                 <RaisedButton id="insert_button" label="Insert New Point" primary={true} onClick={() => this.insertNewPosition()} />
                 <br />
@@ -99,9 +99,9 @@ class App extends Component {
                 <TextField id="longitude_field" hintText="Longitude" onChange={this.handlePostLongitude} />
               </div>
             </Col>
-            <Col>
+            <Col xs={6} md={3}>
               <div>
-                <RaisedButton id="delete_button" label="Insert New Point" primary={true} onClick={() => this.insertNewPosition()} />
+                <RaisedButton id="delete_button" label="Delete Point" primary={true} onClick={() => this.deletePosition()} />
                 <br />
                 <TextField id="id_delete_field" hintText="Id" onChange={this.handleDeleteId} />
                 <TextField id="latitude_delete_field" hintText="Latitude" onChange={this.handleDeleteLatitude} />
@@ -141,8 +141,8 @@ class App extends Component {
   }
 
   // Insert new position into the user database
-  insertNewPosition(position) {
-    var url = '159.203.178.86:8000/postPosition&Id=' + this.state.insertId +
+  insertNewPosition() {
+    var url = 'http://159.203.178.86:8000/postPosition&Id=' + this.state.insertId +
       '&Latitude=' + this.state.insertLatitude + '&Longitude=' + this.state.insertLongitude;
     axios.put(url)
       .then(response => {
@@ -151,8 +151,9 @@ class App extends Component {
   }
 
   // Delete position in the user database
-  deletePosition(id) {
-    var url = '159.203.178.86:8000/deletePosition';
+  deletePosition() {
+    var url = 'http://159.203.178.86:8000/deletePosition&Id=' + this.state.deleteId +
+      '&Latitude=' + this.state.deleteLatitude + '&Longitude=' + this.state.deleteLongitude;
     axios.delete(url)
       .then(response => {
         console.log(response);

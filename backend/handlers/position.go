@@ -36,6 +36,8 @@ func GetPosition(w http.ResponseWriter, r *http.Request) {
 
 // Post a new latitude and longitude position to the database
 func PostPosition(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var db = database.ConnectUserDb()
 	var user model.User
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -51,6 +53,8 @@ func PostPosition(w http.ResponseWriter, r *http.Request) {
 
 // Deletes a latitude and longitude position in the database
 func DeletePosition(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var db = database.ConnectUserDb()
 	us := model.User{}
 	err := database.DeletePosition(&us, db)
