@@ -142,9 +142,15 @@ class App extends Component {
 
   // Insert new position into the user database
   insertNewPosition() {
-    var url = 'http://159.203.178.86:8000/postPosition&Id=' + this.state.insertId +
-      '&Latitude=' + this.state.insertLatitude + '&Longitude=' + this.state.insertLongitude;
-    axios.put(url)
+    let data = JSON.stringify({
+      Id: this.state.insertId,
+      Latitude: this.state.insertLatitude,
+      Longitude: this.state.Longitude
+    })
+    var url = 'http://159.203.178.86:8000/postPosition';
+    axios.post(url, data, {
+      headers: {'Content-Type': 'application/json',}
+    })
       .then(response => {
         console.log(response);
       });
