@@ -37,6 +37,13 @@ class App extends Component {
         }
       ]
     }
+
+    this.handlePostId = this.handlePostId.bind(this);
+    this.handlePostLatitude = this.handlePostLatitude.bind(this);
+    this.handlePostLongitude = this.handlePostLongitude.bind(this);
+    this.handleDeleteId = this.handleDeleteId.bind(this);
+    this.handleDeleteLatitude = this.handleDeleteLatitude.bind(this);
+    this.handleDeleteLongitude = this.handleDeleteLongitude.bind(this);
   }
 
   // Handles data change on the insert id text field
@@ -145,7 +152,7 @@ class App extends Component {
     let data = JSON.stringify({
       Id: this.state.insertId,
       Latitude: this.state.insertLatitude,
-      Longitude: this.state.Longitude
+      Longitude: this.state.insertLongitude
     })
     var url = 'http://159.203.178.86:8000/postPosition';
     axios.post(url, data, {

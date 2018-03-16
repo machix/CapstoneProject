@@ -38,7 +38,6 @@ func GetPosition(w http.ResponseWriter, r *http.Request) {
 func PostPosition(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectUserDb()
 	var user model.User
-	fmt.Println(r.Body)
 	err := json.NewDecoder(r.Body).Decode(&user)
 	fmt.Println(user.Id)
 	fmt.Println(user.Latitude)
@@ -47,6 +46,8 @@ func PostPosition(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
+	defer r.Body.Close()
 
 	marshalJson(user, w)
 }

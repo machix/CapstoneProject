@@ -75,6 +75,10 @@ class Maps extends Component {
     getPolygonPoints() {
         // TODO: Implement drawing polygons onto map from database
     }
+
+    shouldComponentUpdate(nextProps, nextState){
+        return false;
+    }
 }
 
 export default Maps;
