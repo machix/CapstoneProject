@@ -9,9 +9,9 @@ type Summary struct {
 }
 
 type User struct {
-	Id        uint32
-	Latitude  float32
-	Longitude float32
+	Id        uint32  `json:"Id"`
+	Latitude  float32 `json:"Latitude"`
+	Longitude float32 `json:"Longitude"`
 }
 
 type UserInfo struct {
