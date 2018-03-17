@@ -131,3 +131,26 @@ func SavePolygon(p *geo.Polygon, db *sql.DB) error {
 
 	return nil
 }
+
+// Add new client to the client database
+func AddNewClient(c *model.Client, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := "INSERT INTO CLIENT_DATA (id, latitude, longitude) VALUES ($1, $2, $3)"
+
+	_, err = db.Exec(sqlStmt, c.ID, c.FirstName, c.LastName, c.Email, c.Password, c.StatusID, c.UpdatedAt, c.Deleted)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
+}
+
+// Update the information of a current client
+func UpdateClient(c *model.Client, db *sql.DB) error {
+	return nil
+}
