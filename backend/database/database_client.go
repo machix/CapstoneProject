@@ -113,7 +113,25 @@ func SavePolygon(p *geo.Polygon, c *model.Client, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := "INSERT INTO POLYGONS (id, polygon) VALUES ($1, $2)"
+	sqlStmt := "INSERT INTO CLIENT_DATA (id, polygon) VALUES ($1, $2)"
+
+	_, err = tx.Exec(sqlStmt, c.ID, p)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
+}
+
+// Delete a polygon that has been saved in the database
+func DeletePolygon(p *geo.Polygon, c *model.Client, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := "DELETE * WHERE id=$1 and polygon=$2"
 
 	_, err = tx.Exec(sqlStmt, c.ID, p)
 	if err != nil {
@@ -131,7 +149,7 @@ func AddNewClient(c *model.Client, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := "INSERT INTO CLIENT_DATA (id, first_name, last_name) VALUES ($1, $2, $3)"
+	sqlStmt := "INSERT INTO CLIENT (id, first_name, last_name) VALUES ($1, $2, $3)"
 
 	_, err = db.Exec(sqlStmt, c.ID, c.FirstName, c.LastName)
 	if err != nil {
@@ -142,7 +160,20 @@ func AddNewClient(c *model.Client, db *sql.DB) error {
 	return nil
 }
 
-// Update the information of a current client
+// Delete the information of a current client
 func DeleteClient(c *model.Client, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := "DELETE * WHERE id=$1"
+
+	_, err = db.Exec(sqlStmt, c.ID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	return nil
 }
