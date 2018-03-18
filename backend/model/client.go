@@ -1,8 +1,6 @@
 package model
 
 import (
-	"time"
-
 	"github.com/kellydunn/golang-geo"
 )
 
@@ -15,12 +13,6 @@ type Client struct {
 	ID        uint32
 	FirstName string
 	LastName  string
-	Email     string
-	Password  string
-	StatusID  uint8
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Deleted   uint8
 }
 
 type Store struct {
