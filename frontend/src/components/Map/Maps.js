@@ -68,12 +68,21 @@ class Maps extends Component {
             polygonObject.longitude = locations[i].lng();
             polygonPointArray.push(polygonObject);
         }
-        //Make API call
+        var data = JSON.stringify({
+            points: polygonPointArray
+        })
+        var url = 'http://159.203.178.86:8000/savePolygon';
+        axios.post(url, data, {
+            headers: {'Content-Type': 'application/json',}
+        }).then(response => {
+            console.log(response);
+        });
     }
 
-    // Download polygons
+    // Download polygons contained within certain area on the map
     getPolygonPoints() {
-        // TODO: Implement drawing polygons onto map from database
+        var url = "http://159.203.178.86:8000/getPolygons";
+        var currentPosition = 1.23;
     }
 
     shouldComponentUpdate(nextProps, nextState){

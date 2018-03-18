@@ -107,23 +107,15 @@ func GetPolygons(c *model.Client, db *sql.DB) error {
 }
 
 // Saves points in a polygon that has been drawn on the map
-func SavePolygon(p *geo.Polygon, db *sql.DB) error {
+func SavePolygon(p *geo.Polygon, c *model.Client, db *sql.DB) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
 
-	sqlStmt := "INSERT INTO CLIENT_DATA SET Polygon=1"
+	sqlStmt := "INSERT INTO POLYGONS (id, polygon) VALUES ($1, $2)"
 
-	userPolygonInsert, err := tx.Prepare(sqlStmt)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	defer userPolygonInsert.Close()
-
-	_, err = tx.Exec(sqlStmt)
+	_, err = tx.Exec(sqlStmt, c.ID, p)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -139,9 +131,9 @@ func AddNewClient(c *model.Client, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := "INSERT INTO CLIENT_DATA (id, latitude, longitude) VALUES ($1, $2, $3)"
+	sqlStmt := "INSERT INTO CLIENT_DATA (id, first_name, last_name) VALUES ($1, $2, $3)"
 
-	_, err = db.Exec(sqlStmt, c.ID, c.FirstName, c.LastName, c.Email, c.Password, c.StatusID, c.UpdatedAt, c.Deleted)
+	_, err = db.Exec(sqlStmt, c.ID, c.FirstName, c.LastName)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -151,6 +143,6 @@ func AddNewClient(c *model.Client, db *sql.DB) error {
 }
 
 // Update the information of a current client
-func UpdateClient(c *model.Client, db *sql.DB) error {
+func DeleteClient(c *model.Client, db *sql.DB) error {
 	return nil
 }
