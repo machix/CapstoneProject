@@ -87,7 +87,7 @@ func GetPolygons(c *model.Client, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := "SELECT * WHERE id={c.Id}"
+	sqlStmt := "SELECT * WHERE id=$1"
 
 	clientPolygonRetrieve, err := tx.Prepare(sqlStmt)
 	if err != nil {
@@ -97,7 +97,7 @@ func GetPolygons(c *model.Client, db *sql.DB) error {
 
 	defer clientPolygonRetrieve.Close()
 
-	_, err = tx.Exec(sqlStmt)
+	_, err = tx.Exec(sqlStmt, c.ID)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -113,7 +113,7 @@ func SavePolygon(p *geo.Polygon, c *model.Client, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := "INSERT INTO CLIENT_DATA (id, polygon) VALUES ($1, $2)"
+	sqlStmt := "INSERT INTO CLIENT_POLYGON (id, name, polygon) VALUES ($1, $2, $3)"
 
 	_, err = tx.Exec(sqlStmt, c.ID, p)
 	if err != nil {
