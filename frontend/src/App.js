@@ -81,21 +81,21 @@ class App extends Component {
       <MuiThemeProvider>
         <Grid fluid>
           <Row>
-            <Col xs={6} md={3}>
-              <RaisedButton id="load_button" label="Load database" primary={true} onClick={() => this.fetchDatabaseInfo()} />
-            </Col>
-            <Col xs={6} md={3}>
+            <Col>
               <Map />
             </Col>
           </Row>
           <br /><br /><br />
           <Row>
-            <Col>
+            <Col xs={6} md={3}>
               <div id="data_table" className="Table">
                 <ReactTable
                   data={this.state.data}
                   columns={this.state.columns}/>
               </div>
+            </Col>
+            <Col xs={6} md={3}>
+              <RaisedButton id="load_button" label="Load database" primary={true} onClick={() => this.fetchDatabaseInfo()} />
             </Col>
             <Col xs={6} md={3}>
               <div>
@@ -153,7 +153,7 @@ class App extends Component {
       Id: Number.parseInt(this.state.insertId),
       Latitude: Number.parseFloat(this.state.insertLatitude),
       Longitude: Number.parseFloat(this.state.insertLongitude)
-    })
+    });
     var url = 'http://159.203.178.86:8000/postPosition';
     axios.post(url, data, {
       headers: {'Content-Type': 'application/json',}
@@ -164,12 +164,17 @@ class App extends Component {
 
   // Delete position in the user database
   deletePosition() {
-    var url = 'http://159.203.178.86:8000/deletePosition&Id=' + this.state.deleteId +
-      '&Latitude=' + this.state.deleteLatitude + '&Longitude=' + this.state.deleteLongitude;
-    axios.delete(url)
-      .then(response => {
+    let data = JSON.stringify({
+      Id: Number.parseInt(this.state.deleteId),
+      Latitude: Number.parseFloat(this.state.deleteLatitude),
+      Longitude: Number.parseFloat(this.state.deleteLongitude)
+    });
+    var url = 'http://159.203.178.86:8000/deletePosition';
+    axios.delete(url, data, {
+      headers: {'Content-Type': 'application/json',}
+    }).then(response => {
         console.log(response);
-      })
+      });
   }
 
   // Function for fetching info from the database give ID

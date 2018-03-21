@@ -14,19 +14,45 @@ type (
 )
 
 // Adds polygon to the database for client
-func AddPolygon(w http.ResponseWriter, r *http.Request) {
+func SavePolygon(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
-	db.Close()
-}
+	client := model.Client{}
+	polygon := model.Polygon{}
 
-// Retrieve client's polygons(geofences) from the database
-func GetPolygons(w http.ResponseWriter, r *http.Request, c *model.Client) {
-	var db = database.ConnectClientDb()
-	err := database.GetPolygons(c, db)
+	err := database.SavePolygon(&polygon, &client, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
+	db.Close()
+}
+
+// Retrieve client's polygons(geofences) from the database
+func GetPolygons(w http.ResponseWriter, r *http.Request) {
+	var db = database.ConnectClientDb()
+	client := model.Client{}
+	err := database.GetPolygons(&client, db)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	db.Close()
+}
+
+// Deletes a clients polygons from the database
+func DeletePolygon(w http.ResponseWriter, r *http.Request) {
+	var db = database.ConnectClientDb()
+	polygon := model.Polygon{}
+	client := model.Client{}
+	err := database.DeletePolygon(&polygon, &client, db)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	db.Close()
 }
 
 // Return new ClientHandler
