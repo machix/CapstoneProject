@@ -142,10 +142,14 @@ func DeletePosition(u *model.User, db *sql.DB) error {
 	if err != nil {
 		return err
 	}
+	fmt.Print("hello")
+	fmt.Printf("%d", u.Id)
+	fmt.Printf("%f", u.Latitude)
+	fmt.Printf("%f", u.Longitude)
 
-	sqlStmt := "DELETE FROM USER_LOCATION WHERE id=$1"
+	sqlStmt := "DELETE FROM USER_LOCATION WHERE id=$1 AND latitude=$2 AND longitude=$3"
 
-	_, err = db.Exec(sqlStmt, u.Id)
+	_, err = db.Exec(sqlStmt, u.Id, u.Latitude, u.Longitude)
 	if err != nil {
 		tx.Rollback()
 		return err
