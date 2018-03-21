@@ -69,10 +69,14 @@ class Maps extends Component {
             polygonObject.longitude = locations[i].lng();
             polygonPointArray.push(polygonObject);
         }
+
         console.log(polygonPointArray);
         var data = JSON.stringify({
+            id: 1,
+            name: "polygon1",
             points: polygonPointArray
-        })
+        });
+
         var url = 'http://159.203.178.86:8000/savePolygon';
         axios.post(url, data, {
             headers: {'Content-Type': 'application/json',}
@@ -83,8 +87,12 @@ class Maps extends Component {
 
     // Download polygons contained within certain area on the map
     getPolygonPoints() {
+        //TODO: Pass in range to query in PostGIS
         var url = "http://159.203.178.86:8000/getPolygons";
-        var currentPosition = 1.23;
+        axios.get(url)
+          .then(response => {
+              console.log(response);
+          });
     }
 
     // Prevents the componenet from reloading/updating on every event
