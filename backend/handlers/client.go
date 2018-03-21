@@ -6,6 +6,7 @@ import (
 	"github.com/NaturalFractals/CapstoneProject/backend/database"
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
 	"github.com/julienschmidt/httprouter"
+	geo "github.com/kellydunn/golang-geo"
 )
 
 // ClientHandler represent handler for handling client resource
@@ -14,8 +15,17 @@ type (
 )
 
 // Adds polygon to the database for client
-func AddPolygon(w http.ResponseWriter, r *http.Request) {
+func SavePolygon(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
+	client := model.Client{}
+	polygon := geo.Polygon{}
+
+	err := database.SavePolygon(&polygon, &client, db)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
 	db.Close()
 }
 
@@ -27,6 +37,20 @@ func GetPolygons(w http.ResponseWriter, r *http.Request, c *model.Client) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
+	db.Close()
+}
+
+// Deletes a clients polygons from the database
+func DeletePolygon(w http.ResponseWriter, r *http.Request, c *model.Client) {
+	var db = database.ConnectClientDb()
+	err := database.DeletePolygon(c, db)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	db.Close()
 }
 
 // Return new ClientHandler

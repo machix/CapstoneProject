@@ -138,11 +138,12 @@ func PostPosition(u *model.User, db *sql.DB) error {
 
 // Queries the database to delete the user's location
 func DeletePosition(u *model.User, db *sql.DB) error {
+	fmt.Printf("hello")
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
-	fmt.Print("hello")
+
 	fmt.Printf("%d", u.Id)
 	fmt.Printf("%f", u.Latitude)
 	fmt.Printf("%f", u.Longitude)

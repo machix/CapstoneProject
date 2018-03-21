@@ -69,6 +69,7 @@ class Maps extends Component {
             polygonObject.longitude = locations[i].lng();
             polygonPointArray.push(polygonObject);
         }
+        console.log(polygonPointArray);
         var data = JSON.stringify({
             points: polygonPointArray
         })
@@ -86,6 +87,7 @@ class Maps extends Component {
         var currentPosition = 1.23;
     }
 
+    // Prevents the componenet from reloading/updating on every event
     shouldComponentUpdate(nextProps, nextState){
         return false;
     }
