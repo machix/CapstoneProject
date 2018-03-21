@@ -6,7 +6,6 @@ import (
 	"github.com/NaturalFractals/CapstoneProject/backend/database"
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
 	"github.com/julienschmidt/httprouter"
-	geo "github.com/kellydunn/golang-geo"
 )
 
 // ClientHandler represent handler for handling client resource
@@ -18,7 +17,7 @@ type (
 func SavePolygon(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
 	client := model.Client{}
-	polygon := geo.Polygon{}
+	polygon := model.Polygon{}
 
 	err := database.SavePolygon(&polygon, &client, db)
 	if err != nil {
@@ -30,9 +29,10 @@ func SavePolygon(w http.ResponseWriter, r *http.Request) {
 }
 
 // Retrieve client's polygons(geofences) from the database
-func GetPolygons(w http.ResponseWriter, r *http.Request, c *model.Client) {
+func GetPolygons(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
-	err := database.GetPolygons(c, db)
+	client := model.Client{}
+	err := database.GetPolygons(&client, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -42,9 +42,11 @@ func GetPolygons(w http.ResponseWriter, r *http.Request, c *model.Client) {
 }
 
 // Deletes a clients polygons from the database
-func DeletePolygon(w http.ResponseWriter, r *http.Request, c *model.Client) {
+func DeletePolygon(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
-	err := database.DeletePolygon(c, db)
+	polygon := model.Polygon{}
+	client := model.Client{}
+	err := database.DeletePolygon(&polygon, &client, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

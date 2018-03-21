@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
-	geo "github.com/kellydunn/golang-geo"
 )
 
 // Database Constants. Uses environment variables
@@ -107,7 +106,7 @@ func GetPolygons(c *model.Client, db *sql.DB) error {
 }
 
 // Saves points in a polygon that has been drawn on the map
-func SavePolygon(p *geo.Polygon, c *model.Client, db *sql.DB) error {
+func SavePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -125,7 +124,7 @@ func SavePolygon(p *geo.Polygon, c *model.Client, db *sql.DB) error {
 }
 
 // Delete a polygon that has been saved in the database
-func DeletePolygon(p *geo.Polygon, c *model.Client, db *sql.DB) error {
+func DeletePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err

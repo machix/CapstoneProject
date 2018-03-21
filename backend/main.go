@@ -20,7 +20,7 @@ func main() {
 	router.HandleFunc("/deletePosition", handlers.DeletePosition).Methods("DELETE")
 	router.HandleFunc("/getPolygons", handlers.GetPolygons).Methods("GET")
 	router.HandleFunc("/savePolygon", handlers.SavePolygon).Methods("POST")
-	router.HandleFunc("/deletePolygon", handlers.DeletePolgon).Methods("DELETE")
+	router.HandleFunc("/deletePolygon", handlers.DeletePolygon).Methods("DELETE")
 
 	corsRouter := cors.Default().Handler(router)
 	http.ListenAndServe(":8000", corsRouter)
