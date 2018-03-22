@@ -86,12 +86,37 @@ class Client extends Component {
 
     // Inserts a New Client into the database
     insertNewClient() {
-
+      var url = 'http://159.203.178.86:8000/postClient';
+      let data = JSON.stringify({
+        Id: Number.parseInt(this.state.insertId),
+        FirstName: this.state.clientFirstName,
+        LastName: this.state.clientLastName
+      });
+      axios.post(url, data, {
+        headers: {'Content-Type': 'application/json',}
+      }).then(response => {
+        console.log(response);
+      })
     }
 
     // Fetches the info for the client database
     fetchClientDatabaseInfo() {
-
+      var url = 'http://159.203.178.86:8000/getClients';
+      axios.get(url)
+        .then(response => {
+          console.log(response.data);
+          var res = response.data;
+          var tempTableArray = [];
+          for (var i = 0; i < res.length; i++) {
+            var tempObject;
+            tempObject.Id = res[i].Id;
+            tempObject.FirstName = res[i].FirstName;
+            tempObject.LastName = res[i].LastName;
+            this.state.tempTableArray.push(tempObject);
+          }
+          this.setState({ data: tempTableArray });
+          console.log(this.state.data);
+        });
     }
 
     // Deletes a client from the database
