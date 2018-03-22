@@ -1,18 +1,9 @@
 package model
 
-import (
-	"github.com/kellydunn/golang-geo"
-)
-
-type ClientPolygon struct {
-	Id      uint32
-	polygon geo.Polygon
-}
-
 type Client struct {
-	ID        uint32
-	FirstName string
-	LastName  string
+	ID        uint32 `json:"Id"`
+	FirstName string `json:"FirstName"`
+	LastName  string `json:"LastName"`
 }
 
 type Store struct {
