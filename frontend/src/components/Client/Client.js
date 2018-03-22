@@ -1,6 +1,26 @@
 import React, { Component } from 'react';
 
 class Client extends Component {
+    constructor() {
+        this.state = {
+            data: [],
+            columns: [
+              {
+                Header: "Id",
+                accessor: "id"
+              },
+              {
+                Header: "First Name",
+                accessor: "first_name"
+              },
+              {
+                Header: "Last Name",
+                accessor: "last_name"
+              }
+            ]
+        }
+    }
+    
     render() {
         return(
             <Row>
@@ -25,7 +45,7 @@ class Client extends Component {
             </Col>
             <Col xs={6} md={3}>
               <div>
-                <RaisedButton id="delete_button" label="Delete Client" primary={true} onClick={() => this.deletePosition()} />
+                <RaisedButton id="delete_button" label="Delete Client" primary={true} onClick={() => this.deleteClient()} />
                 <br />
                 <TextField id="id_delete_field" hintText="Id" onChange={this.handleDeleteId} />
                 <TextField id="first_name_delete_field" hintText="First Name" onChange={this.handleDeleteLatitude} />
@@ -36,11 +56,18 @@ class Client extends Component {
         );
     }
 
+    // Inserts a New Client into the database
     insertNewClient() {
 
     }
 
+    // Fetches the info for the client database
     fetchClientDatabaseInfo() {
+
+    }
+
+    // Deletes a client from the database
+    deleteClient() {
 
     }
 }
