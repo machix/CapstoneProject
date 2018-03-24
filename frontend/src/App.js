@@ -7,6 +7,7 @@ import ReactTable from 'react-table';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import axios from 'axios';
 import Map from "./components/Map";
+import Client from "./components/Client";
 
 class App extends Component {
   constructor(props) {
@@ -63,17 +64,17 @@ class App extends Component {
 
   // Handles data change on the delete id text field
   handleDeleteId = (e) => {
-    this.setState({ deleteId: e.target.value});
+    this.setState({ deleteId: e.target.value });
   }
 
   // Handles data change on the delete latitude field
   handleDeleteLatitude = (e) => {
-    this.setState({ deleteLatitude: e.target.value});
+    this.setState({ deleteLatitude: e.target.value });
   }
 
   // Handles data change on the delete longitude field
   handleDeleteLongitude = (e) => {
-    this.setState({ deleteLongitude: e.target.value});
+    this.setState({ deleteLongitude: e.target.value });
   }
 
   render() {
@@ -91,7 +92,7 @@ class App extends Component {
               <div id="data_table" className="Table">
                 <ReactTable
                   data={this.state.data}
-                  columns={this.state.columns}/>
+                  columns={this.state.columns} />
               </div>
             </Col>
             <Col xs={6} md={3}>
@@ -115,6 +116,10 @@ class App extends Component {
                 <TextField id="longitude_delete_field" hintText="Longitude" onChange={this.handleDeleteLongitude} />
               </div>
             </Col>
+          </Row>
+          <br /> <br />
+          <Row>
+            <Client />
           </Row>
         </Grid>
       </MuiThemeProvider>
@@ -156,10 +161,10 @@ class App extends Component {
     });
     var url = 'http://159.203.178.86:8000/postPosition';
     axios.post(url, data, {
-      headers: {'Content-Type': 'application/json',}
+      headers: { 'Content-Type': 'application/json', }
     }).then(response => {
-        console.log(response);
-      });
+      console.log(response);
+    });
   }
 
   // Delete position in the user database
@@ -171,10 +176,10 @@ class App extends Component {
     });
     var url = 'http://159.203.178.86:8000/deletePosition';
     axios.delete(url, data, {
-      headers: {'Content-Type': 'application/json',}
+      headers: { 'Content-Type': 'application/json', }
     }).then(response => {
-        console.log(response);
-      });
+      console.log(response);
+    });
   }
 
   // Function for fetching info from the database give ID
