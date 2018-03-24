@@ -34,6 +34,10 @@ func TestClientDatabaseDeletePolygon(t *testing.T) {
 
 }
 
+// Test database fetching all current clients in database
+func TestClientDatabaseGetClient(t *testing.T) {
+}
+
 // Test database adding a new client to database
 func TestClientDatabaseAddNewClient(t *testing.T) {
 
