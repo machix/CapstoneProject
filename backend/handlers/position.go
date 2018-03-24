@@ -22,16 +22,19 @@ func GetPosition(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
+		db.Close()
 		return
 	}
 
 	out, err := json.Marshal(us)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
+		db.Close()
 		return
 	}
 
 	fmt.Fprintf(w, string(out))
+	db.Close()
 }
 
 // Post a new latitude and longitude position to the database
@@ -42,12 +45,14 @@ func PostPosition(w http.ResponseWriter, r *http.Request) {
 	err = database.PostPosition(&user, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
+		db.Close()
 		return
 	}
 
 	defer r.Body.Close()
 
 	marshalJson(user, w)
+	db.Close()
 }
 
 // Deletes a latitude and longitude position in the database
@@ -57,10 +62,12 @@ func DeletePosition(w http.ResponseWriter, r *http.Request) {
 	err := database.DeletePosition(&us, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
+		db.Close()
 		return
 	}
 
 	marshalJson(us, w)
+	db.Close()
 }
 
 // Marshals the json and outputs, otherwise outputs error if unsuccesful
