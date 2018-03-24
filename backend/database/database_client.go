@@ -159,6 +159,24 @@ func AddNewClient(c *model.Client, db *sql.DB) error {
 	return nil
 }
 
+// Retrieves all clients from the client database
+func GetClients(db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStmt := "SELECT * FROM CLIENT"
+
+	_, err = db.Exec(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
+}
+
 // Delete the information of a current client
 func DeleteClient(c *model.Client, db *sql.DB) error {
 	tx, err := db.Begin()
