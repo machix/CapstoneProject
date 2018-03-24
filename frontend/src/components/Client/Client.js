@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ReactTable from 'react-table';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import axios from 'axios';
 
 // Client component for demonstrating working service
@@ -90,7 +90,7 @@ class Client extends Component {
   insertNewClient() {
     var url = 'http://159.203.178.86:8000/postClient';
     let data = JSON.stringify({
-      Id: Number.parseInt(this.state.insertId),
+      Id: Number.parseInt(this.state.insertId, 10),
       FirstName: this.state.clientFirstName,
       LastName: this.state.clientLastName
     });
@@ -125,9 +125,8 @@ class Client extends Component {
   deleteClient() {
     var url = 'http://159.203.178.86:8000/deleteClients';
     let data = JSON.stringify({
-      Id: Number.parseInt(this.state.clientDeleteId),
+      Id: Number.parseInt(this.state.clientDeleteId, 10),
     });
-    var url = 'http://159.203.178.86:8000/deletePosition';
     axios.delete(url, data, {
       headers: { 'Content-Type': 'application/json', }
     }).then(response => {

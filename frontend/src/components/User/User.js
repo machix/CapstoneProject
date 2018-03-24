@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import ReactTable from 'react-table';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 import axios from 'axios';
 
 class User extends Component {
@@ -137,7 +137,7 @@ class User extends Component {
   // Insert new position into the user database
   insertNewPosition() {
     let data = JSON.stringify({
-      Id: Number.parseInt(this.state.insertId),
+      Id: Number.parseInt(this.state.insertId, 10),
       Latitude: Number.parseFloat(this.state.insertLatitude),
       Longitude: Number.parseFloat(this.state.insertLongitude)
     });
@@ -152,7 +152,7 @@ class User extends Component {
   // Delete position in the user database
   deletePosition() {
     let data = JSON.stringify({
-      Id: Number.parseInt(this.state.deleteId),
+      Id: Number.parseInt(this.state.deleteId, 10),
       Latitude: Number.parseFloat(this.state.deleteLatitude),
       Longitude: Number.parseFloat(this.state.deleteLongitude)
     });
