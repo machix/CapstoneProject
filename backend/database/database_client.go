@@ -174,7 +174,7 @@ func AddNewClient(c *model.Client, db *sql.DB) error {
 }
 
 // Retrieves all clients from the client database
-func GetClients(db *sql.DB) error {
+func GetClients(c *model.ClientSummary, db *sql.DB) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -182,7 +182,29 @@ func GetClients(db *sql.DB) error {
 
 	sqlStmt := "SELECT * FROM CLIENT"
 
-	_, err = db.Exec(sqlStmt)
+	rows, err := tx.Query(sqlStmt)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		tempClient := model.Client{}
+		err := rows.Scan(
+			&tempClient.ID,
+			&tempClient.FirstName,
+			&tempClient.LastName)
+
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	err = rows.Err()
 	if err != nil {
 		tx.Rollback()
 		return err

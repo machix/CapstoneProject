@@ -35,7 +35,6 @@ func hasPointInPolygon(sourcePoly []*geo.Point, targetPoly []*geo.Point) bool {
 
 // Check the intersection of points
 func checkIntersect(s1p1 *geo.Point, s1p2 *geo.Point, s2p1 *geo.Point, s2p2 *geo.Point) bool {
-	// Based on http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 	p := s1p1
 	r := vectorDifference(s1p2, s1p1)
 	q := s2p1

@@ -1,5 +1,9 @@
 package model
 
+type ClientSummary struct {
+	ClientSummary []Client
+}
+
 type Client struct {
 	ID        uint32 `json:"Id"`
 	FirstName string `json:"FirstName"`
