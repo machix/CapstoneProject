@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
 	_ "github.com/lib/pq"
@@ -87,7 +88,7 @@ func GetPolygons(c *model.Client, db *sql.DB) error {
 		return err
 	}
 
-	sqlStmt := "SELECT * WHERE id=$1"
+	sqlStmt := "SELECT polygon FROM CLIENT_POLYGON WHERE id=$1"
 
 	clientPolygonRetrieve, err := tx.Prepare(sqlStmt)
 	if err != nil {
@@ -115,7 +116,19 @@ func SavePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
 
 	sqlStmt := "INSERT INTO CLIENT_POLYGON (id, name, polygon) VALUES ($1, $2, $3)"
 
-	_, err = tx.Exec(sqlStmt, c.ID, p)
+	// Format the Polygon string for insertion into the database
+	polygonStmt := "POLYGON(("
+	for _, h := range p.Coordinates {
+		for _, i := range h {
+			polygonStmt += FloatToString(i) + " "
+		}
+		polygonStmt += ","
+	}
+	polygonStmt += "))"
+
+	fmt.Println(polygonStmt)
+
+	_, err = tx.Exec(sqlStmt, p.Id, p.Name, polygonStmt)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -194,4 +207,9 @@ func DeleteClient(c *model.Client, db *sql.DB) error {
 	}
 
 	return nil
+}
+
+// Convert Float number to a string
+func FloatToString(input_num float64) string {
+	return strconv.FormatFloat(input_num, 'f', 6, 64)
 }

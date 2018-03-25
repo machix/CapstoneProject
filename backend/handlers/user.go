@@ -1,30 +1,82 @@
 package handlers
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
+	"github.com/NaturalFractals/CapstoneProject/backend/database"
+	"github.com/NaturalFractals/CapstoneProject/backend/model"
 )
 
-// UserHandler represent handler for handling user resource
-type (
-	UserHandler struct{}
-)
-
-// Return new UserHandler
-func NewUserHandler() *UserHandler {
-	return &UserHandler{}
+// This is a method that test response from the API
+func Handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "You have been hacked.")
 }
 
-// GetUser retrieves an individual user resource
-func (uh UserHandler) GetUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+// This is a method for testing response from the API
+func GetPosition(w http.ResponseWriter, r *http.Request) {
+	var db = database.ConnectUserDb()
+	us := model.Summary{}
+	err := database.QueryPosition(&us, db)
+
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		db.Close()
+		return
+	}
+
+	out, err := json.Marshal(us)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		db.Close()
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
+	db.Close()
 }
 
-// CreateUser creates a new user resource
-func (uh UserHandler) CreateUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+// Post a new latitude and longitude position to the database
+func PostPosition(w http.ResponseWriter, r *http.Request) {
+	var db = database.ConnectUserDb()
+	var user model.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	err = database.PostPosition(&user, db)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		db.Close()
+		return
+	}
 
+	defer r.Body.Close()
+
+	marshalJson(user, w)
+	db.Close()
 }
 
-// RemoveUser removes an existing user resource
-func (uh UserHandler) RemoveUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+// Deletes a latitude and longitude position in the database
+func DeletePosition(w http.ResponseWriter, r *http.Request) {
+	var db = database.ConnectUserDb()
+	us := model.User{}
+	err := database.DeletePosition(&us, db)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		db.Close()
+		return
+	}
+
+	marshalJson(us, w)
+	db.Close()
+}
+
+// Marshals the json and outputs, otherwise outputs error if unsuccesful
+func marshalJson(u model.User, w http.ResponseWriter) {
+	out, err := json.Marshal(u)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
 }
