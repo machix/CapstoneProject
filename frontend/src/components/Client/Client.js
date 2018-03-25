@@ -103,7 +103,7 @@ class Client extends Component {
 
   // Fetches the info for the client database
   fetchClientDatabaseInfo() {
-    var url = 'http://159.203.178.86:8000/getClients';
+    var url = 'http://159.203.178.86:8000/getClient';
     axios.get(url)
       .then(response => {
         console.log(response.data);
