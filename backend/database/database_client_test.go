@@ -36,6 +36,7 @@ func TestClientDatabaseDeletePolygon(t *testing.T) {
 
 // Test database fetching all current clients in database
 func TestClientDatabaseGetClient(t *testing.T) {
+<<<<<<< HEAD
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
@@ -56,6 +57,8 @@ func TestClientDatabaseGetClient(t *testing.T) {
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
+=======
+>>>>>>> master
 }
 
 // Test database adding a new client to database

@@ -25,7 +25,7 @@ class Maps extends Component {
             <GoogleMap
                 defaultZoom={8}
                 defaultCenter={new google.maps.LatLng(-34.397, 150.644)}
-                >
+            >
                 <DrawingManager
                     defaultDrawingMode={google.maps.drawing.OverlayType.POLYGON}
                     defaultOptions={{
@@ -49,9 +49,9 @@ class Maps extends Component {
                         },
                     }}
                     onPolygonComplete={(polygon) => this.savePolygonPoints(polygon)}
-                    />
+                />
             </GoogleMap>
-            );
+        );
         return (
             <div>
                 <MapWithADrawingManager />
@@ -63,7 +63,7 @@ class Maps extends Component {
     savePolygonPoints(polygon) {
         var locations = (polygon.getPath().getArray());
         var polygonPointArray = [];
-        for(var i = 0; i < locations.length; i++) {
+        for (var i = 0; i < locations.length; i++) {
             var polygonObject = {};
             polygonObject.latitude = locations[i].lat();
             polygonObject.longitude = locations[i].lng();
@@ -79,7 +79,7 @@ class Maps extends Component {
 
         var url = 'http://159.203.178.86:8000/savePolygon';
         axios.post(url, data, {
-            headers: {'Content-Type': 'application/json',}
+            headers: { 'Content-Type': 'application/json', }
         }).then(response => {
             console.log(response);
         });
@@ -87,16 +87,16 @@ class Maps extends Component {
 
     // Download polygons contained within certain area on the map
     getPolygonPoints() {
-        //TODO: Pass in range to query in PostGIS
+        
         var url = "http://159.203.178.86:8000/getPolygons";
         axios.get(url)
-          .then(response => {
-              console.log(response);
-          });
+            .then(response => {
+                console.log(response);
+            });
     }
 
     // Prevents the componenet from reloading/updating on every event
-    shouldComponentUpdate(nextProps, nextState){
+    shouldComponentUpdate(nextProps, nextState) {
         return false;
     }
 }
