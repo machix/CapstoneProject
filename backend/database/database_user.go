@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
-	_ "github.com/lib/pq"
 )
 
 const (

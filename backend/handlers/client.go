@@ -27,6 +27,7 @@ func SavePolygon(w http.ResponseWriter, r *http.Request) {
 func GetPolygons(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
 	client := model.Client{}
+
 	err := database.GetPolygons(&client, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -42,6 +43,7 @@ func DeletePolygon(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
 	polygon := model.Polygon{}
 	client := model.Client{}
+
 	err := database.DeletePolygon(&polygon, &client, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -56,6 +58,7 @@ func DeletePolygon(w http.ResponseWriter, r *http.Request) {
 func CreateClient(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
 	client := model.Client{}
+
 	err := database.AddNewClient(&client, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
