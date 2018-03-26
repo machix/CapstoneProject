@@ -19,15 +19,15 @@ class Client extends Component {
       columns: [
         {
           Header: "Id",
-          accessor: "id"
+          accessor: "Id"
         },
         {
           Header: "First Name",
-          accessor: "first_name"
+          accessor: "FirstName"
         },
         {
           Header: "Last Name",
-          accessor: "last_name"
+          accessor: "LastName"
         }
       ]
     }
@@ -106,17 +106,20 @@ class Client extends Component {
     var url = 'http://159.203.178.86:8000/getClient';
     axios.get(url)
       .then(response => {
-        console.log(response.data);
         var res = response.data;
+        this.setState({ data: [] });
         var tempTableArray = [];
-        console.log(res.length)
-        for (var i = 0; i < res.length; i++) {
-          var tempObject;
-          tempObject.Id = res[i].Id;
-          tempObject.FirstName = res[i].FirstName;
-          tempObject.LastName = res[i].LastName;
-          console.log(tempObject);
-          this.state.tempTableArray.push(tempObject);
+        for (var key in res) {
+          if (res.hasOwnProperty(key)) {
+            var value = res[key];
+            for (var i = 0; i < value.length; i++) {
+              var tempObject = {};
+              tempObject.Id = value[i].Id;
+              tempObject.FirstName = value[i].FirstName;
+              tempObject.LastName = value[i].LastName;
+              tempTableArray.push(tempObject);
+            }
+          }
         }
         this.setState({ data: tempTableArray });
         console.log(this.state.data);
@@ -134,6 +137,11 @@ class Client extends Component {
     }).then(response => {
       console.log(response);
     });
+  }
+
+  // Prevents the componenet from reloading/updating on every event
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
   }
 }
 
