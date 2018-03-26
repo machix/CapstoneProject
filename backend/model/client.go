@@ -12,7 +12,6 @@ type Client struct {
 
 type Store struct {
 	ClientID uint32
-	//Store location
 }
 
 type StoreLocation struct {

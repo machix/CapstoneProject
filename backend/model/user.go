@@ -24,10 +24,3 @@ type UserInfo struct {
 	UpdatedAt time.Time
 	Deleted   uint8
 }
-
-// UserLocation struct that represents location data about user
-type UserLocation struct {
-	UserID    uint32
-	Latitude  float32
-	Longitude float32
-}
