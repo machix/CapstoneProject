@@ -39,6 +39,11 @@ func TestDatabaseSelectQuery(t *testing.T) {
 	}
 }
 
+// Test database insert query for user
+func TestDatabaseInsertQuery(t *testing.T) {
+
+}
+
 // Test database delete query for user
 func TestDatabaseDeleteQuery(t *testing.T) {
 	db, mock, err := sqlmock.New()
