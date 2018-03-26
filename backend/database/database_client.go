@@ -155,6 +155,47 @@ func DeletePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
 	return nil
 }
 
+// Retrieves all clients from the client database
+func GetClients(c *model.ClientSummary, db *sql.DB) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	rows, err := tx.Query(
+		`SELECT * 
+		 FROM CLIENT`)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	defer rows.Close()
+
+	//Loop through database query
+	for rows.Next() {
+		tempClient := model.Client{}
+		err = rows.Scan(
+			&tempClient.ID,
+			&tempClient.FirstName,
+			&tempClient.LastName)
+
+		if err != nil {
+			return err
+		}
+
+		c.ClientSummary = append(c.ClientSummary, tempClient)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
+}
+
 // Add new client to the client database
 func AddNewClient(c *model.Client, db *sql.DB) error {
 	tx, err := db.Begin()
@@ -165,46 +206,6 @@ func AddNewClient(c *model.Client, db *sql.DB) error {
 	sqlStmt := "INSERT INTO CLIENT (id, first_name, last_name) VALUES ($1, $2, $3)"
 
 	_, err = db.Exec(sqlStmt, c.ID, c.FirstName, c.LastName)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return nil
-}
-
-// Retrieves all clients from the client database
-func GetClients(c *model.ClientSummary, db *sql.DB) error {
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-
-	sqlStmt := "SELECT * FROM CLIENT"
-
-	rows, err := tx.Query(sqlStmt)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		tempClient := model.Client{}
-		err := rows.Scan(
-			&tempClient.ID,
-			&tempClient.FirstName,
-			&tempClient.LastName)
-
-		if err != nil {
-			return err
-		}
-
-		return nil
-	}
-
-	err = rows.Err()
 	if err != nil {
 		tx.Rollback()
 		return err
