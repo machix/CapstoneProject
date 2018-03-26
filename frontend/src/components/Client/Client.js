@@ -103,17 +103,19 @@ class Client extends Component {
 
   // Fetches the info for the client database
   fetchClientDatabaseInfo() {
-    var url = 'http://159.203.178.86:8000/getClients';
+    var url = 'http://159.203.178.86:8000/getClient';
     axios.get(url)
       .then(response => {
         console.log(response.data);
         var res = response.data;
         var tempTableArray = [];
+        console.log(res.length)
         for (var i = 0; i < res.length; i++) {
           var tempObject;
           tempObject.Id = res[i].Id;
           tempObject.FirstName = res[i].FirstName;
           tempObject.LastName = res[i].LastName;
+          console.log(tempObject);
           this.state.tempTableArray.push(tempObject);
         }
         this.setState({ data: tempTableArray });
