@@ -36,6 +36,7 @@ func GetClient(w http.ResponseWriter, r *http.Request) {
 func CreateClient(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
 	var client model.Client
+
 	err := json.NewDecoder(r.Body).Decode(&client)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -60,7 +61,9 @@ func CreateClient(w http.ResponseWriter, r *http.Request) {
 func RemoveClient(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
 	client := model.Client{}
-	err := database.DeleteClient(&client, db)
+	err := json.NewDecoder(r.Body).Decode(&client)
+
+	err = database.DeleteClient(&client, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		db.Close()

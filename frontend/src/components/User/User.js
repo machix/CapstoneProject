@@ -164,25 +164,6 @@ class User extends Component {
         });
     }
 
-    // Function for testing communication with the rudimentary API
-    fetchBasicEndpoint(endpoint) {
-        var url = 'http://159.203.178.86:8000' + endpoint;
-        axios.get(url)
-            .then(response => {
-                console.log(response.data);
-                var res = response.data;
-                if (endpoint === "/position") {
-                    var responseString = res['Text'];
-                    this.setState({ getRequestPositionResponse: responseString })
-                } else {
-                    this.setState({ getRequestResponse: res });
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            })
-    }
-
     // Prevents the componenet from reloading/updating on every event
     shouldComponentUpdate(nextProps, nextState) {
         return false;
