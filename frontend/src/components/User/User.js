@@ -108,100 +108,85 @@ class User extends Component {
         );
     }
 
-      // Function for fetching all of the info in the database
-  fetchDatabaseInfo() {
-    var url = 'http://159.203.178.86:8000/position';
-    axios.get(url)
-      .then(response => {
-        console.log(response);
-        var res = response.data;
-        this.setState({ data: [] });
-        var tempTableArray = [];
-        for (var key in res) {
-          if (res.hasOwnProperty(key)) {
-            var value = res[key];
-            for (var i = 0; i < value.length; i++) {
-              var tempObject = {};
-              tempObject.id = value[i].Id;
-              tempObject.latitude = value[i].Latitude;
-              tempObject.longitude = value[i].Longitude;
-              tempTableArray.push(tempObject);
-            }
-          }
-        }
-        this.setState({ data: tempTableArray });
-        console.log(this.state.data);
-      })
-  }
+    // Function for fetching all of the info in the database
+    fetchDatabaseInfo() {
+        var url = 'http://159.203.178.86:8000/position';
+        axios.get(url)
+            .then(response => {
+                console.log(response);
+                var res = response.data;
+                this.setState({ data: [] });
+                var tempTableArray = [];
+                for (var key in res) {
+                    if (res.hasOwnProperty(key)) {
+                        var value = res[key];
+                        for (var i = 0; i < value.length; i++) {
+                            var tempObject = {};
+                            tempObject.id = value[i].Id;
+                            tempObject.latitude = value[i].Latitude;
+                            tempObject.longitude = value[i].Longitude;
+                            tempTableArray.push(tempObject);
+                        }
+                    }
+                }
+                this.setState({ data: tempTableArray });
+                console.log(this.state.data);
+            });
+    }
 
-  // Insert new position into the user database
-  insertNewPosition() {
-    let data = JSON.stringify({
-      Id: Number.parseInt(this.state.insertId, 10),
-      Latitude: Number.parseFloat(this.state.insertLatitude),
-      Longitude: Number.parseFloat(this.state.insertLongitude)
-    });
-    var url = 'http://159.203.178.86:8000/postPosition';
-    axios.post(url, data, {
-      headers: { 'Content-Type': 'application/json', }
-    }).then(response => {
-      console.log(response);
-    });
-  }
+    // Insert new position into the user database
+    insertNewPosition() {
+        let data = JSON.stringify({
+            Id: Number.parseInt(this.state.insertId, 10),
+            Latitude: Number.parseFloat(this.state.insertLatitude),
+            Longitude: Number.parseFloat(this.state.insertLongitude)
+        });
+        var url = 'http://159.203.178.86:8000/postPosition';
+        axios.post(url, data, {
+            headers: { 'Content-Type': 'application/json', }
+        }).then(response => {
+            console.log(response);
+        });
+    }
 
-  // Delete position in the user database
-  deletePosition() {
-    let data = JSON.stringify({
-      Id: Number.parseInt(this.state.deleteId, 10),
-      Latitude: Number.parseFloat(this.state.deleteLatitude),
-      Longitude: Number.parseFloat(this.state.deleteLongitude)
-    });
-    var url = 'http://159.203.178.86:8000/deletePosition';
-    axios.delete(url, data, {
-      headers: { 'Content-Type': 'application/json', }
-    }).then(response => {
-      console.log(response);
-    });
-  }
+    // Delete position in the user database
+    deletePosition() {
+        let data = JSON.stringify({
+            Id: Number.parseInt(this.state.deleteId, 10),
+            Latitude: Number.parseFloat(this.state.deleteLatitude),
+            Longitude: Number.parseFloat(this.state.deleteLongitude)
+        });
+        var url = 'http://159.203.178.86:8000/deletePosition';
+        axios.delete(url, data, {
+            headers: { 'Content-Type': 'application/json', }
+        }).then(response => {
+            console.log(response);
+        });
+    }
 
-  // Function for fetching info from the database give ID
-  fetchDatabaseId(id) {
-    var url = 'http://159.203.178.86:8000/getPosition';
-    axios.get(url)
-      .then(response => {
-        console.log(response.data);
-        var res = response.data;
-        var tempTableArray = [];
-        for (var i = 0; i < res.length; i++) {
-          var tempObject;
-          tempObject.Id = res[i].Id;
-          tempObject.Latitude = res[i].Latitude;
-          tempObject.Longitude = res[i].Longitude;
-          this.state.tempTableArray.push(tempObject);
-        }
-        this.setState({ data: tempTableArray });
-        console.log(this.state.data);
-      })
-  }
+    // Function for testing communication with the rudimentary API
+    fetchBasicEndpoint(endpoint) {
+        var url = 'http://159.203.178.86:8000' + endpoint;
+        axios.get(url)
+            .then(response => {
+                console.log(response.data);
+                var res = response.data;
+                if (endpoint === "/position") {
+                    var responseString = res['Text'];
+                    this.setState({ getRequestPositionResponse: responseString })
+                } else {
+                    this.setState({ getRequestResponse: res });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
 
-  // Function for testing communication with the rudimentary API
-  fetchBasicEndpoint(endpoint) {
-    var url = 'http://159.203.178.86:8000' + endpoint;
-    axios.get(url)
-      .then(response => {
-        console.log(response.data);
-        var res = response.data;
-        if (endpoint === "/position") {
-          var responseString = res['Text'];
-          this.setState({ getRequestPositionResponse: responseString })
-        } else {
-          this.setState({ getRequestResponse: res });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  }
+    // Prevents the componenet from reloading/updating on every event
+    shouldComponentUpdate(nextProps, nextState) {
+        return false;
+    }
 }
 
 export default User;
