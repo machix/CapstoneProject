@@ -59,7 +59,8 @@ func PostPosition(w http.ResponseWriter, r *http.Request) {
 func DeletePosition(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectUserDb()
 	us := model.User{}
-	err := database.DeletePosition(&us, db)
+	err := json.NewDecoder(r.Body).Decode(&us)
+	err = database.DeletePosition(&us, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		db.Close()

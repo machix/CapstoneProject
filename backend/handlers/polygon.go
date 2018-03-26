@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/database"
@@ -12,8 +13,9 @@ func SavePolygon(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
 	client := model.Client{}
 	polygon := model.Polygon{}
+	err := json.NewDecoder(r.Body).Decode(&polygon)
 
-	err := database.SavePolygon(&polygon, &client, db)
+	err = database.SavePolygon(&polygon, &client, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		db.Close()
