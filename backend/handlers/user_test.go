@@ -11,6 +11,7 @@ func TestGetPosition(t *testing.T) {
 	// r, _ := http.NewRequest("GET", "/position", nil)
 	// w := httptest.NewRecorder()
 
+	// Router().ServeHTTP(w, r)
 }
 
 // Test create user
