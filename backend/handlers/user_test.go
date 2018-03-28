@@ -1,25 +1,18 @@
 package handlers
 
 import (
-	"net/http"
-	"net/http/httptest"
 	"testing"
 )
 
-// Test get user
+// Test get user position
 func TestGetPosition(t *testing.T) {
-	t.Parallel()
 
-	r, _ := http.NewRequest("GET", "/position", nil)
-	w := httptest.NewRecorder()
-
-	Router().ServeHTTP(w, r)
 }
 
-// Test create user
+//Test delete user position
 func TestDeletePosition(t *testing.T) {
 }
 
-// Test remove user
+// Test post user position
 func TestPostPosition(t *testing.T) {
 }
