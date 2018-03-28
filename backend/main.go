@@ -12,6 +12,13 @@ import (
 var db *sql.DB
 
 func main() {
+	router := Router()
+
+	corsRouter := cors.Default().Handler(router)
+	http.ListenAndServe(":8000", corsRouter)
+}
+
+func Router() *mux.Router {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", handlers.Handler)
@@ -25,6 +32,5 @@ func main() {
 	router.HandleFunc("/savePolygon", handlers.SavePolygon).Methods("POST")
 	router.HandleFunc("/deletePolygon", handlers.DeletePolygon).Methods("DELETE")
 
-	corsRouter := cors.Default().Handler(router)
-	http.ListenAndServe(":8000", corsRouter)
+	return router
 }

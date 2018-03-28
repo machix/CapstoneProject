@@ -10,15 +10,6 @@ import (
 func TestClientDatabaseConnect(t *testing.T) {
 }
 
-// Test database save polygon for client database
-func TestClientDatabaseSavePolygon(t *testing.T) {
-}
-
-// Test database get polygon for client database
-func TestClientDatabaseGetPolygons(t *testing.T) {
-
-}
-
 // Test database delete polygon for client database
 func TestClientDatabaseDeletePolygon(t *testing.T) {
 	db, mock, err := sqlmock.New()
