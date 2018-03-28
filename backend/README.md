@@ -32,6 +32,7 @@ Addtionally, you will need to setup a ```env.list``` file on your droplet that c
 Testing for the application includes ```sql-mock``` to install this run the command below:
 
 ```go get gopkg.in/DATA-DOG/go-sqlmock.v1```
+```go get github.com/stretchr/testify```
 
 Once this dependency is installed, ensure you are at the top of the backend directory and run:
 
