@@ -42,7 +42,6 @@ class User extends Component {
         this.handleDeleteLongitude = this.handleDeleteLongitude.bind(this);
     }
 
-
     // Handles data change on the insert id text field
     handlePostId = (e) => {
         this.setState({ insertId: e.target.value });
@@ -162,11 +161,6 @@ class User extends Component {
         }).then(response => {
             console.log(response);
         });
-    }
-
-    // Prevents the componenet from reloading/updating on every event
-    shouldComponentUpdate(nextProps, nextState) {
-        return false;
     }
 }
 

@@ -65,8 +65,8 @@ class Maps extends Component {
         var polygonPointArray = [];
         for (var i = 0; i < locations.length; i++) {
             var polygonObject = {};
-            polygonObject.latitude = locations[i].lat();
-            polygonObject.longitude = locations[i].lng();
+            polygonObject.Latitude = Number.parseFloat(locations[i].lat());
+            polygonObject.Longitude = Number.parseFloat(locations[i].lng());
             polygonPointArray.push(polygonObject);
         }
 
@@ -87,7 +87,6 @@ class Maps extends Component {
 
     // Download polygons contained within certain area on the map
     getPolygonPoints() {
-        
         var url = "http://159.203.178.86:8000/getPolygons";
         axios.get(url)
             .then(response => {
