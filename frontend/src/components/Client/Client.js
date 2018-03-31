@@ -138,11 +138,6 @@ class Client extends Component {
       console.log(response);
     });
   }
-
-  // Prevents the componenet from reloading/updating on every event
-  shouldComponentUpdate(nextProps, nextState) {
-    return false;
-  }
 }
 
 export default Client;

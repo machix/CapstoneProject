@@ -41,15 +41,14 @@ func SavePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
 		return err
 	}
 
+	fmt.Println(p.Coordinates)
 	sqlStmt := "INSERT INTO CLIENT_POLYGON (id, name, polygon) VALUES ($1, $2, $3)"
 
 	// Format the Polygon string for insertion into the database
 	polygonStmt := "POLYGON(("
 	for _, h := range p.Coordinates {
-		for _, i := range h {
-			polygonStmt += FloatToString(i) + " "
-		}
-		polygonStmt += ","
+		polygonStmt += FloatToString(h.Latitude) + "," + FloatToString(h.Longitude) + " "
+		fmt.Println(polygonStmt)
 	}
 	polygonStmt += "))"
 
