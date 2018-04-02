@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 
 class Maps extends Component {
@@ -55,6 +56,7 @@ class Maps extends Component {
         return (
             <div>
                 <MapWithADrawingManager />
+                <RaisedButton id="polygon_button" label="Get Polygons" primary={true} onClick={() => this.getPolygonPoints()} />
             </div>
         );
     }

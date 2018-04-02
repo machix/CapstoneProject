@@ -16,11 +16,7 @@ func GetPolygons(p *model.PolygonSummary, db *sql.DB) error {
 	}
 
 	rows, err := tx.Query(
-		`SELECT array_to_string(array_agg, ',') FROM 
-		(SELECT array_agg( ST_x(geom)||' '||ST_y(geom))  FROM 
-			(SELECT (ST_dumppoints(polygon)).geom FROM CLIENT_POLYGON
-			) AS foo_1
-		) AS foo_2;`)
+		`SELECT * FROM CLIENT_POLYGON`)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -28,7 +24,27 @@ func GetPolygons(p *model.PolygonSummary, db *sql.DB) error {
 
 	//Loop through database query
 	for rows.Next() {
-		//Print out the polygon
+		tempPolygon := model.Polygon{}
+		err = rows.Scan(
+			&tempPolygon.Id,
+			&tempPolygon.Name)
+
+		if err != nil {
+			return err
+		}
+
+		p.PolygonSummary = append(p.PolygonSummary, tempPolygon)
+	}
+
+	poly, err := tx.Query(
+		`SELECT array_to_string(array_agg, ',') FROM 
+		(SELECT array_agg( ST_x(geom)||' '||ST_y(geom))  FROM 
+			(SELECT (ST_dumppoints(polygon)).geom FROM CLIENT_POLYGON
+			) AS foo_1
+		) AS foo_2;`)
+
+	for poly.Next() {
+		fmt.Println()
 	}
 
 	err = rows.Err()
