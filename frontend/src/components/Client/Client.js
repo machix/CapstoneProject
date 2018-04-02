@@ -71,8 +71,8 @@ class Client extends Component {
             <RaisedButton id="insert_button" label="Insert New Client" primary={true} onClick={() => this.insertNewClient()} />
             <br />
             <TextField id="id_field" hintText="Id" onChange={this.handlePostClientId} />
-            <TextField id="first_name_field" hintText="Latitude" onChange={this.handlePostFirstName} />
-            <TextField id="last_name_field" hintText="Longitude" onChange={this.handlePostLastName} />
+            <TextField id="first_name_field" hintText="First Name" onChange={this.handlePostFirstName} />
+            <TextField id="last_name_field" hintText="Last Name" onChange={this.handlePostLastName} />
           </div>
         </Col>
         <Col xs={6} md={3}>
