@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/NaturalFractals/CapstoneProject/backend/database"
@@ -28,15 +29,22 @@ func SavePolygon(w http.ResponseWriter, r *http.Request) {
 // Retrieve client's polygons(geofences) from the database
 func GetPolygons(w http.ResponseWriter, r *http.Request) {
 	var db = database.ConnectClientDb()
-	client := model.Client{}
-
-	err := database.GetPolygons(&client, db)
+	polygonSummary := model.PolygonSummary{}
+	err := database.GetPolygons(&polygonSummary, db)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		db.Close()
 		return
 	}
 
+	out, err := json.Marshal(polygonSummary)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		db.Close()
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
 	db.Close()
 }
 

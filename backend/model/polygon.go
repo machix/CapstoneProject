@@ -1,5 +1,9 @@
 package model
 
+type PolygonSummary struct {
+	PolygonSummary []Polygon
+}
+
 type Polygon struct {
 	Id          int32        `json:"id"`
 	Name        string       `json:"name"`

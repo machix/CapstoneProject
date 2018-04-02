@@ -9,23 +9,29 @@ import (
 )
 
 // Returns all polygons associated with client
-func GetPolygons(c *model.Client, db *sql.DB) error {
+func GetPolygons(p *model.PolygonSummary, db *sql.DB) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
 
-	sqlStmt := "SELECT polygon FROM CLIENT_POLYGON WHERE id=$1"
-
-	clientPolygonRetrieve, err := tx.Prepare(sqlStmt)
+	rows, err := tx.Query(
+		`SELECT array_to_string(array_agg, ',') FROM 
+		(SELECT array_agg( ST_x(geom)||' '||ST_y(geom))  FROM 
+			(SELECT (ST_dumppoints(polygon)).geom FROM CLIENT_POLYGON
+			) AS foo_1
+		) AS foo_2;`)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	defer clientPolygonRetrieve.Close()
+	//Loop through database query
+	for rows.Next() {
+		//Print out the polygon
+	}
 
-	_, err = tx.Exec(sqlStmt, c.ID)
+	err = rows.Err()
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -55,9 +61,6 @@ func SavePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
 	polygonStmt += "))')"
 
 	fmt.Println(polygonStmt)
-	fmt.Println(p.Id)
-	fmt.Println(p.Name)
-	fmt.Println(sqlStmt)
 
 	_, err = db.Exec(sqlStmt, p.Id, p.Name, polygonStmt)
 	if err != nil {
