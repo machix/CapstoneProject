@@ -70,12 +70,20 @@ class Maps extends Component {
             polygonPointArray.push(polygonObject);
         }
 
+        // Final point is not correct (need same beginning and end point)
+        var polygonObject = {};
+        polygonObject.Latitude = Number.parseFloat(locations[0].lat());
+        polygonObject.Longitude = Number.parseFloat(locations[0].lng());
+        polygonPointArray.push(polygonObject);
+
         console.log(polygonPointArray);
         var data = JSON.stringify({
-            id: 1,
-            name: "polygon1",
+            id: Number.parseInt(6),
+            name: 'polygon2',
             points: polygonPointArray
         });
+
+        console.log(data);
 
         var url = 'http://159.203.178.86:8000/savePolygon';
         axios.post(url, data, {
