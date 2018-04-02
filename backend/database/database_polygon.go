@@ -41,20 +41,25 @@ func SavePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
 		return err
 	}
 
-	fmt.Println(p.Coordinates)
 	sqlStmt := "INSERT INTO CLIENT_POLYGON (id, name, polygon) VALUES ($1, $2, $3)"
 
 	// Format the Polygon string for insertion into the database
-	polygonStmt := "POLYGON(("
-	for _, h := range p.Coordinates {
-		polygonStmt += FloatToString(h.Latitude) + "," + FloatToString(h.Longitude) + " "
+	polygonStmt := "ST_GeometryFromText('POLYGON(("
+	for i, h := range p.Coordinates {
+		polygonStmt += FloatToString(h.Latitude) + " " + FloatToString(h.Longitude)
+		if i < len(p.Coordinates)-1 {
+			polygonStmt += ","
+		}
 		fmt.Println(polygonStmt)
 	}
-	polygonStmt += "))"
+	polygonStmt += "))')"
 
 	fmt.Println(polygonStmt)
+	fmt.Println(p.Id)
+	fmt.Println(p.Name)
+	fmt.Println(sqlStmt)
 
-	_, err = tx.Exec(sqlStmt, p.Id, p.Name, polygonStmt)
+	_, err = db.Exec(sqlStmt, p.Id, p.Name, polygonStmt)
 	if err != nil {
 		tx.Rollback()
 		return err
