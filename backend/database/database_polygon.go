@@ -15,27 +15,6 @@ func GetPolygons(p *model.PolygonSummary, db *sql.DB) error {
 		return err
 	}
 
-	rows, err := tx.Query(
-		`SELECT * FROM CLIENT_POLYGON`)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	//Loop through database query
-	for rows.Next() {
-		tempPolygon := model.Polygon{}
-		err = rows.Scan(
-			&tempPolygon.Id,
-			&tempPolygon.Name)
-
-		if err != nil {
-			return err
-		}
-
-		p.PolygonSummary = append(p.PolygonSummary, tempPolygon)
-	}
-
 	poly, err := tx.Query(
 		`SELECT array_to_string(array_agg, ',') FROM 
 		(SELECT array_agg( ST_x(geom)||' '||ST_y(geom))  FROM 
@@ -44,10 +23,16 @@ func GetPolygons(p *model.PolygonSummary, db *sql.DB) error {
 		) AS foo_2;`)
 
 	for poly.Next() {
-		fmt.Println()
+		err = poly.Scan(
+			&p.PolygonSummary,
+		)
+
+		if err != nil {
+			return err
+		}
 	}
 
-	err = rows.Err()
+	err = poly.Err()
 	if err != nil {
 		tx.Rollback()
 		return err

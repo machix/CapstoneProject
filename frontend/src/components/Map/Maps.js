@@ -3,6 +3,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 
 class Maps extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            polygonArray: []
+        }
+    }
+
     render() {
         const google = window.google;
         const { compose, withProps } = require("recompose");
@@ -57,6 +65,7 @@ class Maps extends Component {
             <div>
                 <MapWithADrawingManager />
                 <RaisedButton id="polygon_button" label="Get Polygons" primary={true} onClick={() => this.getPolygonPoints()} />
+                <RaisedButton id="draw_polygon_button" label="Draw Polygons" primary={true} onClick={() => this.drawPolygons()} />
             </div>
         );
     }
@@ -100,8 +109,44 @@ class Maps extends Component {
         var url = "http://159.203.178.86:8000/getPolygons";
         axios.get(url)
             .then(response => {
-                console.log(response);
+                // Split response by delimeter for parsing
+                var polyString = response.data["PolygonSummary"];
+                var polyStringArray = polyString.split(",");
+                var tempPolygonArray = [];
+
+                // Loop through each coordinate to pull out polygons
+                polyStringArray.forEach( (coordinate) => {
+                    var tempCoordinate = coordinate.split(" ");
+                    var tempCoordinateObject = {};
+                    tempCoordinateObject.lat = Number.parseFloat(tempCoordinate[0]);
+                    tempCoordinateObject.lng = Number.parseFloat(tempCoordinate[1]);
+
+                    // If polygon is complete reset the temp array
+                    if(tempPolygonArray.find(x => x.lat  === tempCoordinateObject.lat)) {
+                        tempPolygonArray.push(tempCoordinateObject);
+                        this.state.polygonArray.push(tempPolygonArray);
+                        tempPolygonArray = [];
+                    } else {
+                        tempPolygonArray.push(tempCoordinateObject);
+                    }
+                    console.log(this.state.polygonArray);
+                });
             });
+    }
+
+    // Draw the polygons from the database in the database
+    drawPolygons() {
+        this.state.polygonArray.forEach( (polygon) => {
+            var polygonToDraw = this.google.maps.Polygon({
+                paths: polygon,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35
+            });
+            polygonToDraw.setMap(this.props.GoogleMap);
+        });
     }
 
     // Prevents the componenet from reloading/updating on every event
