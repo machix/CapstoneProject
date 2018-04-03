@@ -1,3 +1,4 @@
+/*global google*/
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
@@ -75,10 +76,10 @@ class Maps extends Component {
         var locations = (polygon.getPath().getArray());
         var polygonPointArray = [];
         for (var i = 0; i < locations.length; i++) {
-            var polygonObject = {};
-            polygonObject.Latitude = Number.parseFloat(locations[i].lat());
-            polygonObject.Longitude = Number.parseFloat(locations[i].lng());
-            polygonPointArray.push(polygonObject);
+            var polygonObjectTemp= {};
+            polygonObjectTemp.Latitude = Number.parseFloat(locations[i].lat());
+            polygonObjectTemp.Longitude = Number.parseFloat(locations[i].lng());
+            polygonPointArray.push(polygonObjectTemp);
         }
 
         // Final point is not correct (need same beginning and end point)
@@ -89,7 +90,7 @@ class Maps extends Component {
 
         console.log(polygonPointArray);
         var data = JSON.stringify({
-            id: Number.parseInt(6),
+            id: Number.parseInt(6, 10),
             name: 'polygon2',
             points: polygonPointArray
         });
@@ -113,31 +114,36 @@ class Maps extends Component {
                 var polyString = response.data["PolygonSummary"];
                 var polyStringArray = polyString.split(",");
                 var tempPolygonArray = [];
+                var tempCoordinateObject = {};
 
                 // Loop through each coordinate to pull out polygons
                 polyStringArray.forEach( (coordinate) => {
                     var tempCoordinate = coordinate.split(" ");
-                    var tempCoordinateObject = {};
-                    tempCoordinateObject.lat = Number.parseFloat(tempCoordinate[0]);
-                    tempCoordinateObject.lng = Number.parseFloat(tempCoordinate[1]);
+                    var tempPolygonCoordinateArray = [];
+                    for(var i = 0; i < tempCoordinate.length; i++) {
+                        tempPolygonCoordinateArray.push(new google.maps.LatLng(
+                            parseFloat(tempCoordinate[0]),
+                            parseFloat(tempCoordinate[1])
+                        ));
+                    }
 
                     // If polygon is complete reset the temp array
-                    if(tempPolygonArray.find(x => x.lat  === tempCoordinateObject.lat)) {
+                    if(tempPolygonArray.find(x => x.lat  === tempPolygonCoordinateArray["lat"])) {
                         tempPolygonArray.push(tempCoordinateObject);
-                        this.state.polygonArray.push(tempPolygonArray);
+                        this.state.polygonArray.push(tempPolygonCoordinateArray);
                         tempPolygonArray = [];
                     } else {
-                        tempPolygonArray.push(tempCoordinateObject);
+                        tempPolygonArray.push(tempPolygonCoordinateArray);
                     }
                     console.log(this.state.polygonArray);
                 });
             });
     }
 
-    // Draw the polygons from the database in the database
+    // Draw the polygons from the database on the map
     drawPolygons() {
         this.state.polygonArray.forEach( (polygon) => {
-            var polygonToDraw = this.google.maps.Polygon({
+            var polygonToDraw = new google.maps.Polygon({
                 paths: polygon,
                 strokeColor: '#FF0000',
                 strokeOpacity: 0.8,
@@ -145,7 +151,7 @@ class Maps extends Component {
                 fillColor: '#FF0000',
                 fillOpacity: 0.35
             });
-            polygonToDraw.setMap(this.props.GoogleMap);
+            polygonToDraw.setMap(this.MapWithADrawingManager);
         });
     }
 
