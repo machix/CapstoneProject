@@ -1,7 +1,7 @@
-# CapstoneProject
+# Capstone Project
 CS4800: Capstone Project
 
-## FrontEnd
+## Frontend
 Please see README.md in the frontend folder for detailed instructions on working with the React app.
 
 
