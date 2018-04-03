@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/NaturalFractals/CapstoneProject/backend/geofence"
+	geofence "github.com/NaturalFractals/CapstoneProject/backend/geofence"
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
 	"github.com/kellydunn/golang-geo"
 )
