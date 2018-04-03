@@ -1,7 +1,7 @@
 package model
 
 type PolygonSummary struct {
-	PolygonSummary []Polygon
+	PolygonSummary string
 }
 
 type Polygon struct {
