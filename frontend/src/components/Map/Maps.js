@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
-import Polygon from 'react-google-maps';
+import { Polygon } from 'react-google-maps';
 
 class Maps extends Component {
     constructor(props) {
@@ -14,7 +14,6 @@ class Maps extends Component {
     }
 
     render() {
-        const { polygonArray } = this.state;
         const google = window.google;
         const { compose, withProps } = require("recompose");
         const {
@@ -59,7 +58,7 @@ class Maps extends Component {
                             zIndex: 1,
                         },
                     }}
-                    onPolygonComplete={(polygon) => this.savePolygonPoints(polygon)}/>
+                    onPolygonComplete={(polygon) => this.createGeofence(polygon)}/>
             </GoogleMap>
         );
         return (
@@ -69,6 +68,24 @@ class Maps extends Component {
                 <RaisedButton id="draw_polygon_button" label="Draw Polygons" primary={true} onClick={() => this.drawPolygons()} />
             </div>
         );
+    }
+
+    // Creates a geofence from the drawn polygon
+    createGeofence(polygon) {
+        var polygonPointArray = this.createPolygonObject(polygon);
+        
+        var data = JSON.stringify({
+            id: Number.parseInt(6, 10),
+            name: 'polygon2',
+            points: polygonPointArray
+        });
+
+        var url = 'http://159.203.178.86:8000/createGeofence';
+        axios.post(url, data, {
+            headers: { 'Content-Type': 'application/json', }
+        }).then(response => {
+            console.log(response);
+        });
     }
 
     // Save the coordinates of the polygon drawn on the map
@@ -112,6 +129,7 @@ class Maps extends Component {
             .then(response => {
                 // Split response by delimeter for parsing
                 var polyString = response.data["PolygonSummary"];
+                console.log(polyString);
                 var polyStringArray = polyString.split(",");
                 var tempPolygonArray = [];
                 var tempCoordinateObject = {};
@@ -142,31 +160,36 @@ class Maps extends Component {
 
     // Draw the polygons from the database on the map
     drawPolygons() {
-        // this.state.polygonArray.forEach( (polygon) => {
-        //     var polygonToDraw = new google.maps.Polygon({
-        //         paths: polygon,
-        //         strokeColor: '#FF0000',
-        //         strokeOpacity: 0.8,
-        //         strokeWeight: 2,
-        //         fillColor: '#FF0000',
-        //         fillOpacity: 0.35
-        //     });
-        //     polygonToDraw.setMap(this.MapWithADrawingManager);
-        // });
-
-        var triangleCoords = [
-          {lat: -34.16097083888272, lng: 149.91890234375},
-          {lat: -34.28814582106447, lng: 149.0454892578125},
-          {lat: -34.650442819653406, lng: 149.0674619140625},
-          {lat: -34.16097083888272, lng: 149.91890234375}
-        ];
-
-        this.state.polygonArray.push(triangleCoords);
+        this.state.polygonArray.forEach( (polygon) => {
+            var polygonToDraw = new google.maps.Polygon({
+                paths: polygon,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35
+            });
+            polygonToDraw.setMap(this.MapWithADrawingManager);
+        });
     }
 
-    // Prevents the componenet from reloading/updating on every event
-    shouldComponentUpdate(nextProps, nextState) {
-        return false;
+    // Create polygon object
+    createPolygonObject(polygon) {
+        var locations = (polygon.getPath().getArray());
+        var polygonPointArray = [];
+        for (var i = 0; i < locations.length; i++) {
+            var polygonObjectTemp = {};
+            polygonObjectTemp.Latitude = Number.parseFloat(locations[i].lat());
+            polygonObjectTemp.Longitude = Number.parseFloat(locations[i].lng());
+            polygonPointArray.push(polygonObjectTemp);
+        }
+
+                // Final point is not correct (need same beginning and end point)
+        var polygonObject = {};
+        polygonObject.Latitude = Number.parseFloat(locations[0].lat());
+        polygonObject.Longitude = Number.parseFloat(locations[0].lng());
+        polygonPointArray.push(polygonObject);
+        return polygonPointArray;
     }
 }
 
