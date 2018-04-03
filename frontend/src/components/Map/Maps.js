@@ -1,8 +1,7 @@
 /*global google*/
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import axios from 'axios';
-import { Polygon } from 'react-google-maps';
+import axios from 'axios'
 
 class Maps extends Component {
     constructor(props) {
@@ -34,6 +33,7 @@ class Maps extends Component {
             withGoogleMap
         )(props =>
             <GoogleMap
+                onClick={(point) => this.checkPointInPolygon(point)}
                 defaultZoom={8}
                 defaultCenter={new google.maps.LatLng(-34.397, 150.644)}>
                 <DrawingManager
@@ -73,19 +73,39 @@ class Maps extends Component {
     // Creates a geofence from the drawn polygon
     createGeofence(polygon) {
         var polygonPointArray = this.createPolygonObject(polygon);
-        
+
         var data = JSON.stringify({
             id: Number.parseInt(6, 10),
             name: 'polygon2',
             points: polygonPointArray
         });
 
+        // Post request to API to create geofence
         var url = 'http://159.203.178.86:8000/createGeofence';
         axios.post(url, data, {
             headers: { 'Content-Type': 'application/json', }
         }).then(response => {
             console.log(response);
         });
+    }
+
+    // Check point in polygon
+    checkPointInPolygon(point) {
+        console.log(point.ua.x);
+        console.log(point.ua.y);
+
+        var data = JSON.stringify({
+            latitude: Number.parseFloat(point.ua.x, 10),
+            longitude: Number.parseInt(point.ua.y, 10)
+        });
+
+        // Get request to API to check point in polygon
+        var url = 'http://159.203.178.86:8000/checkGeofence';
+        axios.get(url, data, {
+            headers: { 'Content-Type': 'application/json', }
+        }).then(response => {
+            console.log(response);
+        })
     }
 
     // Save the coordinates of the polygon drawn on the map
