@@ -23,7 +23,7 @@ The makefile can be sure to streamline the building process:
 
 * To remove the latest ```.docker``` built, simply use the ```make clean``` command.
 
-All other ```make``` commands are specific to accesing a private DigitalOcean droplet. You can switch out the values in the makefile with your own private digital ocean droplet IP. This would allow you to transfer your service docker image with ```make rsync``` and you can restart your current docker container running with the new one on your remote droplet using the ```make restart``` command.
+All other ```make``` commands are specific to accesing a private DigitalOcean droplet. You can switch out the values in the makefile with your own private digital ocean droplet IP. This would allow you to transfer your service docker image with ```make rsync``` and you can restart your current docker container running on the droplet with the new image just created and loaded to the droplet by using the ```make restart``` command.
 
 Addtionally, you will need to setup a ```env.list``` file on your droplet that contains environment variables for connecting to the database. The environment variables you will need to set will be DBHOST, DBPORT, DBUSER, DBPASS, and DBNAME where this is the database host, database port, database user, database password, and database name, respectively.
 
@@ -40,13 +40,13 @@ Once this dependency is installed, ensure you are at the top of the backend dire
 
 ```go test ./...```
 
-You can determine the testing coverage with go-carpet. First you will need to download it using the commands below:
+You can also determine the testing coverage with a tool called go-carpet. First you will need to download it using the commands below:
 
 ```go get -u github.com/msoap/go-carpet```
 
 ```sudo ln -s $(go env GOPATH)/bin/go-carpet /usr/local/bin/go-carpet```
 
-You can then view the cover in less using the following command:
+You can then view the coverage in less using the following command:
 
 ``` go-carpet | less -R ```
 
