@@ -1,3 +1,4 @@
+// Package to handle database access
 package database
 
 import (

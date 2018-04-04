@@ -1,3 +1,4 @@
+// Package to handle geofencing and point-in-polygon algorithms
 package geo
 
 import "github.com/kellydunn/golang-geo"

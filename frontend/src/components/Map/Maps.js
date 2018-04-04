@@ -63,7 +63,7 @@ class Maps extends Component {
         );
         return (
             <div>
-                <MapWithADrawingManager/>
+                <this.MapWithADrawingManager id="map"/>
                 <RaisedButton id="polygon_button" label="Get Polygons" primary={true} onClick={() => this.getPolygonPoints()} />
                 <RaisedButton id="draw_polygon_button" label="Draw Polygons" primary={true} onClick={() => this.drawPolygons()} />
             </div>

@@ -1,3 +1,4 @@
+// Handlers for http request the API endpoints
 package handlers
 
 import (
