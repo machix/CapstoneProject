@@ -40,3 +40,13 @@ Once this dependency is installed, ensure you are at the top of the backend dire
 
 ```go test ./...```
 
+You can determine the testing coverage with go-carpet. First you will need to download it using the commands below:
+
+```go get -u github.com/msoap/go-carpet```
+
+```sudo ln -s $(go env GOPATH)/bin/go-carpet /usr/local/bin/go-carpet```
+
+You can then view the cover in less using the following command:
+
+``` go-carpet | less -R ```
+
