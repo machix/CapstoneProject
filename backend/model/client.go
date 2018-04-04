@@ -1,3 +1,4 @@
+// Contains structs for project. There is are no functions contained in this package.
 package model
 
 type ClientSummary struct {

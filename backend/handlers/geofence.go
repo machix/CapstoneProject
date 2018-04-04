@@ -9,6 +9,8 @@ import (
 	"github.com/kellydunn/golang-geo"
 )
 
+var geofences *geofence.Geofence
+
 // Creates a geofence with the given points
 func CreateGeofence(w http.ResponseWriter, r *http.Request) {
 	polygon := model.Polygon{}
@@ -25,14 +27,24 @@ func CreateGeofence(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create the geofence
-	geofence.NewGeofence(points)
+	tempFence := geofence.NewGeofence(points)
+
+	geofences = tempFence
 }
 
 // Checks to see if a point is contained within a polygon
 func CheckPointInPolygon(w http.ResponseWriter, r *http.Request) {
+	coordinate := model.Coordinate{}
+	err := json.NewDecoder(r.Body).Decode(&coordinate)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	point := geo.NewPoint(coordinate.Latitude, coordinate.Longitude)
+	geofences.Inside(point)
 }
 
 // Check Polygon overlap
 func CheckPolygonOverlap(w http.ResponseWriter, r *http.Request) {
-
 }
