@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	geofence "github.com/NaturalFractals/CapstoneProject/backend/geofence"
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
@@ -42,7 +44,9 @@ func CheckPointInPolygon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	point := geo.NewPoint(coordinate.Latitude, coordinate.Longitude)
-	geofences.Inside(point)
+	inPoint := geofences.Inside(point)
+
+	fmt.Fprintf(w, strconv.FormatBool(inPoint))
 }
 
 // Check Polygon overlap
