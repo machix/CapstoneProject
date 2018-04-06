@@ -63,7 +63,7 @@ class Maps extends Component {
         );
         return (
             <div>
-                <this.MapWithADrawingManager id="map"/>
+                <MapWithADrawingManager/>
                 <RaisedButton id="polygon_button" label="Get Polygons" primary={true} onClick={() => this.getPolygonPoints()} />
                 <RaisedButton id="draw_polygon_button" label="Draw Polygons" primary={true} onClick={() => this.drawPolygons()} />
             </div>
@@ -76,7 +76,7 @@ class Maps extends Component {
 
         var data = JSON.stringify({
             id: Number.parseInt(6, 10),
-            name: 'polygon2',
+            name: 'polygon',
             points: polygonPointArray
         });
 
@@ -91,17 +91,18 @@ class Maps extends Component {
 
     // Check point in polygon
     checkPointInPolygon(point) {
-        console.log(point.ua.x);
-        console.log(point.ua.y);
+        console.log(point);
+        console.log(point.oa.x);
+        console.log(point.oa.y);
 
         var data = JSON.stringify({
-            latitude: Number.parseFloat(point.ua.x, 10),
-            longitude: Number.parseInt(point.ua.y, 10)
+            latitude: Number.parseFloat(point.oa.x, 10),
+            longitude: Number.parseInt(point.oa.y, 10)
         });
 
         // Get request to API to check point in polygon
         var url = 'http://159.203.178.86:8000/checkGeofence';
-        axios.get(url, data, {
+        axios.post(url, data, {
             headers: { 'Content-Type': 'application/json', }
         }).then(response => {
             console.log(response);

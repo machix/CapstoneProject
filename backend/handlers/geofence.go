@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	geofence "github.com/NaturalFractals/CapstoneProject/backend/geofence"
@@ -13,7 +14,7 @@ var geofences *geofence.Geofence
 
 // Creates a geofence with the given points
 func CreateGeofence(w http.ResponseWriter, r *http.Request) {
-	polygon := model.Polygon{}
+	var polygon model.Polygon
 	err := json.NewDecoder(r.Body).Decode(&polygon)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -34,15 +35,26 @@ func CreateGeofence(w http.ResponseWriter, r *http.Request) {
 
 // Checks to see if a point is contained within a polygon
 func CheckPointInPolygon(w http.ResponseWriter, r *http.Request) {
-	coordinate := model.Coordinate{}
+	var coordinate model.Coordinate
 	err := json.NewDecoder(r.Body).Decode(&coordinate)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
+	fmt.Println(coordinate.Latitude)
+	fmt.Println(coordinate.Longitude)
+
 	point := geo.NewPoint(coordinate.Latitude, coordinate.Longitude)
-	geofences.Inside(point)
+	inPoint := geofences.Inside(point)
+
+	out, err := json.Marshal(inPoint)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
 }
 
 // Check Polygon overlap

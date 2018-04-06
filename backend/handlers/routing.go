@@ -18,8 +18,7 @@ func Router() *mux.Router {
 	router.HandleFunc("/savePolygon", SavePolygon).Methods("POST")
 	router.HandleFunc("/deletePolygon", DeletePolygon).Methods("DELETE")
 	router.HandleFunc("/createGeofence", CreateGeofence).Methods("POST")
-	router.HandleFunc("/checkGeofence", CheckPointInPolygon).Methods("GET")
-	router.HandleFunc("/checkPolygon", CheckPolygonOverlap).Methods("GET")
-
+	router.HandleFunc("/checkGeofence", CheckPointInPolygon).Methods("POST")
+	router.HandleFunc("/checkPolygon", CheckPolygonOverlap).Methods("POST")
 	return router
 }
