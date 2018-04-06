@@ -20,7 +20,5 @@ func Router() *mux.Router {
 	router.HandleFunc("/createGeofence", CreateGeofence).Methods("POST")
 	router.HandleFunc("/checkGeofence", CheckPointInPolygon).Methods("POST")
 	router.HandleFunc("/checkPolygon", CheckPolygonOverlap).Methods("POST")
-	router.HandleFunc("/checkPolygonOverlap", CheckPolygonOverlap).Methods("POST")
-
 	return router
 }
