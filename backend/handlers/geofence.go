@@ -23,9 +23,12 @@ func CreateGeofence(w http.ResponseWriter, r *http.Request) {
 
 	// Extract points out of polygon
 	var points [][]*geo.Point
-	for i, value := range polygon.Coordinates {
-		points[i][0] = geo.NewPoint(value.Latitude, value.Longitude)
+	var firstPoint []*geo.Point
+	for _, value := range polygon.Coordinates {
+		firstPoint = append(firstPoint, geo.NewPoint(value.Latitude, value.Longitude))
 	}
+
+	points = append(points, firstPoint)
 
 	// Create the geofence
 	tempFence := geofence.NewGeofence(points)
@@ -41,9 +44,6 @@ func CheckPointInPolygon(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-
-	fmt.Println(coordinate.Latitude)
-	fmt.Println(coordinate.Longitude)
 
 	point := geo.NewPoint(coordinate.Latitude, coordinate.Longitude)
 	inPoint := geofences.Inside(point)
