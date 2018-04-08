@@ -53,17 +53,18 @@ class Maps extends Component {
                             fillColor: `#ffff00`,
                             fillOpacity: 1,
                             strokeWeight: 5,
-                            clickable: false,
+                            clickable: true,
                             editable: true,
                             zIndex: 1,
                         },
                     }}
-                    onPolygonComplete={(polygon) => this.createGeofence(polygon)}/>
+                    onPolygonComplete={(polygon) => this.createGeofence(polygon)}
+                    onClick={(point) => this.checkPointInPolygon(point)} />
             </GoogleMap>
         );
         return (
             <div>
-                <MapWithADrawingManager/>
+                <MapWithADrawingManager />
                 <RaisedButton id="polygon_button" label="Get Polygons" primary={true} onClick={() => this.getPolygonPoints()} />
                 <RaisedButton id="draw_polygon_button" label="Draw Polygons" primary={true} onClick={() => this.drawPolygons()} />
             </div>
@@ -73,6 +74,20 @@ class Maps extends Component {
     // Creates a geofence from the drawn polygon
     createGeofence(polygon) {
         var polygonPointArray = this.createPolygonObject(polygon);
+        polygon.addListener('click', (point) => {
+            var data = JSON.stringify({
+                latitude: Number.parseFloat(point.latLng.lat(), 10),
+                longitude: Number.parseInt(point.latLng.lng(), 10)
+            });
+
+            // Get request to API to check point in polygon
+            var url = 'http://159.203.178.86:8000/checkGeofence';
+            axios.post(url, data, {
+                headers: { 'Content-Type': 'application/json', }
+            }).then(response => {
+                console.log(response);
+            })
+        });
 
         var data = JSON.stringify({
             id: Number.parseInt(6, 10),
@@ -92,12 +107,11 @@ class Maps extends Component {
     // Check point in polygon
     checkPointInPolygon(point) {
         console.log(point);
-        console.log(point.oa.x);
-        console.log(point.oa.y);
+        console.log(point.latLng.lat());
 
         var data = JSON.stringify({
-            latitude: Number.parseFloat(point.oa.x, 10),
-            longitude: Number.parseInt(point.oa.y, 10)
+            latitude: Number.parseFloat(point.latLng.lat(), 10),
+            longitude: Number.parseInt(point.latLng.lng(), 10)
         });
 
         // Get request to API to check point in polygon
@@ -181,7 +195,7 @@ class Maps extends Component {
 
     // Draw the polygons from the database on the map
     drawPolygons() {
-        this.state.polygonArray.forEach( (polygon) => {
+        this.state.polygonArray.forEach((polygon) => {
             var polygonToDraw = new google.maps.Polygon({
                 paths: polygon,
                 strokeColor: '#FF0000',
@@ -205,7 +219,7 @@ class Maps extends Component {
             polygonPointArray.push(polygonObjectTemp);
         }
 
-                // Final point is not correct (need same beginning and end point)
+        // Final point is not correct (need same beginning and end point)
         var polygonObject = {};
         polygonObject.Latitude = Number.parseFloat(locations[0].lat());
         polygonObject.Longitude = Number.parseFloat(locations[0].lng());

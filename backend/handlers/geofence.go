@@ -45,9 +45,6 @@ func CheckPointInPolygon(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(coordinate.Latitude)
-	fmt.Println(coordinate.Longitude)
-
 	point := geo.NewPoint(coordinate.Latitude, coordinate.Longitude)
 	inPoint := geofences.Inside(point)
 
