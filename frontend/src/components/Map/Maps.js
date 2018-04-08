@@ -1,7 +1,9 @@
 /*global google*/
 import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import axios from 'axios'
+import axios from 'axios';
+import Notifications, {notify} from 'react-notify-toast';
+
 
 class Maps extends Component {
     constructor(props) {
@@ -58,15 +60,13 @@ class Maps extends Component {
                             zIndex: 1,
                         },
                     }}
-                    onPolygonComplete={(polygon) => this.createGeofence(polygon)}
-                    onClick={(point) => this.checkPointInPolygon(point)} />
+                    onPolygonComplete={(polygon) => this.createGeofence(polygon)}/>
             </GoogleMap>
         );
         return (
             <div>
+                <Notifications />
                 <MapWithADrawingManager />
-                <RaisedButton id="polygon_button" label="Get Polygons" primary={true} onClick={() => this.getPolygonPoints()} />
-                <RaisedButton id="draw_polygon_button" label="Draw Polygons" primary={true} onClick={() => this.drawPolygons()} />
             </div>
         );
     }
@@ -76,8 +76,8 @@ class Maps extends Component {
         var polygonPointArray = this.createPolygonObject(polygon);
         polygon.addListener('click', (point) => {
             var data = JSON.stringify({
-                latitude: Number.parseFloat(point.latLng.lat(), 10),
-                longitude: Number.parseInt(point.latLng.lng(), 10)
+                latitude: Number.parseFloat(point.latLng.lat()),
+                longitude: Number.parseFloat(point.latLng.lng())
             });
 
             // Get request to API to check point in polygon
@@ -85,7 +85,12 @@ class Maps extends Component {
             axios.post(url, data, {
                 headers: { 'Content-Type': 'application/json', }
             }).then(response => {
-                console.log(response);
+                if(!response.data) {
+                    notify.show('Point not in Polygon!', "error", 2000);
+                } else {
+                    console.log("here");
+                    notify.show('Point in Polygon!', "success", 2000);
+                }
             })
         });
 
@@ -106,12 +111,9 @@ class Maps extends Component {
 
     // Check point in polygon
     checkPointInPolygon(point) {
-        console.log(point);
-        console.log(point.latLng.lat());
-
         var data = JSON.stringify({
-            latitude: Number.parseFloat(point.latLng.lat(), 10),
-            longitude: Number.parseInt(point.latLng.lng(), 10)
+            latitude: Number.parseFloat(point.latLng.lat()),
+            longitude: Number.parseFloat(point.latLng.lng())
         });
 
         // Get request to API to check point in polygon
@@ -119,7 +121,13 @@ class Maps extends Component {
         axios.post(url, data, {
             headers: { 'Content-Type': 'application/json', }
         }).then(response => {
-            console.log(response);
+            console.log(response.data);
+            if(!response.data) {
+                notify.show('Point not in Polygon!', "error", 2000);
+            } else {
+                console.log("here");
+                notify.show('Point in Polygon!', "success", 2000);
+            }
         })
     }
 

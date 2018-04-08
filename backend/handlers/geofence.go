@@ -34,6 +34,8 @@ func CreateGeofence(w http.ResponseWriter, r *http.Request) {
 	tempFence := geofence.NewGeofence(points)
 
 	geofences = tempFence
+
+	fmt.Println(geofences)
 }
 
 // Checks to see if a point is contained within a polygon

@@ -20,10 +20,12 @@ func TestCorrectness(t *testing.T) {
 	}
 }
 
+// Generates a random point
 func randomPoint(length float64) *geo.Point {
 	return geo.NewPoint(rand.Float64()*length-length/2, rand.Float64()*length-length/2)
 }
 
+// Generates a random polygon
 func randomPolygon(length float64, percentageOfLength float64) []*geo.Point {
 	polygon := make([]*geo.Point, 1000)
 	for i := 0; i < 1000; i++ {
@@ -32,6 +34,7 @@ func randomPolygon(length float64, percentageOfLength float64) []*geo.Point {
 	return polygon
 }
 
+// Generates random point
 func randomPointCustom(minLat float64, maxLat float64, minLng float64, maxLng float64, factor float64) *geo.Point {
 	latRange := maxLat - minLat
 	lngRange := maxLng - minLng
