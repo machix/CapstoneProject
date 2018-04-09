@@ -4,7 +4,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 import Notifications, {notify} from 'react-notify-toast';
 
-
 class Maps extends Component {
     constructor(props) {
         super(props);
