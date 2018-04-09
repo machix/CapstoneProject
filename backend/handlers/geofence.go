@@ -11,6 +11,7 @@ import (
 )
 
 var geofences *geofence.Geofence
+var geofenceList []*geofence.Geofence
 
 // Creates a geofence with the given points
 func CreateGeofence(w http.ResponseWriter, r *http.Request) {
@@ -34,8 +35,7 @@ func CreateGeofence(w http.ResponseWriter, r *http.Request) {
 	tempFence := geofence.NewGeofence(points)
 
 	geofences = tempFence
-
-	fmt.Println(geofences)
+	geofenceList = append(geofenceList, tempFence)
 }
 
 // Checks to see if a point is contained within a polygon
@@ -61,4 +61,16 @@ func CheckPointInPolygon(w http.ResponseWriter, r *http.Request) {
 
 // Check Polygon overlap
 func CheckPolygonOverlap(w http.ResponseWriter, r *http.Request) {
+	var polygon model.Polygon
+	err := json.NewDecoder(r.Body).Decode(&polygon)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// Extract points out of polygon
+	var firstPoint []*geo.Point
+	for _, value := range polygon.Coordinates {
+		firstPoint = append(firstPoint, geo.NewPoint(value.Latitude, value.Longitude))
+	}
 }
