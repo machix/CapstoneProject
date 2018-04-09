@@ -56,7 +56,7 @@ func checkIntersect(s1p1 *geo.Point, s1p2 *geo.Point, s2p1 *geo.Point, s2p2 *geo
 	return t >= 0 && t <= 1 && u >= 0 && u <= 1
 }
 
-// Temporarily use point struct to store vector
+// Find vector difference
 func vectorDifference(p1 *geo.Point, p2 *geo.Point) *geo.Point {
 	return geo.NewPoint(p1.Lat()-p2.Lat(), p1.Lng()-p2.Lng())
 }

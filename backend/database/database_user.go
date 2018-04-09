@@ -18,7 +18,7 @@ const (
 )
 
 // Connect to the postgres database
-func ConnectUserDb() *sql.DB {
+func ConnectUserDb() *DB {
 	var db *sql.DB
 	config := dbConfig()
 	var err error
@@ -39,7 +39,7 @@ func ConnectUserDb() *sql.DB {
 
 	fmt.Println("Successfully connected!")
 
-	return db
+	return &DB{db}
 }
 
 // Checks to ensure all of correct environment varaibles are set
@@ -80,7 +80,7 @@ func dbConfig() map[string]string {
 }
 
 //Query the db to fetch data about user's position
-func QueryPosition(u *model.Summary, db *sql.DB) error {
+func (db *DB) QueryPosition(u *model.Summary) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -120,7 +120,7 @@ func QueryPosition(u *model.Summary, db *sql.DB) error {
 }
 
 // Query the db to post information about the user's position
-func PostPosition(u *model.User, db *sql.DB) error {
+func (db *DB) PostPosition(u *model.User) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -138,7 +138,7 @@ func PostPosition(u *model.User, db *sql.DB) error {
 }
 
 // Queries the database to delete the user's location
-func DeletePosition(u *model.User, db *sql.DB) error {
+func (db *DB) DeletePosition(u *model.User) error {
 	fmt.Printf("hello")
 	tx, err := db.Begin()
 	if err != nil {
