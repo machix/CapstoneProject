@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/NaturalFractals/CapstoneProject/backend/database"
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
 )
 
@@ -15,61 +14,51 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 // This is a method for testing response from the API
-func GetPosition(w http.ResponseWriter, r *http.Request) {
-	var db = database.ConnectUserDb()
+func (env *Env) GetPosition(w http.ResponseWriter, r *http.Request) {
 	us := model.Summary{}
-	err := database.QueryPosition(&us, db)
+	err := env.db.QueryPosition(&us)
 
 	if err != nil {
 		http.Error(w, err.Error(), 500)
-		db.Close()
 		return
 	}
 
 	out, err := json.Marshal(us)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
-		db.Close()
 		return
 	}
 
 	fmt.Fprintf(w, string(out))
-	db.Close()
 }
 
 // Post a new latitude and longitude position to the database
-func PostPosition(w http.ResponseWriter, r *http.Request) {
-	var db = database.ConnectUserDb()
+func (env *Env) PostPosition(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 	err := json.NewDecoder(r.Body).Decode(&user)
-	err = database.PostPosition(&user, db)
+	err = env.db.PostPosition(&user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
-		db.Close()
 		return
 	}
 
 	defer r.Body.Close()
 
 	marshalJson(user, w)
-	db.Close()
 }
 
 // Deletes a latitude and longitude position in the database
-func DeletePosition(w http.ResponseWriter, r *http.Request) {
-	var db = database.ConnectUserDb()
+func (env *Env) DeletePosition(w http.ResponseWriter, r *http.Request) {
 	us := model.User{}
 	err := json.NewDecoder(r.Body).Decode(&us)
 
-	err = database.DeletePosition(&us, db)
+	err = env.db.DeletePosition(&us)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
-		db.Close()
 		return
 	}
 
 	marshalJson(us, w)
-	db.Close()
 }
 
 // Marshals the json and outputs, otherwise outputs error if unsuccesful

@@ -19,7 +19,7 @@ const (
 )
 
 // Connect to the postgres database
-func ConnectClientDb() *sql.DB {
+func ConnectClientDb() *DB {
 	var db *sql.DB
 	config := dbClientConfig()
 	var err error
@@ -40,7 +40,11 @@ func ConnectClientDb() *sql.DB {
 
 	fmt.Println("Successfully connected!")
 
-	return db
+	return &DB{db}
+}
+
+type DB struct {
+	*sql.DB
 }
 
 // Checks to ensure all of correct environment varaibles are set
@@ -81,7 +85,7 @@ func dbClientConfig() map[string]string {
 }
 
 // Retrieves all clients from the client database
-func GetClients(c *model.ClientSummary, db *sql.DB) error {
+func (db *DB) GetClients(c *model.ClientSummary) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -122,7 +126,7 @@ func GetClients(c *model.ClientSummary, db *sql.DB) error {
 }
 
 // Add new client to the client database
-func AddNewClient(c *model.Client, db *sql.DB) error {
+func (db *DB) AddNewClient(c *model.Client) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -140,7 +144,7 @@ func AddNewClient(c *model.Client, db *sql.DB) error {
 }
 
 // Delete the information of a current client
-func DeleteClient(c *model.Client, db *sql.DB) error {
+func (db *DB) DeleteClient(c *model.Client) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err

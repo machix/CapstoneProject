@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"strconv"
 
@@ -9,7 +8,7 @@ import (
 )
 
 // Returns all polygons associated with client
-func GetPolygons(p *model.PolygonSummary, db *sql.DB) error {
+func (db *DB) GetPolygons(p *model.PolygonSummary) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -42,7 +41,7 @@ func GetPolygons(p *model.PolygonSummary, db *sql.DB) error {
 }
 
 // Saves points in a polygon that has been drawn on the map
-func SavePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
+func (db *DB) SavePolygon(p *model.Polygon, c *model.Client) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -73,7 +72,7 @@ func SavePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
 }
 
 // Delete a polygon that has been saved in the database
-func DeletePolygon(p *model.Polygon, c *model.Client, db *sql.DB) error {
+func (db *DB) DeletePolygon(p *model.Polygon, c *model.Client) error {
 	tx, err := db.Begin()
 	if err != nil {
 		return err
