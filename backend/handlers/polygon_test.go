@@ -6,6 +6,7 @@ import (
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
 )
 
+// Interface implementation for mockDB testing
 func (mdb *mockDB) GetPolygons(p *model.PolygonSummary) error {
 	return nil
 }
@@ -15,6 +16,7 @@ func TestGetPolygons(t *testing.T) {
 
 }
 
+// Interface implementation for mockDB testing
 func (mdb *mockDB) SavePolygon(p *model.Polygon, c *model.Client) error {
 	return nil
 }
@@ -24,6 +26,7 @@ func TestSavePolygon(t *testing.T) {
 
 }
 
+// Interface implementation for mockDB testing
 func (mdb *mockDB) DeletePolygon(p *model.Polygon, c *model.Client) error {
 	return nil
 }

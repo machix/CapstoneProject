@@ -6,6 +6,7 @@ import (
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
 )
 
+// Interface implementation for mockDB testing
 func (mdb *mockDB) GetClients(c *model.ClientSummary) error {
 	return nil
 }
@@ -14,6 +15,7 @@ func (mdb *mockDB) GetClients(c *model.ClientSummary) error {
 func TestGetClient(t *testing.T) {
 }
 
+// Interface implementation for mockDB testing
 func (mdb *mockDB) AddNewClient(c *model.Client) error {
 	return nil
 }
@@ -22,6 +24,7 @@ func (mdb *mockDB) AddNewClient(c *model.Client) error {
 func TestCreateClient(t *testing.T) {
 }
 
+// Interface implementation for mockDB testing
 func (mdb *mockDB) DeleteClient(c *model.Client) error {
 	return nil
 }
