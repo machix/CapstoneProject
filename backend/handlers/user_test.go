@@ -25,6 +25,13 @@ func TestGetPosition(t *testing.T) {
 	env := Env{db: &mockDB{}}
 	http.HandlerFunc(env.GetPosition).ServeHTTP(rec, req)
 
+	// Check the status code is what we expect.
+	if status := rec.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	// Check what is returned by handler from mockDB
 	expected := "{\"UserSummary\":[{\"Id\":1,\"Latitude\":1.23,\"Longitude\":1.23}]}"
 	if expected != rec.Body.String() {
 		t.Errorf("\n...expected = %v\n...obtained = %v", expected, rec.Body.String())
@@ -41,11 +48,18 @@ func (mdb *mockDB) PostPosition(u *model.User) error {
 func TestPostPosition(t *testing.T) {
 	var b bytes.Buffer
 	rec := httptest.NewRecorder()
-	req, _ := http.NewRequest("DELETE", "/postPosition", &b)
+	req, _ := http.NewRequest("POST", "/postPosition", &b)
 
 	env := Env{db: &mockDB{}}
 	http.HandlerFunc(env.PostPosition).ServeHTTP(rec, req)
 
+	// Check the status code is what we expect.
+	if status := rec.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	// Check what is returned by handler from mockDB
 	expected := "{\"Id\":0,\"Latitude\":0,\"Longitude\":0}"
 	if expected != rec.Body.String() {
 		t.Errorf("\n...expected = %v\n...obtained = %v", expected, rec.Body.String())
@@ -67,6 +81,13 @@ func TestDeletePosition(t *testing.T) {
 	env := Env{db: &mockDB{}}
 	http.HandlerFunc(env.DeletePosition).ServeHTTP(rec, req)
 
+	// Check the status code is what we expect.
+	if status := rec.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	// Check what is returned by handler from mockDB
 	expected := "{\"Id\":0,\"Latitude\":0,\"Longitude\":0}"
 	if expected != rec.Body.String() {
 		t.Errorf("\n...expected = %v\n...obtained = %v", expected, rec.Body.String())
