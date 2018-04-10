@@ -12,10 +12,6 @@ func TestUserDatabaseConnect(t *testing.T) {
 	// Add Test to test database connection
 }
 
-type Env struct {
-	db model.Datastore
-}
-
 // Test get request to database for user
 func TestDatabaseSelectQuery(t *testing.T) {
 	db, mock, err := sqlmock.New()
@@ -50,7 +46,7 @@ func TestDatabaseInsertQuery(t *testing.T) {
 }
 
 // Test database delete query for user
-func (env *Env) TestDatabaseDeleteQuery(t *testing.T) {
+func TestDatabaseDeleteQuery(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
