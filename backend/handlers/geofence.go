@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	geofence "github.com/NaturalFractals/CapstoneProject/backend/geofence"
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
@@ -48,9 +49,20 @@ func CheckPointInPolygon(w http.ResponseWriter, r *http.Request) {
 	}
 
 	point := geo.NewPoint(coordinate.Latitude, coordinate.Longitude)
-	inPoint := geofences.Inside(point)
+	var ret string
+	for i, value := range geofenceList {
+		fmt.Printf(ret)
+		fmt.Printf(strconv.FormatBool(value.Inside(point)))
+		if value.Inside(point) {
+			ret += strconv.Itoa(i) + ","
+		}
+	}
 
-	out, err := json.Marshal(inPoint)
+	if len(ret) == 0 {
+		ret = "false"
+	}
+
+	out, err := json.Marshal(ret)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
