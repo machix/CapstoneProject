@@ -84,11 +84,21 @@ class Maps extends Component {
             axios.post(url, data, {
                 headers: { 'Content-Type': 'application/json', }
             }).then(response => {
-                if(!response.data) {
-                    notify.show('Point not in Polygon!', "error", 2000);
+                if(response.data === 'false') {
+                    console.log(response);
+                    notify.show('Point not in Polygon!', "error", 3000);
                 } else {
-                    console.log("here");
-                    notify.show('Point in Polygon!', "success", 2000);
+                    console.log(response);
+                    var polygonSplit = response.data.split(",");
+                    var stringNotify = "Point in Polygons (";
+                    for(var i = 0; i < polygonSplit.length - 1; i++) {
+                        if(i == 0)
+                            stringNotify += (Number.parseInt(polygonSplit[i]) + 1);
+                        else 
+                            stringNotify += " & " + (Number.parseInt(polygonSplit[i]) + 1);
+                    }
+                    stringNotify += ")";
+                    notify.show(stringNotify, "success", 3000);
                 }
             })
         });
@@ -104,7 +114,10 @@ class Maps extends Component {
         axios.post(url, data, {
             headers: { 'Content-Type': 'application/json', }
         }).then(response => {
-            console.log(response);
+            if(response.data === 'false') {
+                console.log(response);
+                notify.show('Point not in Polygon!', "error", 3000);
+            }
         });
     }
 
@@ -121,11 +134,8 @@ class Maps extends Component {
             headers: { 'Content-Type': 'application/json', }
         }).then(response => {
             console.log(response.data);
-            if(!response.data) {
-                notify.show('Point not in Polygon!', "error", 2000);
-            } else {
-                console.log("here");
-                notify.show('Point in Polygon!', "success", 2000);
+            if(response.data === 'false') {
+                notify.show('Point not in Polygon!', "error", 3000);
             }
         })
     }

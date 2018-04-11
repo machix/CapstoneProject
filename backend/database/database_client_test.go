@@ -6,10 +6,6 @@ import (
 	sqlmock "gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
-// Test connection to the AWS Postgres database
-func TestClientDatabaseConnect(t *testing.T) {
-}
-
 // Test database delete polygon for client database
 func TestClientDatabaseDeletePolygon(t *testing.T) {
 	db, mock, err := sqlmock.New()
