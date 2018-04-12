@@ -1,6 +1,13 @@
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-Below you will find some information on how to perform common tasks.<br>
+After cloning the respository, to run the app you should open a unix terminal and change directories and ensure you are at the top of the ```frontend``` directory, then you will run the command ```npm install```. This will install all of the required dependencies using npm. 
+
+Once all of the dependencies have been installed you can then run the react ap using the command ```npm start```. Your browser of choice should open and you should be directed to ```localhost:XXXX```, otherwise you will need to open a browser and navigate to the ```localhost:XXXX``` address given in your terminal. 
+
+**NOTE**: This application will only be functional in the current state assuming the backend is running at the current url pointed at by the axios request. If the app appears to have no functionality, please see the README.md in the backend directory for directions on how to setup the backend.
+
+
+Below you will find some information on how to perform common tasks and more information about [Create React App](https://github.com/facebookincubator/create-react-app)..<br>
 You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
 ## Table of Contents
