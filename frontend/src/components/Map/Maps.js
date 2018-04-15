@@ -1,6 +1,5 @@
 /*global google*/
 import React, { Component } from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
 import axios from 'axios';
 import Notifications, {notify} from 'react-notify-toast';
 
@@ -92,7 +91,7 @@ class Maps extends Component {
                     var polygonSplit = response.data.split(",");
                     var stringNotify = "Point in Polygons (";
                     for(var i = 0; i < polygonSplit.length - 1; i++) {
-                        if(i == 0)
+                        if(i === 0)
                             stringNotify += (Number.parseInt(polygonSplit[i]) + 1);
                         else 
                             stringNotify += " & " + (Number.parseInt(polygonSplit[i]) + 1);
@@ -114,10 +113,15 @@ class Maps extends Component {
         axios.post(url, data, {
             headers: { 'Content-Type': 'application/json', }
         }).then(response => {
-            if(response.data === 'false') {
-                console.log(response);
-                notify.show('Point not in Polygon!', "error", 3000);
-            }
+            console.log(response.data);
+        });
+
+        var urlOverlap = 'http://159.203.178.86:8000/checkPolygon';
+        axios.post(urlOverlap, data, {
+            headers: { 'Content-Type': 'application/json', }
+        }).then(response => {
+            console.log(response.data);
+            this.handlePolygonOverlap(response.data);
         });
     }
 
@@ -242,6 +246,13 @@ class Maps extends Component {
         polygonObject.Longitude = Number.parseFloat(locations[0].lng());
         polygonPointArray.push(polygonObject);
         return polygonPointArray;
+    }
+
+    // Handles display of polygon overlap
+    handlePolygonOverlap(responseData) {
+        if(responseData === 'true') {
+            notify.show('Polygon Overlap', "error", 3000);
+        }
     }
 }
 

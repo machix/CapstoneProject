@@ -80,9 +80,22 @@ func CheckPolygonOverlap(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Extract points out of polygon
-	var firstPoint []*geo.Point
+	isOverlap := "false"
 	for _, value := range polygon.Coordinates {
-		firstPoint = append(firstPoint, geo.NewPoint(value.Latitude, value.Longitude))
+		for _, poly := range geofenceList {
+			tempPoint := geo.NewPoint(value.Latitude, value.Longitude)
+			if poly.Inside(tempPoint) {
+				isOverlap = "true"
+			}
+		}
 	}
+
+	out, err := json.Marshal(isOverlap)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(w, string(out))
+
 }
