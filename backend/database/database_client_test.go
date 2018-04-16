@@ -3,6 +3,7 @@ package database
 import (
 	"testing"
 
+	"github.com/NaturalFractals/CapstoneProject/backend/model"
 	sqlmock "gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
@@ -27,12 +28,26 @@ func TestClientDatabaseGetClient(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
+
+	env := &DB{db}
 	defer db.Close()
 
-	rows := sqlmock.NewRows([]string{"id", "first_name", "last_name"}).AddRow(1, 4.5678, 5.4567)
+	rows := sqlmock.NewRows([]string{"id", "first_name", "last_name"}).AddRow(1, 4.567, 5.456)
 
 	mock.ExpectBegin()
 	mock.ExpectQuery(`[SELECT * FROM CLIENT]`).WillReturnRows(rows)
+
+	tempSummary := model.ClientSummary{}
+
+	// Test QueryPosition function
+	if err = env.GetClients(&tempSummary); err != nil {
+		t.Errorf("error was not expected while updating stats: %s", err)
+	}
+
+	// Ensure the Expectations match
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
 }
 
 // Test database adding a new client to database
