@@ -9,6 +9,7 @@ import (
 	"github.com/NaturalFractals/CapstoneProject/backend/model"
 )
 
+// mockDB struct for handling database connection
 type mockDB struct{}
 
 // Interface implementation for mockDB

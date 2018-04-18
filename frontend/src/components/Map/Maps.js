@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Notifications, {notify} from 'react-notify-toast';
 
+// Map componenent and all associated drawing functionality
 class Maps extends Component {
     constructor(props) {
         super(props);

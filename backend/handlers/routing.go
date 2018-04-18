@@ -10,6 +10,7 @@ type Env struct {
 	db model.Datastore
 }
 
+// Returns a router for routing incoming request
 func Router() *mux.Router {
 	router := mux.NewRouter()
 

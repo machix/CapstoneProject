@@ -7,11 +7,6 @@ import (
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
-// Test connection to the AWS Postgres database
-func TestUserDatabaseConnect(t *testing.T) {
-	// Add Test to test database connection
-}
-
 // Test get request to database for user
 func TestDatabaseSelectQuery(t *testing.T) {
 	db, mock, err := sqlmock.New()
