@@ -5,6 +5,7 @@ import ReactTable from 'react-table';
 import { Row, Col } from 'react-flexbox-grid';
 import axios from 'axios';
 
+// User component to demonstrate working service
 class User extends Component {
     constructor(props) {
         super(props);
