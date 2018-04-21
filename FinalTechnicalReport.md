@@ -6,7 +6,9 @@ April 28th, 2018
 
 ## Abstract
 
-This project involves building a geofencing microservice, with the goal of allowing clients to query the service and determine if a point is contained within a polygon/geofence. These types of services are common in industry, although are generally proprietary systems. 
+The goal of this project was to build a geofencing microservice, with the goal of allowing clients to query the service and determine if a point is contained within a polygon/geofence. These types of services are common in industry, although are generally proprietary systems. 
+
+Throughout the rest of this report the term polygon and geofence will be used interchangeably. 
 
 Keywords: Geofence, Point-In-Polygon, Microservice
 
@@ -14,14 +16,32 @@ Keywords: Geofence, Point-In-Polygon, Microservice
 
 ## Introduction
 
-In our ever increasingly mobile first world, applications with location awareness have become increasingly popular and useful. 
+In our ever increasingly mobile first world, applications with location awareness have become increasingly popular and necessary. Whether it is a coupon manufacturing service or a ride-sharing application, they all use location based services for improving the customer experience.
 Within this technology trend, an application of geofences has arisen. A geofence is a part of a software program 
 that uses GPS, WiFi or RFID to define geographical boundaries. With pushes in technology towards augmented reality, self-driving 
-cars and IoT the need for location aware machines is becoming increasingly necessary.
+cars and IoT the need for location aware devices is becoming increasingly important
 
-This project is intended to provide a microservice that allows a client to query the service and determine if a point is contained within a polygon or geofence. A microservice architecture is an architecture style that is structured a collection of loosely coupled services that generally implement some type of business capabilities [2]. 
+### Problem
+
+Geolocation systems are common in almost all application systems these days. While there are geo-location applications you can use as a service, they are costly and you have to forfeit your customers data to a third-party. Additionally, with a high number of users it isn’t unlikely that you will need to process tens of thousands of transactions per second. With such high transaction volumes, outsourcing this responsibility to a third party would again prove costly. 
+
+With the help of open source geospatial libraries, tools and data structures one can build their out geolocation service.  
 
 Point-in-Polygon detection algorithms are common tools used to implement geofences. 
+
+Along with the convenience that mobile applications provide, users also expect relevant information. For example, if a user wants to use a mobile app to find local coupons, they don’t want to see coupons for stores over an hour away. The geolocation services offered as part of the applications allow commerce platforms to provide relevant and more valuable information to their customers. 
+
+### Objectives
+
+The idea of this project is to create a functionable and scalable solution to geofencing. Implementing a geofence requires lookups using CPU-intensive point-in-polygon algorithms in order to determine if an object exist in a geofence.
+
+A microservice architecture is an architecture style that is structured a collection of loosely coupled services that generally implement some type of business capabilities [2].  This project is intended to provide a microservice that allows a client to query the service and determine if a point is contained within a polygon or geofence.  The microservice architecture would handle all server-side components of an augmented reality based marketing application. 
+
+### Potential Users
+
+While this microservice could be used alone, the functionality of the service fit better into a larger system that uses the service for geolocation purposes. 
+
+
 
 ## Project Overview
 
@@ -29,10 +49,19 @@ Point-in-Polygon detection algorithms are common tools used to implement geofenc
 
 ## Design, Development and Test
 
+The development of this project was performed using 1 week sprints. Each sprint we planned feature(s) that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. 
+
 ### Design
 
 
 The design of this microservice can be seen in the diagram below. This microservice is designed to be part of a larger system of microservices, in which each is decoupled from the other and has its own functionality.
+
+Golang was chosen as the development language for this microservice for a variety of reasons:
+
+
+* Point in polygon lookups require CPU-intensive algorithms. Golang is a systems language that is designed to be fast and efficient.
+* Low latency and high throughput. The service needs to be able to handle thousands of request, with reach request taking less than 100 milliseconds.
+* Concurrent Design. This service must constantly refresh in-memory geofences in the background. Background refreshing can tie up the CPU and slow query response time. Goroutines can be executed on multiple cores and allow the service to run background queries in parallel with foreground queries.
 
 
 ### Development
@@ -41,11 +70,15 @@ The design of this microservice can be seen in the diagram below. This microserv
 
 ### Test
 
-Testing and building was automated using TravisCI.
+Testing and building was automated using TravisCI. 
 
-My initial design of the http handler methods didn’t allow for easy integration testing. The first implementation would have required setting up a temporary http server with proper environment variables to test the handlers. Given most of my testing had been automated through TravisCI, this wasn’t easily feasible. Instead I refactored the database dependency out of my handlers using and interface. This allowed me to decouple my handlers from my database interaction and create a mock database connections for my testing.
+My initial design of the http handler methods didn’t allow for easy unit testing. The first implementation would have required setting up a temporary http server with proper environment variables to test the handlers. Given most of my testing had been automated through TravisCI, this wasn’t easily feasible. Instead I refactored the database dependencies out of my handlers using an interface. This allowed me to decouple my handlers from my database interaction and create a mock datastores for testing.
 
 Testing the database required using a library for mock databases. I was unable to find any libraries for a mock PostGIS database. Due to limited time, I was unable to build my own version of a mock database for testing the PostGIS. Given the model package contains no functionality there are no unit test for this package.
+
+Go-carpet was used to determine testing coverage. This metric was only mildly useful for this specific project as some of the packages had no functionality, and as mentioned some of the specific database interactions could not be testing. 
+
+Once each feature was complete integration testing was also performed using calls from the client. The correct implementation was testing by verifying the correct response from the http request. 
 
 ## Results
 
@@ -61,6 +94,10 @@ In order to save polygons in the database the PostGIS extension was needed. This
 
 
 ## Conclusion
+
+This was my first large project using Go as the development language. Coming from an OOP background, learning best practices for the language was a valuable learning process.
+
+After refactoring my code to allow for proper unit testing, one can see the benefits of taking a Test Driven Development (TDD) approach. In future project, I believe using a TDD approach to development would save time and improve design decisions over the long run.
 
 The algorithm implemented in this project is not the most efficient solution. 
 
