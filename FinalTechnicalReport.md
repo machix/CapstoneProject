@@ -68,12 +68,15 @@ QuadTrees are used in popular mapping applications such as Google Maps and Bing 
 
 While R-Tree implementations often have a higher maximum throughput, heavy update activity of the geospatial data decreases the performance of the R-Tree implementations, but heavy updating of the Quad Tree will have no impact on performance [7].
 
+A microservice is one service in part of a microservice architecture that structures an application as a group of loosely coupled services which generally implement business capabilities. Benefits of this architecture style allows for scalability, flexibility, and portability[4]. The microservice designed and implemented for this project is just one service that is part of a larger system, as can be seen in the figure below.
 
+
+![microservicecapstone](https://user-images.githubusercontent.com/13584530/39459534-30f312dc-4cca-11e8-9dbc-da9541c494cd.png)
 
 
 ### Objectives
 
-The idea of this project is to create a functionable and scalable solution to geofencing. Implementing a geofence requires lookups using CPU-intensive point-in-polygon algorithms in order to determine if an object exist in a geofence.
+The idea of this project is to create a functionable and scalable solution to geofencing. Implementing a geofence requires lookups using CPU-intensive point-in-polygon algorithms in order to determine if an object exist in a geofence. The algorithms used in this project were not the optimal solutions for point-in-polygon detection. 
 
 A microservice architecture is an architecture style that is structured a collection of loosely coupled services that generally implement some type of business capabilities [2].  This project is intended to provide a microservice that allows a client to query the service and determine if a point is contained within a polygon or geofence.  The microservice architecture would handle all server-side components of an augmented reality based marketing application. 
 
@@ -103,9 +106,38 @@ Golang was chosen as the development language for this microservice for a variet
 * Concurrent Design. This service must constantly refresh in-memory geofences in the background. Background refreshing can tie up the CPU and slow query response time. Goroutines can be executed on multiple cores and allow the service to run background queries in parallel with foreground queries.
 
 
+In a true microservice the functionality of the user and client would be separated into different services, but due to time constraints and project scope they were coupled with the geofencing functionality as one microservice.
+
 ### Development
 
-One the service had been designed, the development sections were split into three main categories: Users, Clients, and Polygons. The polygon is the geofence, the client “owns” a polygon, and the service is used to determine if the user is inside of one of the client’s polygons. The service was built one endpoint at a time.Once the endpoint and HTTP handler was implemented, the database interaction was completed. 
+One the service had been designed, the development sections were split into three main categories: Users, Clients, and Polygons. The polygon is the geofence, the client “owns” a polygon, and the service is used to determine if the user is inside of one of the client’s polygons. The service was built one endpoint at a time. The user endpoints were implemented first. Each of the endpoints below was implemented and tested:
+
+* getPosition - GET request handler that returns the user’s position
+* savePosition - POST request handler that would save the user’s position in the database for later reference
+* deletePosition - DELETE request handler the would remove a position(s) from the user’s database
+
+After the user endpoints receive the request, they need to then make a database transaction. The go standard library contains an sql library that was used to help complete these database transaction. After decoding any information in the http request, an SQL statement was then formed and an made to an AWS PostGIS database. 
+
+Next the following client endpoints were implemented and tested:
+
+* getClient - GET request handler to returns the clients
+* postClient - POST request handler to save a new client to the client
+* deleteClient - DELETE request handler to remove a current client from the database
+
+Once the client endpoints received the request, the database transactions were handled just as with the user database. 
+
+Next the polygon endpoints were implemented:
+
+* getPolygons - GET request handler that retrieves specific polygons in the database
+* savePolygon - POST request handler that saves a polygon to the database
+* deletePolygon - DELETE request handler that deletes a polygon from the database
+* checkGeofence - POST request to determine if a point is within an existing polygon
+* checkPolygon - POST request to determine if a polygon intersects with an existing polygon
+
+**NOTE**: The checkPolygon endpoint is functional, but the implementation and response of the endpoint is not fully functional.
+
+The polygon database interactions were more complicated due to the use of the PostGIS extension of the Postgres database. PostGIS SQL queries are more complex and use a completely different type of syntax for manipulating geometrical data within the database. 
+
 
 ### Test
 
@@ -138,8 +170,11 @@ This was my first large project using Go as the development language. Coming fro
 
 After refactoring my code to allow for proper unit testing, one can see the benefits of taking a Test Driven Development (TDD) approach. In future project, I believe using a TDD approach to development would improve design decisions and save time over the course of the project.
 
+Future development of this microservice would involve removing the other functionality such as interacting with the user and client database, implementing more sophisticated point-in-polygon algorithms, and performing performance testing on the microservice.
+
 
 The algorithm implemented in this project is not the most efficient solution. 
+
 
 ## References
 
