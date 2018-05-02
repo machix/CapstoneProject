@@ -54,21 +54,24 @@ While there are geolocation applications you can use as a service, they are cost
 
 Point-in-Polygon detection algorithms are common methods used to implement geofences. There are a wide array of point-polygon algorithm which all vary in complexity and efficiency. A ray-casting is one of the oldest and most well-known algorithms for detecting if a point is contained within a polygon. 
 
-Another version is to use geohashes to recursively fill the polygon with geohashes and then hash a point to determine if it is contained in one of the hashes. To recursively fill the set you start with an empty fence. Then if the hash is completely contained within the fence completely then it is added to the set. If the hash intersects with the geofence, we don’t add it but recurse with the hashes of its children.
+Another version is to use geohashes to recursively fill the polygon with geohashes and then hash a point to determine if it is contained in one of the hashes. To recursively fill the set you start with an empty fence. Then if the hash is completely contained within the fence completely then it is added to the set. If the hash intersects with the geofence, it isn’t added, but instead recurse with the hashes of its children. Once you reach the point in which the hash is equal to the maximum precision that is being checked, you add the hash to the set and stop recursing. Ultimately, if the hash doesn’t intersect with the geofence, then you don’t add it to the set, and you stop recursing. A visual representation of this process can be seen in the figure below.
+
+![screenshotfromhashfill](https://user-images.githubusercontent.com/13584530/39506363-06c9eb7a-4da6-11e8-8f9a-ed61248c415a.png)  
+FIGURE 1. RECURSIVE HASHING
 
 Within the large variety of algorithms used for geofencing, the most efficient ones all share some commonalities. Previous studies have found many use R-Trees to organize their Minimum Bounding Rectangle(MBR) of polygons for the filtering stage [8]. 
 
 An R-Tree is a spatial data structure based on a B-Tree that is used for spatial indexing methods. In the two-dimensional case of geofencing, the MBR is a simple bounding box (bbox) defined by a minimum and maximum coordinate. The check to determine if one object’s bbox is contained in another is a constant time operation.  Figure 1 below shows a good representation of an R-Tree.
 
 ![r-tree explanation](https://user-images.githubusercontent.com/13584530/39414423-5891e842-4c05-11e8-9f88-0a3dc050e339.png)  
-FIGURE 1. R-TREE DATA STRUCTURE
+FIGURE 2. R-TREE DATA STRUCTURE
 
 The average search time complexity for an R-Tree is O(log Mn) where M is the defined constant of the maximum number of children a node can have.
 
 The other common spatial data structure used in the fastest point-in-polygon algorithms is a QuadTree. A QuadTree is a specialization of a generic kd-tree for 2-dimensional indexing. You take a flat project of a surface and divide the surface into quarters, generally called cells. Figure 2 below shows an example of QuadTree generation.
 
 ![bingmapquad](https://user-images.githubusercontent.com/13584530/39414425-5a95f818-4c05-11e8-93dd-cd7758246207.jpeg)  
-FIGURE 1. QUADTREE EXAMPLE
+FIGURE 3. QUADTREE EXAMPLE
 
 QuadTrees are used in popular mapping applications such as Google Maps and Bing Maps. Google Maps uses a S2 algorithm, which is a projection of the Earth’s sphere using cube mapping so each cell has a uniform surface area. The cells are arranged using a Hilbert Curve to conserve spatial locality in the cell label. A Hilbert Curve is a space filling curve that allows the range to cover the entire n-dimensional space. 
 
@@ -157,9 +160,10 @@ The polygon database interactions were more complicated due to the use of the Po
 
 Testing and building was automated using TravisCI. 
 
-My initial design of the http handler methods didn’t allow for easy unit testing. The first implementation would have required setting up a temporary http server with proper environment variables to test the handlers. Given most of my testing had been automated through TravisCI, this wasn’t easily feasible. Instead I refactored the database dependencies out of my handlers using an interface. This allowed me to decouple my handlers from my database interaction and create a mock datastores for testing.
+My initial design of the HTTP handler methods didn’t allow for easy unit testing. The first implementation had a dependency of the database connection and would have required setting up a temporary HTTP server with proper environment variables to test the HTTP handlers. Given most of my testing had been automated through TravisCI, this wasn’t easily feasible. Instead I refactored the database dependencies out of my handlers using an interface. This allowed me to decouple my handlers from my database interaction and create mock datastores for testing.
 
-Testing the database required using a library for mock databases. I was unable to find any libraries for a mock PostGIS database. Due to limited time, I was unable to build my own version of a mock database for testing the PostGIS. Given the model package contains no functionality there are no unit test for this package.
+Testing the database package required using a library for mock databases. The library used was called go-sqlmock. I was unable to find any libraries for a mock PostGIS database. Due to limited time, I was unable to build my own version of a mock database for testing the PostGIS database interactions. Given the model package contains no functionality there are no unit tests for this package.
+
 
 Go-carpet was used to determine testing coverage. This metric was only mildly useful for this specific project as some of the packages had no functionality, and as mentioned some of the specific database interactions could not be testing. 
 
@@ -174,17 +178,19 @@ To help demonstrate the working API, a bootstrapped React App was created. Withi
 The next feature implemented was the addition of database interactions within the service. A Postgres database hosted on Amazon Web Services (AWS) was used to host the database. A database package was created to handle interactions between the service and database. In order to allow the client to retrieve data from the database, endpoints were created that allowed the client to perform GET, POST, and DELETE http request. 
 
 As each feature was added to the service, a demonstration of this functionality was added to the React App. 
-
-In order to save polygons in the database the PostGIS extension was needed. This extension allows one to save geometrical shapes in the database. 
-This was my first large project using Go as the development language. Coming from an OOP background, learning best practices for the language was a valuable learning process.
+In order to save polygons in the database the PostGIS extension was needed. This extension allows one to save geometrical shapes in the database. Query syntax for a PostGIS database is significantly different from a regular SQL database. I didn’t research this extension before using it, so I had to learn how to properly query the database and work with geometric shapes. Integrating PostGIS into the project took longer than anticipated. 
 
 In a true microservice the functionality of the user and client would be separated into different services, but due to time constraints and project scope they were coupled with the geofencing functionality as one microservice.
 
-As previously mentioned, project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras.
+In the proposal project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. As displayed in the chart below, I was able to finish all of the critical aspects of the project. 
 
 ![featuressss](https://user-images.githubusercontent.com/13584530/39502875-a7f57c5a-4d90-11e8-9d39-890a188b9935.png)  
 FIGURE 5. FEATURE RESULTS
 
+
+This was my first large project using Go as the development language. Learning best practices for the language was time consuming, but a valuable learning process. This had a small impact on my productivity. Working to make a user-friendly interface within the React application took longer than anticipated. Demonstrating a working project at the end of our development process was necessary, but in the future I would research more time-efficient ways to build a user interface to demonstrate the service functionality. 
+
+The algorithm that is used in the geofence package is the recursive hash filling algorithm discussed in the background section. This algorithm works best for queries of a large number of points in a polygon. As the number of polygons increases, this algorithm will be faster than the ray casting algorithm, but will not scale as well as others discussed in the background section of this report. I was able to begin coding the QuadTree data structure, but didn’t have time to finish the data structure or an algorithm to utilize the tree.
 
 
 ## Conclusion
