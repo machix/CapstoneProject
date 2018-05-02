@@ -1,5 +1,5 @@
 # Capstone Project
-This project is a Geofencing Microservice. This service allows you to make queries to determine if a point is contained in a set of polygons. This repository also includes a React app as a way to demonstrate functionality of the microservice. Using the frontend app you can test the point-in-polygon service on the backend. You can find information on running the React app and microservice in the fronend and backend folders, respectively.
+This project is a Geofencing Microservice. This service allows you to make queries to determine if a point is contained in a set of polygons. This repository also includes a React app as a way to demonstrate functionality of the microservice. Using the frontend app you can test the point-in-polygon service on the backend. You can find information on running the React app and microservice in the frontend and backend folders, respectively.
 
   <img width="788" alt="screen shot 2018-04-09 at 11 09 49 pm" src="https://user-images.githubusercontent.com/13584530/38534297-7d04ddfc-3c4b-11e8-8b35-f0dfe38a1630.png">
   
