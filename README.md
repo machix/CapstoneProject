@@ -16,6 +16,6 @@ Please see README.md in the backend folder for detailed instructions on working 
 
 
 
-## [Proposal](#capstone-project-description.md)
+## [Proposal](#https://github.com/NaturalFractals/CapstoneProject/blob/master/CapstoneProjectDescription.md)
 
-## [Technical Report](#final-technical-report.md)
+## [Technical Report](#https://github.com/NaturalFractals/CapstoneProject/blob/master/FinalTechnicalReport.md)
