@@ -15,7 +15,7 @@ Keywords: Geofence, Point-In-Polygon, Microservice
 
 1. [Introduction](#introduction)  
 
-1. [Problem](#problem)  
+    1. [Problem](#problem)  
 
     2. [Objectives](#objectives)  
 
@@ -38,7 +38,7 @@ Keywords: Geofence, Point-In-Polygon, Microservice
 6. [References](#references)  
     
 
-## Introduction
+## Introduction and Project Overview
 
 In our ever increasingly mobile first world, applications with location awareness have become more popular and necessary. Whether it is a coupon manufacturing service or a ride-sharing application, they all use location-based services for improving the customer experience.
 Within this technology trend, an application of geofences has arisen. A geofence is a part of a software program 
@@ -62,14 +62,14 @@ Within the large variety of algorithms used for geofencing, the most efficient o
 
 An R-Tree is a spatial data structure based on a B-Tree that is used for spatial indexing methods. In the two-dimensional case of geofencing, the MBR is a simple bounding box (bbox) defined by a minimum and maximum coordinate. The check to determine if one object’s bbox is contained in another is a constant time operation.  Figure 1 below shows a good representation of an R-Tree.
 
-![r-tree explanation](https://user-images.githubusercontent.com/13584530/39414423-5891e842-4c05-11e8-9f88-0a3dc050e339.png)
+![r-tree explanation](https://user-images.githubusercontent.com/13584530/39414423-5891e842-4c05-11e8-9f88-0a3dc050e339.png)  
 FIGURE 1. R-TREE DATA STRUCTURE
 
 The average search time complexity for an R-Tree is O(log Mn) where M is the defined constant of the maximum number of children a node can have.
 
 The other common spatial data structure used in the fastest point-in-polygon algorithms is a QuadTree. A QuadTree is a specialization of a generic kd-tree for 2-dimensional indexing. You take a flat project of a surface and divide the surface into quarters, generally called cells. Figure 2 below shows an example of QuadTree generation.
 
-![bingmapquad](https://user-images.githubusercontent.com/13584530/39414425-5a95f818-4c05-11e8-93dd-cd7758246207.jpeg)
+![bingmapquad](https://user-images.githubusercontent.com/13584530/39414425-5a95f818-4c05-11e8-93dd-cd7758246207.jpeg)  
 FIGURE 1. QUADTREE EXAMPLE
 
 QuadTrees are used in popular mapping applications such as Google Maps and Bing Maps. Google Maps uses a S2 algorithm, which is a projection of the Earth’s sphere using cube mapping so each cell has a uniform surface area. The cells are arranged using a Hilbert Curve to conserve spatial locality in the cell label. A Hilbert Curve is a space filling curve that allows the range to cover the entire n-dimensional space. 
@@ -79,7 +79,7 @@ While R-Tree implementations often have a higher maximum throughput, heavy updat
 A microservice is one service in part of a microservice architecture that structures an application as a group of loosely coupled services which generally implement business capabilities. Benefits of this architecture style allows for scalability, flexibility, and portability[4]. The microservice designed and implemented for this project is just one service that is part of a larger system, as can be seen in the figure below.
 
 
-![microservicecapstone](https://user-images.githubusercontent.com/13584530/39459534-30f312dc-4cca-11e8-9dbc-da9541c494cd.png)
+![microservicecapstone](https://user-images.githubusercontent.com/13584530/39459534-30f312dc-4cca-11e8-9dbc-da9541c494cd.png)  
 
 
 ### Objectives
@@ -91,14 +91,17 @@ A microservice architecture is an architecture style that is structured a collec
 There are many libraries that help with location data and implementation of common data structures that will be useful in the implementation of this service.
 
 
+In the project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. They are outlined in the figure below.
+
+![faeatsasa](https://user-images.githubusercontent.com/13584530/39502959-23fd59ee-4d91-11e8-81c0-7df6190d0762.png)  
+
+FIGURE 4. FEATURE TABLE
+
+
+
 ### Potential Users
 
 While this microservice could be used alone, the functionality of the service fit better into a larger system that uses the service for geolocation purposes. 
-
-
-
-## Project Overview
-
 
 
 ## Design, Development and Test
@@ -175,9 +178,10 @@ As each feature was added to the service, a demonstration of this functionality 
 In order to save polygons in the database the PostGIS extension was needed. This extension allows one to save geometrical shapes in the database. 
 This was my first large project using Go as the development language. Coming from an OOP background, learning best practices for the language was a valuable learning process.
 
-In the proposal project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras.
+As previously mentioned, project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras.
 
-![featurechart](https://user-images.githubusercontent.com/13584530/39502779-2febbb70-4d90-11e8-9ae7-ae287e5a3195.png)
+![featuressss](https://user-images.githubusercontent.com/13584530/39502875-a7f57c5a-4d90-11e8-9d39-890a188b9935.png)  
+FIGURE 5. FEATURE RESULTS
 
 
 
