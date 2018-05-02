@@ -6,51 +6,59 @@ April 28th, 2018
 
 ## Abstract
 
-The goal of this project was to build a geofencing microservice the would allow clients to query the service and determine if a point is contained within a polygon/geofence. These types of services are common in industry, although are generally implemented as proprietary systems. The service built for this project will be once service in a larger architecture for a location-based marketing application. A geofencing service was build using Golang and hosted in a docker container on a Digital Ocean droplet. To demonstrate the functionality of the service a basic React app was built. This app allows the user to draw polygons using the Google Maps API and then click inside and outside of the polygons. Upon clicking, the app sends a http request to the service and issues a toast notification on the screen to alert the results. If the click was outside of the polygon, then the user will be alerted, and if it is inside the polygon(s), then the user will be alerts to which polygons the click is contained. 
+The goal of this project was to build a geofencing microservice that would allow clients to query the service and determine if a point is contained within a geofence. These types of services are common in industry, although are generally implemented as proprietary systems. The service built for this project is one service in a larger architecture for a location-based marketing application. The location-based functionality will allow for an accurate targeting of customers to help provide a personalized user experience. The geofencing service was built using Golang and hosted in a Docker container on a Digital Ocean droplet. A basic React application provides an easy to use interface to demonstrate the functionality of the service. This app allows the user to draw polygons using the Google Maps Application Programmable Interface (API) and click inside and outside of the polygons. Upon clicking, the application sends a Hyper Transfer Text Protocol (HTTP) request to the service and issues a notification on the screen to alert the results. If the click was outside of the polygon(s), then the user will be alerted; if it is inside the polygon(s), then the user will be alerted to which polygons the click is contained. 
 
 
 Keywords: Geofence, Point-In-Polygon, Microservice
 
 ## Table of Contents
 
-[Introduction](#introduction)
-    [Problem](#problem)
-    [Objectives](#objectives)
-    [Potential Users](#potential-users)
-[Project Overview](#project-overview)
-[Design, Development and Test](#design,-development-and-test)
-    [Design](#design)
-    [Development](#development)
-    [Test](#test)
-[Results](#results)
-[Conclusion](#conclusion)
-[References](#references)
+1. [Introduction](#introduction)  
+
+1. [Problem](#problem)  
+
+    2. [Objectives](#objectives)  
+
+    3. [Potential Users](#potential-users)  
+
+2. [Project Overview](#project-overview)  
+
+3. [Design, Development and Test](#design,-development-and-test)  
+
+    1. [Design](#design)  
+
+    2. [Development](#development)  
+
+    3. [Test](#test)  
+
+4. [Results](#results)  
+
+5. [Conclusion](#conclusion)  
+
+6. [References](#references)  
     
 
 ## Introduction
 
-In our ever increasingly mobile first world, applications with location awareness have become more popular and necessary. Whether it is a coupon manufacturing service or a ride-sharing application, they all use location based services for improving the customer experience.
+In our ever increasingly mobile first world, applications with location awareness have become more popular and necessary. Whether it is a coupon manufacturing service or a ride-sharing application, they all use location-based services for improving the customer experience.
 Within this technology trend, an application of geofences has arisen. A geofence is a part of a software program 
 that uses GPS, WiFi or RFID to define geographical boundaries. With pushes in technology towards augmented reality, self-driving 
 cars and IoT the need for location aware devices is becoming increasingly important.
 
-Throughout the rest of this report the term polygon and geofence will be used interchangeably. 
 
 ### Problem
 
-Apps that almost everyone uses on a daily basis such as Uber, Google Maps, Waze, Yelp, and the list goes on and on, use some type of geofencing in their product. This is a core part of their product, so these implementation are very valuable and not open to the public. Most of the information regarding similar services are in the form of high-level overviews of their engineering architecture. There are many libraries that help with location data and implementation of common data structures that will be useful in the implementation of this service.
+Applications that almost everyone uses on a daily basis such as Uber, Google Maps, Waze, and Yelp use some type of geofencing in their product. This is a core part of their product, so these implementations are very valuable and not open to the public. Most of the information regarding similar services are in the form of high-level overviews or brief engineering blogs describing their implementation of a geofencing service. 
 
-Along with the convenience that mobile applications provide, users also expect relevant information. For example, if a user wants to use a mobile app to find local coupons, they don’t want to see coupons for stores over an hour away. The geolocation services offered as part of the applications allow commerce platforms to provide relevant and more valuable information to their customers. 
-
-While there are geolocation applications you can use as a service, they are costly and you have to forfeit your customers data to a third-party. Additionally, with a high number of users the service will need to process tens of thousands of transactions per second. With such high transaction volumes, outsourcing this responsibility to a third party would again prove costly. 
-
-With the help of open source geospatial libraries, tools and data structures one can build their out geolocation service.  
+While there are geolocation applications you can use as a service, they are costly and you have to forfeit your customers data to a third-party. Additionally, with a high number of users the service will need to process tens of thousands of transactions per second. With such high request volumes, outsourcing this responsibility to a third party would again prove costly. With the limited processing power on many of our devices, it is not feasible to use them to determine their location in relation to geofences. To attain a satisfactory user experience, secure the user’s data, and achieve reasonable response times this computation must be offloaded onto a server. The geofencing microservice built for this project will provide a solution to all of these issues.
 
 ### Background
 
-A microservice is one service in part of a microservice architecture that structures an application as a group of loosely coupled services which generally implement business capabilities. Benefits of this architecture style allows for scalability, flexibility, and portability[4]. The microservice designed and implemented for this project is just one service that is part of a larger system, as can be seen in the figure below.
+Point-in-Polygon detection algorithms are common methods used to implement geofences. There are a wide array of point-polygon algorithm which all vary in complexity and efficiency. A ray-casting is one of the oldest and most well-known algorithms for detecting if a point is contained within a polygon. 
 
-Point-in-Polygon detection algorithms are common tools used to implement geofences. The algorithms used in this project were not the optimal solutions for point-in-polygon detection. Within the large variety of algorithms used for geofencing, the most efficient ones all share some commonalities. Previous studies have found they all use R-Trees to organize their Minimum Bounding Rectangle(MBR) of polygons for the filtering stage [8]. 
+Another version is to use geohashes to recursively fill the polygon with geohashes and then hash a point to determine if it is contained in one of the hashes. To recursively fill the set you start with an empty fence. Then if the hash is completely contained within the fence completely then it is added to the set. If the hash intersects with the geofence, we don’t add it but recurse with the hashes of its children.
+
+Within the large variety of algorithms used for geofencing, the most efficient ones all share some commonalities. Previous studies have found many use R-Trees to organize their Minimum Bounding Rectangle(MBR) of polygons for the filtering stage [8]. 
 
 An R-Tree is a spatial data structure based on a B-Tree that is used for spatial indexing methods. In the two-dimensional case of geofencing, the MBR is a simple bounding box (bbox) defined by a minimum and maximum coordinate. The check to determine if one object’s bbox is contained in another is a constant time operation.  Figure 1 below shows a good representation of an R-Tree.
 
@@ -79,6 +87,9 @@ A microservice is one service in part of a microservice architecture that struct
 The idea of this project is to create a functionable and scalable solution to geofencing. Implementing a geofence requires lookups using CPU-intensive point-in-polygon algorithms in order to determine if an object exist in a geofence. The algorithms used in this project were not the optimal solutions for point-in-polygon detection. 
 
 A microservice architecture is an architecture style that is structured a collection of loosely coupled services that generally implement some type of business capabilities [2].  This project is intended to provide a microservice that allows a client to query the service and determine if a point is contained within a polygon or geofence.  The microservice architecture would handle all server-side components of an augmented reality based marketing application. 
+
+There are many libraries that help with location data and implementation of common data structures that will be useful in the implementation of this service.
+
 
 ### Potential Users
 
@@ -164,6 +175,10 @@ As each feature was added to the service, a demonstration of this functionality 
 In order to save polygons in the database the PostGIS extension was needed. This extension allows one to save geometrical shapes in the database. 
 This was my first large project using Go as the development language. Coming from an OOP background, learning best practices for the language was a valuable learning process.
 
+In the proposal project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras.
+
+![featurechart](https://user-images.githubusercontent.com/13584530/39502779-2febbb70-4d90-11e8-9ae7-ae287e5a3195.png)
+
 
 
 ## Conclusion
@@ -178,16 +193,17 @@ The algorithm implemented in this project is not the most efficient solution.
 
 ## References
 
-[1] Geofencing definition
+[1] “Simple example of an R-tree for 2D rectangles” Available: https://en.wikipedia.org/wiki/R-tree [April 27, 2018]
 
-[2] http://microservices.io
+[2] Available: https://msdn.microsoft.com/en-us/library/bb259689.aspx [April 27, 2018]
+
+[3] “Microservice Architecture pattern” Available: http://microservices.io/patterns/microservices.html [April 28. 2018]
 
 [4] https://icpe.spec.org/icpe_proceedings/2017/companion/p223.pdf
-
 [8] S. Tang, Y. Yu, R. Zimmerman, S. Obana. “39 Efficient Geo-fencing via Hybrid Hashing: A Combination of Bucket Selection and In-bucket Binary Search.” Internet: http://research.nii.ac.jp/~yiyu/GeoFence-20150512-FirstLook.pdf, [April 26, 2018]
 
-[7] M. M. Sardadi, M. S. bin Mohd Rahim, Z. Jupri, and D. bin Daman. “Choosing R-tree or Quadtree Spatial Data Indexing in One Oracle Spatial Database System to Make Faster Showing Geographical Map in Mobile Geographical Information System Technology.” Internet: https://pdfs.semanticscholar.org/c86e/a522e7872c44359b00a4102d16e72bbed891.pdf, [April 28, 2018]. 
 
-## Appendices
+
+[7] M. M. Sardadi, M. S. bin Mohd Rahim, Z. Jupri, and D. bin Daman. “Choosing R-tree or Quadtree Spatial Data Indexing in One Oracle Spatial Database System to Make Faster Showing Geographical Map in Mobile Geographical Information System Technology.” Internet: https://pdfs.semanticscholar.org/c86e/a522e7872c44359b00a4102d16e72bbed891.pdf, [April 26, 2018]. 
 
 
