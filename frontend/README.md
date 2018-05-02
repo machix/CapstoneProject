@@ -1,15 +1,15 @@
 ## Installation
-After cloning the respository, to run the app you should have npm installed and open a unix terminal and change directories and ensure you are at the top of the ```frontend``` directory, then you will run the command ```npm install```. This will install all of the required dependencies using npm. 
+After cloning the respository, to run the app you should have npm installed. Open a unix terminal and change directories to ensure you are at the top of the ```frontend``` directory, then you will run the command ```npm install```. This will install all of the required dependencies using npm. 
 
 Windows users can [see this link](http://blog.teamtreehouse.com/install-node-js-npm-windows) for downloading npm and node.
 
-Once all of the dependencies have been installed you can then run the react app using the command ```npm start```. Your browser of choice should open and you should be directed to ```localhost:XXXX```, otherwise you will need to open a browser and navigate to the ```localhost:XXXX``` address given in your terminal. 
+Once all of the dependencies have been installed you can then run the React app using the command ```npm start```. Your browser of choice should open and you should be directed to ```localhost:XXXX```, otherwise you will need to open a browser and navigate to the ```localhost:XXXX``` address given in your terminal. 
 
 **NOTE**: This application will only be functional in the current state assuming the backend is running at the current URL pointed at by the axios request in each of the React components. If the app appears to have no functionality, please see the README.md in the backend directory for directions on how to setup the backend. After setting up your own backend, you will need to point the axios request at the proper URL.
 
 ## Application Usage
 
-Once you have navigated to the react app running on localhost, you can then test the service by using the map and drawing manager. You will want to click on the polygon shape, and then draw as many polygons as desired. 
+Once you have navigated to the React app running on localhost, you can then test the service by using the map and drawing manager. You will want to click on the polygon shape, and then draw as many polygons as desired. 
 
 ![image1](https://user-images.githubusercontent.com/13584530/38959518-fb027cd4-432e-11e8-85c0-a62bf3418599.jpg)
 
