@@ -13,7 +13,7 @@ Keywords: Geofence, Point-In-Polygon, Microservice
 
 ## Table of Contents
 
-1. [Introduction](#introduction)  
+1. [Introduction & Project Overview](#introduction-&-project-overview)  
 
     1. [Problem](#problem)  
 
@@ -21,9 +21,7 @@ Keywords: Geofence, Point-In-Polygon, Microservice
 
     3. [Potential Users](#potential-users)  
 
-2. [Project Overview](#project-overview)  
-
-3. [Design, Development and Test](#design,-development-and-test)  
+2. [Design, Development and Test](#design,-development-and-test)  
 
     1. [Design](#design)  
 
@@ -31,14 +29,14 @@ Keywords: Geofence, Point-In-Polygon, Microservice
 
     3. [Test](#test)  
 
-4. [Results](#results)  
+3. [Results](#results)  
 
-5. [Conclusion](#conclusion)  
+4. [Conclusion](#conclusion)  
 
-6. [References](#references)  
+5. [References](#references)  
     
 
-## Introduction and Project Overview
+## Introduction & Project Overview
 
 In our ever increasingly mobile first world, applications with location awareness have become more popular and necessary. Whether it is a coupon manufacturing service or a ride-sharing application, they all use location-based services for improving the customer experience.
 Within this technology trend, an application of geofences has arisen. A geofence is a part of a software program 
@@ -76,11 +74,7 @@ QuadTrees are used in popular mapping applications such as Google Maps and Bing 
 
 While R-Tree implementations often have a higher maximum throughput, heavy update activity of the geospatial data decreases the performance of the R-Tree implementations, but heavy updating of the Quad Tree will have no impact on performance [7].
 
-A microservice is one service in part of a microservice architecture that structures an application as a group of loosely coupled services which generally implement business capabilities. Benefits of this architecture style allows for scalability, flexibility, and portability[4]. The microservice designed and implemented for this project is just one service that is part of a larger system, as can be seen in the figure below.
-
-
-![microservicecapstone](https://user-images.githubusercontent.com/13584530/39459534-30f312dc-4cca-11e8-9dbc-da9541c494cd.png)  
-
+A microservice is one service in part of a microservice architecture that structures an application as a group of loosely coupled services which generally implement business capabilities. Benefits of this architecture style allows for scalability, flexibility, and portability[4]. 
 
 ### Objectives
 
@@ -101,26 +95,32 @@ FIGURE 4. FEATURE TABLE
 
 ### Potential Users
 
-While this microservice could be used alone, the functionality of the service fit better into a larger system that uses the service for geolocation purposes. 
+While this microservice could be used alone, the functionality of the service fit better into a larger system that uses the service for geolocation purposes. The microservice designed and implemented for this project is just one service that is part of a larger system, as can be seen in the figure below.
+
+![microservicecapstone](https://user-images.githubusercontent.com/13584530/39459534-30f312dc-4cca-11e8-9dbc-da9541c494cd.png)  
+FIGURE 5. MICROSERVICE ARCHITECTURE DIAGRAM
+
+In theory, almost any company that needs to implement geofencing into their application could use this service. Specifically, this microsevice will be used to handle geolocation operations in a location-based augment reality application. 
 
 
 ## Design, Development and Test
 
-The development of this project was performed using 1 week sprints. Each sprint we planned feature(s) that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. 
+The development of this project was performed using 1 week sprints. Each sprint we planned feature(s) that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. The development of this project was performed using 1 week sprints. Each sprint, we planned features that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. Github Projects and Issues were used to track each of the features and our current position in each sprint. Git was used as the version control throughout the project. 
 
 ### Design
 
-The design of this microservice can be seen in the diagram below. This microservice is designed to be part of a larger system of microservices, in which each is decoupled from the other and has its own functionality.
+This microservice is designed to be part of a larger system of microservices, in which each is decoupled from the other and has its own functionality.The service is split into four main packages:
+* model - Holds all of the structs and models of the service. This package contains no functionality.
+* database - This package handles all of the database interactions.
+* handlers - This package contains all of the handlers and methods for building the router containing the handlers.
+* geofence - This package contains the implementation of the geofence algorithm and associated functionality.
 
 Golang was chosen as the development language for this microservice for a variety of reasons:
 
 
 * Point in polygon lookups require CPU-intensive algorithms. Golang is a systems language that is designed to be fast and efficient.
-* Low latency and high throughput. The service needs to be able to handle thousands of request, with reach request taking less than 100 milliseconds.
+* Low latency and high throughput. The service needs to be able to handle thousands of request, with each request ideally taking less than 100 milliseconds.
 * Concurrent Design. This service must constantly refresh in-memory geofences in the background. Background refreshing can tie up the CPU and slow query response time. Goroutines can be executed on multiple cores and allow the service to run background queries in parallel with foreground queries.
-
-
-In a true microservice the functionality of the user and client would be separated into different services, but due to time constraints and project scope they were coupled with the geofencing functionality as one microservice.
 
 ### Development
 
@@ -178,6 +178,8 @@ As each feature was added to the service, a demonstration of this functionality 
 In order to save polygons in the database the PostGIS extension was needed. This extension allows one to save geometrical shapes in the database. 
 This was my first large project using Go as the development language. Coming from an OOP background, learning best practices for the language was a valuable learning process.
 
+In a true microservice the functionality of the user and client would be separated into different services, but due to time constraints and project scope they were coupled with the geofencing functionality as one microservice.
+
 As previously mentioned, project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras.
 
 ![featuressss](https://user-images.githubusercontent.com/13584530/39502875-a7f57c5a-4d90-11e8-9d39-890a188b9935.png)  
@@ -187,12 +189,11 @@ FIGURE 5. FEATURE RESULTS
 
 ## Conclusion
 
-After refactoring my code to allow for proper unit testing, one can see the benefits of taking a Test Driven Development (TDD) approach. In future project, I believe using a TDD approach to development would improve design decisions and save time over the course of the project.
+A geofencing microservice was needed as part of a larger architecture for a location-based augmented reality application. To keep cost low, protect user's data, and provide the user with relevant information I built a geofencing microservice as my project. 
 
-Future development of this microservice would involve removing the other functionality such as interacting with the user and client database, implementing more sophisticated point-in-polygon algorithms, and performing performance testing on the microservice.
+After refactoring my code to allow for proper unit testing, I would take a Test Driven Development (TDD) approach in future projects. Using a TDD approach to development would improve design decisions and save time over the course of the project. I spent a large portion of my time making a good interface for demonstrating the functionality of my service. In the future I would focus more on the primary functionality of the project, such as implementing more advanced algorithms. Overall, I was able to complete all of the necessary features for a working project.
 
-
-The algorithm implemented in this project is not the most efficient solution. 
+Future development of this microservice would involve removing the other functionality such as interacting with the user and client database. These database interactions would be factored out into separate services that handle client and user data. The current geofencing service would not efficiently handle tens of thousands of request per second. Implementing more sophisticated point-in-polygon algorithms and more appropriate spatial data structures would improve efficiency of the service. Another aspect of the service that could be improved is by adding concurrent design patterns. This would enable to run services in the foreground and background simultaneously. This should ultimately improve the effeciency of the service. Finally, load and performance testing on the microservice would allow me to have a concrete analysis of the functionality of the service. With enough data I could accurate determine the total number of request the service could handle and decide if one instance of the service will be enough to handle all of the incoming request. 
 
 
 ## References
