@@ -16,6 +16,6 @@ Please see README.md in the backend folder for detailed instructions on working 
 
 
 
-## [Proposal](#capstone-project-description)
+## [Proposal](#capstone-project-description.md)
 
-## [Technical Report](#final-technical-report)
+## [Technical Report](#final-technical-report.md)
