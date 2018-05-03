@@ -52,7 +52,7 @@ While there are geolocation applications you can use as a service, they are cost
 
 Point-in-Polygon detection algorithms are common methods used to implement geofences. There are a wide array of point-polygon algorithm which all vary in complexity and efficiency. Ray-casting is one of the oldest and most well-known algorithms[6] for detecting if a point is contained within a polygon. 
 
-![raycast](https://user-images.githubusercontent.com/13584530/39556011-35909918-4e4b-11e8-9e5d-902b00853753.png)
+![300px-ray casting algorithm illustration](https://user-images.githubusercontent.com/13584530/39556319-8d2abf1c-4e4d-11e8-8f9f-513044fb7ad1.png)  
 FIGURE 1. RAY-CASTING ALGORITHM [1]
 
 This was the first algorithm implemented in the project. It was replaced to then implement the geohashing algorithm discussed below.
@@ -94,7 +94,8 @@ There are many libraries that help with location data and implementation of comm
 
 In the project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. They are outlined in the figure below.
 
-![faeatsasa](https://user-images.githubusercontent.com/13584530/39502959-23fd59ee-4d91-11e8-81c0-7df6190d0762.png)  
+<img width="899" alt="screen shot 2018-05-02 at 9 10 46 pm" src="https://user-images.githubusercontent.com/13584530/39556291-5605560a-4e4d-11e8-80f6-8567257a6284.png">
+
 
 FIGURE 4. FEATURE TABLE
 
@@ -107,7 +108,7 @@ While this microservice could be used alone, the functionality of the service fi
 ![microservicecapstone](https://user-images.githubusercontent.com/13584530/39459534-30f312dc-4cca-11e8-9dbc-da9541c494cd.png)  
 FIGURE 6. MICROSERVICE ARCHITECTURE DIAGRAM
 
-In theory, almost any company that needs to implement geofencing into their application could use this service. Specifically, this microsevice will be used to handle geolocation operations in a location-based augment reality application. 
+In theory, almost any company that needs to implement geofencing into their application could use this service. As an example, a ride-sharing application such as Lyft would use this in their product. They want to optimize the number of passengers a car is able to service, and optimize the wait time for a rider to get a car. They can use a geofence around a car to determine if a rider is in close enough range to send the driver to pick up the rider. This helps the service be as efficient as possible for both users. This assumes there is only one point in the polygon, but if there were multiple points in the polygon, then choosing the optimal rider would be a different problem a bit outside of the scope of this project. Specifically, this microsevice will be used to handle geolocation operations in a location-based augmented reality application. 
 
 
 ## Design, Development and Test
@@ -207,7 +208,7 @@ Future development of this microservice would involve removing the other functio
 
 ## References
 
-[1] "Ray-casting graphic". Available: https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwj4vv63rOjaAhULUt8KHf6mA-EQjRx6BAgBEAU&url=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F217578%2Fhow-can-i-determine-whether-a-2d-point-is-within-a-polygon&psig=AOvVaw2XwYqoJczzLynGHIKPLk8e&ust=1525395833496471 [April 29, 2018]
+[1] "Ray-casting graphic". Available: https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjF1N2jrujaAhVNtlkKHV_6DREQjRx6BAgBEAU&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3ARay.casting.algorithm.illustration.svg&psig=AOvVaw3gvGqsfySLmPpytryQnxaO&ust=1525396323375259 [April 29, 2018]
 
 [2] "Filling a geofence with geohashes". Available:https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwi7uI3rrOjaAhXng-AKHW-yAlsQjRx6BAgBEAU&url=http%3A%2F%2Fwilldemaine.ghost.io%2Ffilling-geofences-with-geohashes%2F&psig=AOvVaw3BkMzF9YtXsrUp8VaVX6RW&ust=1525395936043284 [April 29, 2018]
 
