@@ -6,9 +6,7 @@ April 28th, 2018
 
 ## Abstract
 
-The goal of this project was to build a geofencing microservice that would allow clients to query the service and determine if a point is contained within a geofence. These types of services are common in industry, although are generally implemented as proprietary systems. The service built for this project is one service in a larger architecture for a location-based marketing application. The location-based functionality will allow for an accurate targeting of customers to help provide a personalized user experience. The geofencing service was built using Golang and hosted in a Docker container on a Digital Ocean droplet. A basic React application provides an easy to use interface to demonstrate the functionality of the service. This app allows the user to draw polygons using the Google Maps Application Programmable Interface (API) and click inside and outside of the polygons. Upon clicking, the application sends a Hyper Transfer Text Protocol (HTTP) request to the service and issues a notification on the screen to alert the results. If the click was outside of the polygon(s), then the user will be alerted; if it is inside the polygon(s), then the user will be alerted to which polygons the click is contained. 
-
-
+The goal of this project was to build a geofencing microservice that would allow clients to query the service and determine if a point is contained within a geofence. These types of services are common in industry, although are generally implemented as proprietary systems. The service built for this project is one service in a larger architecture for a location-based marketing application. The location-based functionality will allow for an accurate targeting of customers to help provide a personalized user experience. The geofencing service was built using [Golang](https://golang.org) and hosted in a [Docker](https://www.docker.com) container on a [Digital Ocean](https://www.digitalocean.com) droplet. A basic React application provides an easy to use interface to demonstrate the functionality of the service. This app allows the user to draw polygons using the Google Maps Application Programmable Interface (API) and click inside and outside of the polygons. Upon clicking, the application sends a Hyper Transfer Text Protocol (HTTP) request to the service and issues a notification on the screen to alert the results. If the click was outside of the polygon(s), then the user will be alerted; if it is inside the polygon(s), then the user will be alerted to which polygons the click is contained. All of the core features of the service outlined in the proposal were completed. [TravisCI](https://travis-ci.com) was used for build and testing automation. Git was used as the version control system and Github was used to host our projects as well as manage our feature sprints. 
 Keywords: Geofence, Point-In-Polygon, Microservice
 
 ## Table of Contents
@@ -52,26 +50,33 @@ While there are geolocation applications you can use as a service, they are cost
 
 ### Background
 
-Point-in-Polygon detection algorithms are common methods used to implement geofences. There are a wide array of point-polygon algorithm which all vary in complexity and efficiency. A ray-casting is one of the oldest and most well-known algorithms for detecting if a point is contained within a polygon. 
+Point-in-Polygon detection algorithms are common methods used to implement geofences. There are a wide array of point-polygon algorithm which all vary in complexity and efficiency. Ray-casting is one of the oldest and most well-known algorithms[6] for detecting if a point is contained within a polygon. 
+
+![raycast](https://user-images.githubusercontent.com/13584530/39556011-35909918-4e4b-11e8-9e5d-902b00853753.png)
+FIGURE 1. RAY-CASTING ALGORITHM [1]
+
+This was the first algorithm implemented in the project. It was replaced to then implement the geohashing algorithm discussed below.
 
 Another version is to use geohashes to recursively fill the polygon with geohashes and then hash a point to determine if it is contained in one of the hashes. To recursively fill the set you start with an empty fence. Then if the hash is completely contained within the fence completely then it is added to the set. If the hash intersects with the geofence, it isn’t added, but instead recurse with the hashes of its children. Once you reach the point in which the hash is equal to the maximum precision that is being checked, you add the hash to the set and stop recursing. Ultimately, if the hash doesn’t intersect with the geofence, then you don’t add it to the set, and you stop recursing. A visual representation of this process can be seen in the figure below.
 
 ![screenshotfromhashfill](https://user-images.githubusercontent.com/13584530/39506363-06c9eb7a-4da6-11e8-8f9a-ed61248c415a.png)  
-FIGURE 1. RECURSIVE HASHING
+FIGURE 2. RECURSIVE HASHING [2]
 
-Within the large variety of algorithms used for geofencing, the most efficient ones all share some commonalities. Previous studies have found many use R-Trees to organize their Minimum Bounding Rectangle(MBR) of polygons for the filtering stage [8]. 
+This was the next algorithm implemented for this project and is the current implementation in the geofencing microservice.
+
+Within the large variety of algorithms used for geofencing, the most efficient ones all share some commonalities. Previous research has found many use R-Trees to organize their Minimum Bounding Rectangle(MBR) of polygons for the filtering stage [8]. 
 
 An R-Tree is a spatial data structure based on a B-Tree that is used for spatial indexing methods. In the two-dimensional case of geofencing, the MBR is a simple bounding box (bbox) defined by a minimum and maximum coordinate. The check to determine if one object’s bbox is contained in another is a constant time operation.  Figure 1 below shows a good representation of an R-Tree.
 
 ![r-tree explanation](https://user-images.githubusercontent.com/13584530/39414423-5891e842-4c05-11e8-9f88-0a3dc050e339.png)  
-FIGURE 2. R-TREE DATA STRUCTURE
+FIGURE 3. R-TREE DATA STRUCTURE [3]
 
 The average search time complexity for an R-Tree is O(log Mn) where M is the defined constant of the maximum number of children a node can have.
 
 The other common spatial data structure used in the fastest point-in-polygon algorithms is a QuadTree. A QuadTree is a specialization of a generic kd-tree for 2-dimensional indexing. You take a flat project of a surface and divide the surface into quarters, generally called cells. Figure 2 below shows an example of QuadTree generation.
 
 ![bingmapquad](https://user-images.githubusercontent.com/13584530/39414425-5a95f818-4c05-11e8-93dd-cd7758246207.jpeg)  
-FIGURE 3. QUADTREE EXAMPLE
+FIGURE 4. QUADTREE EXAMPLE [4]
 
 QuadTrees are used in popular mapping applications such as Google Maps and Bing Maps. Google Maps uses a S2 algorithm, which is a projection of the Earth’s sphere using cube mapping so each cell has a uniform surface area. The cells are arranged using a Hilbert Curve to conserve spatial locality in the cell label. A Hilbert Curve is a space filling curve that allows the range to cover the entire n-dimensional space. 
 
@@ -83,10 +88,9 @@ A microservice is one service in part of a microservice architecture that struct
 
 The idea of this project is to create a functionable and scalable solution to geofencing. Implementing a geofence requires lookups using CPU-intensive point-in-polygon algorithms in order to determine if an object exist in a geofence. The algorithms used in this project were not the optimal solutions for point-in-polygon detection. 
 
-A microservice architecture is an architecture style that is structured a collection of loosely coupled services that generally implement some type of business capabilities [2].  This project is intended to provide a microservice that allows a client to query the service and determine if a point is contained within a polygon or geofence.  The microservice architecture would handle all server-side components of an augmented reality based marketing application. 
+A microservice architecture is an architecture style that is a structured a collection of loosely coupled services that generally implement some type of business capabilities [2].  This project is intended to provide a microservice that allows a client to query the service and determine if a point is contained within a polygon or geofence.  The microservice architecture would handle all server-side components of an augmented reality based marketing application. 
 
 There are many libraries that help with location data and implementation of common data structures that will be useful in the implementation of this service.
-
 
 In the project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. They are outlined in the figure below.
 
@@ -101,18 +105,18 @@ FIGURE 4. FEATURE TABLE
 While this microservice could be used alone, the functionality of the service fit better into a larger system that uses the service for geolocation purposes. The microservice designed and implemented for this project is just one service that is part of a larger system, as can be seen in the figure below.
 
 ![microservicecapstone](https://user-images.githubusercontent.com/13584530/39459534-30f312dc-4cca-11e8-9dbc-da9541c494cd.png)  
-FIGURE 5. MICROSERVICE ARCHITECTURE DIAGRAM
+FIGURE 6. MICROSERVICE ARCHITECTURE DIAGRAM
 
 In theory, almost any company that needs to implement geofencing into their application could use this service. Specifically, this microsevice will be used to handle geolocation operations in a location-based augment reality application. 
 
 
 ## Design, Development and Test
 
-The development of this project was performed using 1 week sprints. Each sprint we planned feature(s) that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. The development of this project was performed using 1 week sprints. Each sprint, we planned features that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. Github Projects and Issues were used to track each of the features and our current position in each sprint. Git was used as the version control throughout the project. 
+The development of this project was performed using 1 week sprints. Each sprint we planned features that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. The development of this project was performed using 1 week sprints. Each sprint, we planned features that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. Github Projects and Issues were used to track each of the features and our current position in each sprint. Git was used as the version control throughout the project. 
 
 ### Design
 
-This microservice is designed to be part of a larger system of microservices, in which each is decoupled from the other and has its own functionality.The service is split into four main packages:
+This microservice is designed to be part of a larger system of microservices, in which each is decoupled from the other and has its own functionality. I chose to split the microservice into the three main categories User, Client, and Polygon. In a true microservice the functionality of the user and client would be separated into different services. But, due to time constraints and project scope they were coupled with the geofencing functionality as one microservice. The service is split into four main packages:
 * model - Holds all of the structs and models of the service. This package contains no functionality.
 * database - This package handles all of the database interactions.
 * handlers - This package contains all of the handlers and methods for building the router containing the handlers.
@@ -120,10 +124,11 @@ This microservice is designed to be part of a larger system of microservices, in
 
 Golang was chosen as the development language for this microservice for a variety of reasons:
 
-
 * Point in polygon lookups require CPU-intensive algorithms. Golang is a systems language that is designed to be fast and efficient.
-* Low latency and high throughput. The service needs to be able to handle thousands of request, with each request ideally taking less than 100 milliseconds.
+* Low latency and high throughput. The service needs to be able to handle thousands of requests, with reach request taking less than 100 milliseconds.
 * Concurrent Design. This service must constantly refresh in-memory geofences in the background. Background refreshing can tie up the CPU and slow query response time. Goroutines can be executed on multiple cores and allow the service to run background queries in parallel with foreground queries.
+
+My first design of the database had the database dependencies/connections in the database section. Once I tried to unit test the database methods, I quickly realized this dependency would prevent me from easily writing unit test. Refactoring the dependence out of the methods and passing a pointer to a database into these methods allowed me to pass in a mock database for unit testing. 
 
 ### Development
 
@@ -158,29 +163,27 @@ The polygon database interactions were more complicated due to the use of the Po
 
 ### Test
 
-Testing and building was automated using TravisCI. 
+Testing and building was automated using TravisCI. My initial design of the HTTP handler methods didn’t allow for easy unit testing. The first implementation had a dependency of the database connection and would have required setting up a temporary HTTP server with proper environment variables to test the HTTP handlers. Given most of my testing had been automated through TravisCI, this wasn’t easily feasible. Instead I refactored the database dependencies out of my handlers using an interface. This allowed me to decouple my handlers from my database interaction and create mock datastores for testing.
 
-My initial design of the HTTP handler methods didn’t allow for easy unit testing. The first implementation had a dependency of the database connection and would have required setting up a temporary HTTP server with proper environment variables to test the HTTP handlers. Given most of my testing had been automated through TravisCI, this wasn’t easily feasible. Instead I refactored the database dependencies out of my handlers using an interface. This allowed me to decouple my handlers from my database interaction and create mock datastores for testing.
+Testing the database package required using a library for mock databases. The library used was called [go-sqlmock](https://github.com/DATA-DOG/go-sqlmock). I was unable to find any libraries for a mock PostGIS database. Due to limited time, I was unable to build my own version of a mock database for testing the PostGIS database interactions. Given the model package contains no functionality there are no unit tests for this package.
 
-Testing the database package required using a library for mock databases. The library used was called go-sqlmock. I was unable to find any libraries for a mock PostGIS database. Due to limited time, I was unable to build my own version of a mock database for testing the PostGIS database interactions. Given the model package contains no functionality there are no unit tests for this package.
+[Go-carpet](https://github.com/msoap/go-carpet) was used to determine testing coverage. This metric was only mildly useful for this specific project as some of the packages had no functionality, and as mentioned, some of the specific database interactions could not be tested. 
 
+Once each feature was complete integration testing was also performed using calls from the client. The correct implementation was tested by verifying the correct response from the HTTP requests. The React application interface allowed me to test request responses from a client application to the service. 
 
-Go-carpet was used to determine testing coverage. This metric was only mildly useful for this specific project as some of the packages had no functionality, and as mentioned some of the specific database interactions could not be testing. 
-
-Once each feature was complete integration testing was also performed using calls from the client. The correct implementation was testing by verifying the correct response from the http request. 
 
 ## Results
 
-A rudimentary service was created at first with Go with a single endpoint was created and tested locally. Once the basic app had been tested locally, it was moved to a DigitalOcean droplet (server). Docker was used to help facilitate easy deployment of new service iterations. Using a makefile and a few make commands, one is able to load up a new docker image and run it on the droplet. 
+A rudimentary service was created at first with Go containing a single endpoint was created and tested locally. Once the basic app had been tested locally, it was moved to a DigitalOcean droplet (server). Docker was used to help facilitate easy deployment of new service iterations. Using a makefile and a few make commands, one is able to load up a new docker image and run it on the droplet. 
 
-To help demonstrate the working API, a bootstrapped React App was created. Within this React App some basic http request were created and the results displayed on the UI to help test the functionality of the service. 
+To help demonstrate the working API, a bootstrapped React App was created. Within this React App some basic HTTP requests were created and the results displayed on the UI to help test the functionality of the service. As each feature was added to the service, a demonstration of this functionality was added to the React App. 
 
 The next feature implemented was the addition of database interactions within the service. A Postgres database hosted on Amazon Web Services (AWS) was used to host the database. A database package was created to handle interactions between the service and database. In order to allow the client to retrieve data from the database, endpoints were created that allowed the client to perform GET, POST, and DELETE http request. 
 
 As each feature was added to the service, a demonstration of this functionality was added to the React App. 
 In order to save polygons in the database the PostGIS extension was needed. This extension allows one to save geometrical shapes in the database. Query syntax for a PostGIS database is significantly different from a regular SQL database. I didn’t research this extension before using it, so I had to learn how to properly query the database and work with geometric shapes. Integrating PostGIS into the project took longer than anticipated. 
 
-In a true microservice the functionality of the user and client would be separated into different services, but due to time constraints and project scope they were coupled with the geofencing functionality as one microservice.
+In order to save polygons in the database the [PostGIS extension](https://postgis.net/install/) was needed. This extension allows one to save geometrical shapes in the database. Query syntax for a PostGIS database is significantly different from a regular SQL database. I didn’t research this extension before using it, so I had to learn how to properly query the database and work with geometric shapes. Integrating PostGIS into the project took longer than anticipated. 
 
 In the proposal project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. As displayed in the chart below, I was able to finish all of the critical aspects of the project. 
 
@@ -188,7 +191,7 @@ In the proposal project features were ranked as A, B, and C using a priority sys
 FIGURE 5. FEATURE RESULTS
 
 
-This was my first large project using Go as the development language. Learning best practices for the language was time consuming, but a valuable learning process. This had a small impact on my productivity. Working to make a user-friendly interface within the React application took longer than anticipated. Demonstrating a working project at the end of our development process was necessary, but in the future I would research more time-efficient ways to build a user interface to demonstrate the service functionality. 
+This was my first large project using Go as the development language. The current service implementation does not take advantage of concurrent programming, but it is planned to add this to the service in future development. Learning best practices for the language was time consuming, but a valuable learning process. This had a small impact on my productivity. Working to make a user-friendly interface within the React application took longer than anticipated. Demonstrating a working project at the end of our development process was necessary, but in the future I would research more time-efficient ways to build a user interface to demonstrate the service functionality. 
 
 The algorithm that is used in the geofence package is the recursive hash filling algorithm discussed in the background section. This algorithm works best for queries of a large number of points in a polygon. As the number of polygons increases, this algorithm will be faster than the ray casting algorithm, but will not scale as well as others discussed in the background section of this report. I was able to begin coding the QuadTree data structure, but didn’t have time to finish the data structure or an algorithm to utilize the tree.
 
@@ -204,17 +207,22 @@ Future development of this microservice would involve removing the other functio
 
 ## References
 
-[1] “Simple example of an R-tree for 2D rectangles” Available: https://en.wikipedia.org/wiki/R-tree [April 27, 2018]
+[1] "Ray-casting graphic". Available: https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwj4vv63rOjaAhULUt8KHf6mA-EQjRx6BAgBEAU&url=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F217578%2Fhow-can-i-determine-whether-a-2d-point-is-within-a-polygon&psig=AOvVaw2XwYqoJczzLynGHIKPLk8e&ust=1525395833496471 [April 29, 2018]
 
-[2] Available: https://msdn.microsoft.com/en-us/library/bb259689.aspx [April 27, 2018]
+[2] "Filling a geofence with geohashes". Available:https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwi7uI3rrOjaAhXng-AKHW-yAlsQjRx6BAgBEAU&url=http%3A%2F%2Fwilldemaine.ghost.io%2Ffilling-geofences-with-geohashes%2F&psig=AOvVaw3BkMzF9YtXsrUp8VaVX6RW&ust=1525395936043284 [April 29, 2018]
 
-[3] “Microservice Architecture pattern” Available: http://microservices.io/patterns/microservices.html [April 28. 2018]
+[3] “Simple example of an R-tree for 2D rectangles” Available: https://en.wikipedia.org/wiki/R-tree [April 27, 2018]
 
-[4] https://icpe.spec.org/icpe_proceedings/2017/companion/p223.pdf
-[8] S. Tang, Y. Yu, R. Zimmerman, S. Obana. “39 Efficient Geo-fencing via Hybrid Hashing: A Combination of Bucket Selection and In-bucket Binary Search.” Internet: http://research.nii.ac.jp/~yiyu/GeoFence-20150512-FirstLook.pdf, [April 26, 2018]
+[4] Available: https://msdn.microsoft.com/en-us/library/bb259689.aspx [April 27, 2018]
 
+[5] Add reference here for ray-casting paper
+
+[6] Add reference here for microservice paper
 
 
 [7] M. M. Sardadi, M. S. bin Mohd Rahim, Z. Jupri, and D. bin Daman. “Choosing R-tree or Quadtree Spatial Data Indexing in One Oracle Spatial Database System to Make Faster Showing Geographical Map in Mobile Geographical Information System Technology.” Internet: https://pdfs.semanticscholar.org/c86e/a522e7872c44359b00a4102d16e72bbed891.pdf, [April 26, 2018]. 
+
+[8] S. Tang, Y. Yu, R. Zimmerman, S. Obana. “39 Efficient Geo-fencing via Hybrid Hashing: A Combination of Bucket Selection and In-bucket Binary Search.” Internet: http://research.nii.ac.jp/~yiyu/GeoFence-20150512-FirstLook.pdf, [April 26, 2018]
+
 
 
