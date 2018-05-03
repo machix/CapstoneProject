@@ -94,8 +94,8 @@ There are many libraries that help with location data and implementation of comm
 
 In the project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. They are outlined in the figure below.
 
-<img width="899" alt="screen shot 2018-05-02 at 9 10 46 pm" src="https://user-images.githubusercontent.com/13584530/39556291-5605560a-4e4d-11e8-80f6-8567257a6284.png">
 
+<img width="902" alt="screen shot 2018-05-02 at 9 21 11 pm" src="https://user-images.githubusercontent.com/13584530/39556508-cac656aa-4e4e-11e8-9e1d-f9832dd7b42a.png">
 
 FIGURE 4. FEATURE TABLE
 
@@ -188,7 +188,7 @@ In order to save polygons in the database the [PostGIS extension](https://postgi
 
 In the proposal project features were ranked as A, B, and C using a priority system. There were three levels of priority, with A being essential, B being want to implement, and C being extensions or extras. As displayed in the chart below, I was able to finish all of the critical aspects of the project. 
 
-![featuressss](https://user-images.githubusercontent.com/13584530/39502875-a7f57c5a-4d90-11e8-9d39-890a188b9935.png)  
+<img width="899" alt="screen shot 2018-05-02 at 9 10 46 pm" src="https://user-images.githubusercontent.com/13584530/39556291-5605560a-4e4d-11e8-80f6-8567257a6284.png"> 
 FIGURE 5. FEATURE RESULTS
 
 
