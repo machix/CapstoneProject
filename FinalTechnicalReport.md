@@ -112,7 +112,7 @@ In theory, almost any company that needs to implement geofencing into their appl
 
 ## Design, Development and Test
 
-The development of this project was performed using 1 week sprints. Each sprint we planned features that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. The development of this project was performed using 1 week sprints. Each sprint, we planned features that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. Github Projects and Issues were used to track each of the features and our current position in each sprint. Git was used as the version control throughout the project. 
+The development of this project was performed using 1 week sprints. Each sprint, we planned features that were to be completed by the end of each sprint. Each of these features should be a testable unit of code. Github Projects and Issues were used to track each of the features and our current position in each sprint. Git was used as the version control throughout the project. 
 
 ### Design
 
