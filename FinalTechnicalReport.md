@@ -87,7 +87,7 @@ QuadTrees are used in popular mapping applications such as Google Maps and Bing 
 
 While R-Tree implementations often have a higher maximum throughput, heavy update activity of the geospatial data decreases the performance of the R-Tree implementations, but heavy updating of the Quad Tree will have no impact on performance [7].
 
-A microservice architecture is an architecture style that is a structured a collection of loosely coupled services that generally implement some type of business capabilities [6].  This project is intended to provide a microservice that allows a client to query the service and determine if a point is contained within a polygon or geofence.  The microservice architecture would handle all server-side components of an augmented reality based marketing application. 
+ This project is intended to provide a microservice that allows a client to query the service and determine if a point is contained within a polygon or geofence. This microservice is one service in part of a [microservice architecture](http://microservices.io/patterns/microservices.html). A microservice architecture is an architecture style that is a structured collection of loosely coupled services that generally implement some type of business capabilities [6]. The microservice architecture would handle all server-side components of an augmented reality based marketing application. Benefits of this architecture style allows for scalability, flexibility, and portability[4].
 
 
 ### Objectives
@@ -144,15 +144,16 @@ In order to save polygons in the database the [PostGIS extension](https://postgi
 
 My first design of the database had the database dependencies/connections in the database section. Once I tried to unit test the database methods, I quickly realized this dependency would prevent me from easily writing unit test. Refactoring the dependence out of the methods and passing a pointer to a database into these methods allowed me to pass in a mock database for unit testing. 
 
-Libraries Used
+#### Libraries Used
+ 
 | Library | Description |
+| ---------- | ---------------- |
 | pq | A pure Go Postgre driver for Go’s database/sql package |
 | golang-geo | Go library for translating, geocoding, and calculating distances between geographical points|
 | gorila/mux | A powerful URL router and dispatcher for golang |
 | go-sqlmock| SQL mock driver for golang to test database interactions |
 | stretchr/testify | A toolkit with common assertions and mocks that work with the standard library |
-| go-carpet | shows test coverage in terminal for Go source files |
-
+| go-carpet | Shows test coverage in terminal for Go source files |
 
 ### Development
 
